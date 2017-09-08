@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/lovebr-chess.iml" filepath="$PROJECT_DIR$/.idea/modules/lovebr-chess.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/lovebr-chess_main.iml" filepath="$PROJECT_DIR$/.idea/modules/lovebr-chess_main.iml" group="lovebr-chess" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/lovebr-chess_test.iml" filepath="$PROJECT_DIR$/.idea/modules/lovebr-chess_test.iml" group="lovebr-chess" />
+    </modules>
+  </component>
+</project>
