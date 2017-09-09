@@ -17,7 +17,7 @@ class KnightTest {
   }
 
   @Test
-  void canMoveOneStepInOneDirectionAndTwoStepsInTheOtherDirection() {
+  void canMoveOneStepInOneDirectionAndTwoStepsInOnePerpendicularDirection() {
     Knight knight = board.add(new Knight(WHITE), new Position(3, 3));
     knight
         .validMoves()

@@ -19,34 +19,50 @@ public abstract class Piece {
     this.color = color;
   }
 
-  protected void addPosition(
+  protected boolean addPosition(
       Position position, MovementFlag movementFlag, Set<Position> positionSet) {
     if (!board.isInsideBounds(position)) {
-      return;
+      return false;
     }
     switch (movementFlag) {
       case IF_EMPTY:
         if (!board.isEmpty(position)) {
-          return;
+          return false;
         }
         break;
       case IF_ENEMY:
-        if (board.isEmpty(position) || isFriendly(position)) {
-          return;
+        if (board.isEmpty(position) || !isEnemy(position)) {
+          return false;
         }
         break;
       case IF_EMPTY_OR_ENEMY:
-        if (!board.isEmpty(position) && isFriendly(position)) {
-          return;
+        if (!board.isEmpty(position) && !isEnemy(position)) {
+          return false;
         }
         break;
       default:
     }
     positionSet.add(position);
+    return true;
   }
 
-  public boolean isFriendly(Position position) {
-    return !board.isEmpty(position) && board.get(position).color == color;
+  protected void addPositionsInDirection(
+      int rowOffset, int columnOffset, Set<Position> positionSet) {
+    Position position = this.position.offset(rowOffset, columnOffset);
+    while (board.isInsideBounds(position)) {
+      if (!board.isEmpty(position)) {
+        if (isEnemy(position)) {
+          positionSet.add(position);
+        }
+        break;
+      }
+      positionSet.add(position);
+      position = position.offset(rowOffset, columnOffset);
+    }
+  }
+
+  public boolean isEnemy(Position position) {
+    return !board.isEmpty(position) && board.get(position).color != color;
   }
 
   public abstract Set<Position> validMoves();
