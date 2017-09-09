@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static se.lovebrandefelt.chess.Color.WHITE;
 
 import java.util.Arrays;
+import java.util.HashSet;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -20,15 +21,16 @@ public class KingTest {
     King king = board.add(new King(WHITE), new Position(3, 3));
     assertTrue(
         king.validMoves()
-            .containsAll(
-                Arrays.asList(
-                    new Position(2, 2),
-                    new Position(2, 3),
-                    new Position(2, 4),
-                    new Position(3, 2),
-                    new Position(3, 4),
-                    new Position(4, 2),
-                    new Position(4, 3),
-                    new Position(4, 4))));
+            .equals(
+                new HashSet<>(
+                    (Arrays.asList(
+                        new Position(2, 2),
+                        new Position(2, 3),
+                        new Position(2, 4),
+                        new Position(3, 2),
+                        new Position(3, 4),
+                        new Position(4, 2),
+                        new Position(4, 3),
+                        new Position(4, 4))))));
   }
 }
