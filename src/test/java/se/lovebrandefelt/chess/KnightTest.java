@@ -8,7 +8,7 @@ import java.util.HashSet;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-public class KnightTest {
+class KnightTest {
   private Board board;
 
   @BeforeEach
