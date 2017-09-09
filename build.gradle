@@ -28,3 +28,9 @@ dependencies {
     testCompile group: 'org.junit.platform', name: 'junit-platform-runner', version: junitPlatformVersion
     testRuntime group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: junitVersion
 }
+
+jar {
+    from javadoc.destinationDir
+}
+
+jar.dependsOn 'javadoc'
