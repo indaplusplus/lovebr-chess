@@ -1,5 +1,8 @@
 package se.lovebrandefelt.chess;
 
+import static se.lovebrandefelt.chess.Piece.MovementFlag.IF_EMPTY;
+import static se.lovebrandefelt.chess.Piece.MovementFlag.IF_ENEMY;
+
 import java.util.HashSet;
 import java.util.Set;
 
@@ -13,14 +16,14 @@ public class Pawn extends Piece {
     Set<Position> validMoves = new HashSet<>();
     switch (getColor()) {
       case WHITE:
-        addPositionIfEmpty(getPosition().offset(1, 0), validMoves);
-        addPositionIfNonEmpty(getPosition().offset(1, -1), validMoves);
-        addPositionIfNonEmpty(getPosition().offset(1, 1), validMoves);
+        addPosition(getPosition().offset(1, 0), IF_EMPTY, validMoves);
+        addPosition(getPosition().offset(1, -1), IF_ENEMY, validMoves);
+        addPosition(getPosition().offset(1, 1), IF_ENEMY, validMoves);
         break;
       case BLACK:
-        addPositionIfEmpty(getPosition().offset(-1, 0), validMoves);
-        addPositionIfNonEmpty(getPosition().offset(-1, -1), validMoves);
-        addPositionIfNonEmpty(getPosition().offset(-1, 1), validMoves);
+        addPosition(getPosition().offset(-1, 0), IF_EMPTY, validMoves);
+        addPosition(getPosition().offset(-1, -1), IF_ENEMY, validMoves);
+        addPosition(getPosition().offset(-1, 1), IF_ENEMY, validMoves);
         break;
       default:
     }
