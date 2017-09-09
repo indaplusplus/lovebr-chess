@@ -1,23 +1,23 @@
 version '1.0-SNAPSHOT'
 
+apply plugin: 'java'
+
 buildscript {
     repositories {
         mavenCentral()
     }
+    ext {
+        junitVersion = '5.0.0-RC3'
+        junitPlatformVersion = '1.0.0-RC3'
+    }
     dependencies {
-        classpath 'org.junit.platform:junit-platform-gradle-plugin:1.0.0-M4'
+        classpath group: 'org.junit.platform', name: 'junit-platform-gradle-plugin', version: junitPlatformVersion
     }
 }
 
-apply plugin: 'java'
 apply plugin: 'org.junit.platform.gradle.plugin'
 
 sourceCompatibility = 1.8
-
-ext {
-    junitVersion = '5.0.0-M4'
-    junitPlatformVersion = '1.0.0-M4'
-}
 
 repositories {
     mavenCentral()

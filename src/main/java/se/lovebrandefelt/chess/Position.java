@@ -40,4 +40,11 @@ public class Position {
     Position position = (Position) o;
     return row == position.row && column == position.column;
   }
+
+  @Override
+  public int hashCode() {
+    int result = row;
+    result = 31 * result + column;
+    return result;
+  }
 }
