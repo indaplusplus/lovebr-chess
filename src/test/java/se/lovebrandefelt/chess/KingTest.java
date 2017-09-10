@@ -18,18 +18,18 @@ class KingTest {
 
   @Test
   void canMoveToAdjacentSquares() {
-    King king = board.add(new King(WHITE), new Pos(3, 3));
+    King king = board.add(new King(WHITE), new Pos("D4"));
     assertEquals(
         new HashSet<>(
             (Arrays.asList(
-                new Pos(2, 2),
-                new Pos(2, 3),
-                new Pos(2, 4),
-                new Pos(3, 2),
-                new Pos(3, 4),
-                new Pos(4, 2),
-                new Pos(4, 3),
-                new Pos(4, 4)))),
+                new Pos("C3"),
+                new Pos("D3"),
+                new Pos("E3"),
+                new Pos("C4"),
+                new Pos("E4"),
+                new Pos("C5"),
+                new Pos("D5"),
+                new Pos("E5")))),
         king.validMoves());
   }
 }

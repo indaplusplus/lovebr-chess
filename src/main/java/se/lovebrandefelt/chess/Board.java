@@ -37,6 +37,12 @@ public class Board {
     return piece;
   }
 
+  public void addPawnRow(Color color, int row) {
+    for (int i = 0; i < columns(); i++) {
+      add(new Pawn(color), new Pos(row, i));
+    }
+  }
+
   public Piece remove(Pos pos) {
     Piece piece = squares[pos.getRow()][pos.getCol()];
     squares[pos.getRow()][pos.getCol()] = null;

@@ -10,28 +10,6 @@ import java.util.Map;
 import java.util.Set;
 
 public class Game {
-  public static final Board DEFAULT_SETUP =
-      new SetupBuilder(8, 8)
-          .add(new Rook(WHITE), new Pos(0, 0))
-          .add(new Knight(WHITE), new Pos(0, 1))
-          .add(new Bishop(WHITE), new Pos(0, 2))
-          .add(new Queen(WHITE), new Pos(0, 3))
-          .add(new King(WHITE), new Pos(0, 4))
-          .add(new Bishop(WHITE), new Pos(0, 5))
-          .add(new Knight(WHITE), new Pos(0, 6))
-          .add(new Rook(WHITE), new Pos(0, 7))
-          .addPawnRow(WHITE, 1)
-          .add(new Rook(BLACK), new Pos(7, 0))
-          .add(new Knight(BLACK), new Pos(7, 1))
-          .add(new Bishop(BLACK), new Pos(7, 2))
-          .add(new Queen(BLACK), new Pos(7, 3))
-          .add(new King(BLACK), new Pos(7, 4))
-          .add(new Bishop(BLACK), new Pos(7, 5))
-          .add(new Knight(BLACK), new Pos(7, 6))
-          .add(new Rook(BLACK), new Pos(7, 7))
-          .addPawnRow(BLACK, 6)
-          .create();
-
   private Board board;
   private Color currentPlayer;
   private Map<Color, List<Piece>> captures;
@@ -42,6 +20,29 @@ public class Game {
     captures = new HashMap<>();
     captures.put(WHITE, new ArrayList<>());
     captures.put(BLACK, new ArrayList<>());
+  }
+
+  public static Board defaultSetup() {
+    Board board = new Board(8, 8);
+    board.add(new Rook(WHITE), new Pos(0, 0));
+    board.add(new Knight(WHITE), new Pos(0, 1));
+    board.add(new Bishop(WHITE), new Pos(0, 2));
+    board.add(new Queen(WHITE), new Pos(0, 3));
+    board.add(new King(WHITE), new Pos(0, 4));
+    board.add(new Bishop(WHITE), new Pos(0, 5));
+    board.add(new Knight(WHITE), new Pos(0, 6));
+    board.add(new Rook(WHITE), new Pos(0, 7));
+    board.addPawnRow(WHITE, 1);
+    board.add(new Rook(BLACK), new Pos(7, 0));
+    board.add(new Knight(BLACK), new Pos(7, 1));
+    board.add(new Bishop(BLACK), new Pos(7, 2));
+    board.add(new Queen(BLACK), new Pos(7, 3));
+    board.add(new King(BLACK), new Pos(7, 4));
+    board.add(new Bishop(BLACK), new Pos(7, 5));
+    board.add(new Knight(BLACK), new Pos(7, 6));
+    board.add(new Rook(BLACK), new Pos(7, 7));
+    board.addPawnRow(BLACK, 6);
+    return board;
   }
 
   public boolean makeMove(Pos from, Pos to) {

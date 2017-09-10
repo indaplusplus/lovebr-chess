@@ -34,17 +34,17 @@ class PawnTest {
 
   @Test
   void canCaptureOneStepDiagonallyForward() {
-    Pawn whitePawn = board.add(new Pawn(WHITE), new Pos(3, 4));
-    Pawn blackPawn = board.add(new Pawn(BLACK), new Pos(4, 3));
-    assertTrue(whitePawn.validMoves().contains(new Pos(4, 3)));
-    assertTrue(blackPawn.validMoves().contains(new Pos(3, 4)));
+    Pawn whitePawn = board.add(new Pawn(WHITE), new Pos("E4"));
+    Pawn blackPawn = board.add(new Pawn(BLACK), new Pos("D5"));
+    assertTrue(whitePawn.validMoves().contains(new Pos("D5")));
+    assertTrue(blackPawn.validMoves().contains(new Pos("E4")));
   }
 
   @Test
   void cantMoveOneStepDiagonallyForward() {
-    Pawn whitePawn = board.add(new Pawn(WHITE), new Pos(0, 0));
-    Pawn blackPawn = board.add(new Pawn(BLACK), new Pos(7, 7));
-    assertFalse(whitePawn.validMoves().contains(new Pos(1, 1)));
-    assertFalse(blackPawn.validMoves().contains(new Pos(6, 6)));
+    Pawn whitePawn = board.add(new Pawn(WHITE), new Pos("A1"));
+    Pawn blackPawn = board.add(new Pawn(BLACK), new Pos("H8"));
+    assertFalse(whitePawn.validMoves().contains(new Pos("B2")));
+    assertFalse(blackPawn.validMoves().contains(new Pos("G7")));
   }
 }

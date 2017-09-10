@@ -18,18 +18,18 @@ class KnightTest {
 
   @Test
   void canMoveOneStepInOneDirectionAndTwoStepsInOnePerpendicularDirection() {
-    Knight knight = board.add(new Knight(WHITE), new Pos(3, 3));
+    Knight knight = board.add(new Knight(WHITE), new Pos("D4"));
     assertEquals(
         new HashSet<>(
             (Arrays.asList(
-                new Pos(1, 2),
-                new Pos(1, 4),
-                new Pos(2, 1),
-                new Pos(2, 5),
-                new Pos(4, 1),
-                new Pos(4, 5),
-                new Pos(5, 2),
-                new Pos(5, 4)))),
+                new Pos("C2"),
+                new Pos("E2"),
+                new Pos("B3"),
+                new Pos("F3"),
+                new Pos("B5"),
+                new Pos("F5"),
+                new Pos("C6"),
+                new Pos("E6")))),
         knight.validMoves());
   }
 }
