@@ -12,18 +12,18 @@ public class Pawn extends Piece {
   }
 
   @Override
-  public Set<Position> validMoves() {
-    Set<Position> validMoves = new HashSet<>();
+  public Set<Pos> validMoves() {
+    Set<Pos> validMoves = new HashSet<>();
     switch (getColor()) {
       case WHITE:
-        addPosition(getPosition().offset(1, 0), IF_EMPTY, validMoves);
-        addPosition(getPosition().offset(1, -1), IF_ENEMY, validMoves);
-        addPosition(getPosition().offset(1, 1), IF_ENEMY, validMoves);
+        addPosition(getPos().offset(1, 0), IF_EMPTY, validMoves);
+        addPosition(getPos().offset(1, -1), IF_ENEMY, validMoves);
+        addPosition(getPos().offset(1, 1), IF_ENEMY, validMoves);
         break;
       case BLACK:
-        addPosition(getPosition().offset(-1, 0), IF_EMPTY, validMoves);
-        addPosition(getPosition().offset(-1, -1), IF_ENEMY, validMoves);
-        addPosition(getPosition().offset(-1, 1), IF_ENEMY, validMoves);
+        addPosition(getPos().offset(-1, 0), IF_EMPTY, validMoves);
+        addPosition(getPos().offset(-1, -1), IF_ENEMY, validMoves);
+        addPosition(getPos().offset(-1, 1), IF_ENEMY, validMoves);
         break;
       default:
     }

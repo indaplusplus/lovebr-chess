@@ -18,33 +18,33 @@ class PawnTest {
 
   @Test
   void canMoveOneStepForward() {
-    Pawn whitePawn = board.add(new Pawn(WHITE), new Position(0, 0));
-    Pawn blackPawn = board.add(new Pawn(BLACK), new Position(7, 7));
-    assertTrue(whitePawn.validMoves().contains(new Position(1, 0)));
-    assertTrue(blackPawn.validMoves().contains(new Position(6, 7)));
+    Pawn whitePawn = board.add(new Pawn(WHITE), new Pos("A1"));
+    Pawn blackPawn = board.add(new Pawn(BLACK), new Pos("H8"));
+    assertTrue(whitePawn.validMoves().contains(new Pos("A2")));
+    assertTrue(blackPawn.validMoves().contains(new Pos("H7")));
   }
 
   @Test
   void cantCaptureOneStepForward() {
-    Pawn whitePawn = board.add(new Pawn(WHITE), new Position(3, 4));
-    Pawn blackPawn = board.add(new Pawn(BLACK), new Position(4, 4));
-    assertFalse(whitePawn.validMoves().contains(new Position(4, 4)));
-    assertFalse(blackPawn.validMoves().contains(new Position(3, 4)));
+    Pawn whitePawn = board.add(new Pawn(WHITE), new Pos("E4"));
+    Pawn blackPawn = board.add(new Pawn(BLACK), new Pos("E5"));
+    assertFalse(whitePawn.validMoves().contains(new Pos("E5")));
+    assertFalse(blackPawn.validMoves().contains(new Pos("E4")));
   }
 
   @Test
   void canCaptureOneStepDiagonallyForward() {
-    Pawn whitePawn = board.add(new Pawn(WHITE), new Position(3, 4));
-    Pawn blackPawn = board.add(new Pawn(BLACK), new Position(4, 3));
-    assertTrue(whitePawn.validMoves().contains(new Position(4, 3)));
-    assertTrue(blackPawn.validMoves().contains(new Position(3, 4)));
+    Pawn whitePawn = board.add(new Pawn(WHITE), new Pos(3, 4));
+    Pawn blackPawn = board.add(new Pawn(BLACK), new Pos(4, 3));
+    assertTrue(whitePawn.validMoves().contains(new Pos(4, 3)));
+    assertTrue(blackPawn.validMoves().contains(new Pos(3, 4)));
   }
 
   @Test
   void cantMoveOneStepDiagonallyForward() {
-    Pawn whitePawn = board.add(new Pawn(WHITE), new Position(0, 0));
-    Pawn blackPawn = board.add(new Pawn(BLACK), new Position(7, 7));
-    assertFalse(whitePawn.validMoves().contains(new Position(1, 1)));
-    assertFalse(blackPawn.validMoves().contains(new Position(6, 6)));
+    Pawn whitePawn = board.add(new Pawn(WHITE), new Pos(0, 0));
+    Pawn blackPawn = board.add(new Pawn(BLACK), new Pos(7, 7));
+    assertFalse(whitePawn.validMoves().contains(new Pos(1, 1)));
+    assertFalse(blackPawn.validMoves().contains(new Pos(6, 6)));
   }
 }

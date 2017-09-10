@@ -1,6 +1,6 @@
 package se.lovebrandefelt.chess;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static se.lovebrandefelt.chess.Color.WHITE;
 
 import java.util.Arrays;
@@ -18,23 +18,18 @@ class KnightTest {
 
   @Test
   void canMoveOneStepInOneDirectionAndTwoStepsInOnePerpendicularDirection() {
-    Knight knight = board.add(new Knight(WHITE), new Position(3, 3));
-    knight
-        .validMoves()
-        .forEach((position -> System.out.println(position.getRow() + " " + position.getColumn())));
-    assertTrue(
-        knight
-            .validMoves()
-            .equals(
-                new HashSet<>(
-                    Arrays.asList(
-                        new Position(1, 2),
-                        new Position(1, 4),
-                        new Position(2, 1),
-                        new Position(2, 5),
-                        new Position(4, 1),
-                        new Position(4, 5),
-                        new Position(5, 2),
-                        new Position(5, 4)))));
+    Knight knight = board.add(new Knight(WHITE), new Pos(3, 3));
+    assertEquals(
+        new HashSet<>(
+            (Arrays.asList(
+                new Pos(1, 2),
+                new Pos(1, 4),
+                new Pos(2, 1),
+                new Pos(2, 5),
+                new Pos(4, 1),
+                new Pos(4, 5),
+                new Pos(5, 2),
+                new Pos(5, 4)))),
+        knight.validMoves());
   }
 }

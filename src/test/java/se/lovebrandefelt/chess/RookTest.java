@@ -1,6 +1,6 @@
 package se.lovebrandefelt.chess;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static se.lovebrandefelt.chess.Color.BLACK;
 import static se.lovebrandefelt.chess.Color.WHITE;
 
@@ -19,23 +19,20 @@ public class RookTest {
 
   @Test
   void canMoveOrthogonallyButNotThroughPieces() {
-    Rook rook = board.add(new Rook(WHITE), new Position(3, 3));
-    board.add(new Pawn(WHITE), new Position(1, 3));
-    board.add(new Pawn(BLACK), new Position(5, 3));
-    assertTrue(
-        rook.validMoves()
-            .equals(
-                new HashSet<>(
-                    Arrays.asList(
-                        new Position(2, 3),
-                        new Position(4, 3),
-                        new Position(5, 3),
-                        new Position(3, 2),
-                        new Position(3, 1),
-                        new Position(3, 0),
-                        new Position(3, 4),
-                        new Position(3, 5),
-                        new Position(3, 6),
-                        new Position(3, 7)))));
+    Rook rook = board.add(new Rook(WHITE), new Pos("D4"));
+    board.add(new Pawn(WHITE), new Pos("D2"));
+    board.add(new Pawn(BLACK), new Pos("D6"));
+    assertEquals(new HashSet<>(
+        Arrays.asList(
+            new Pos("D3"),
+            new Pos("D5"),
+            new Pos("D6"),
+            new Pos("C4"),
+            new Pos("B4"),
+            new Pos("A4"),
+            new Pos("E4"),
+            new Pos("F4"),
+            new Pos("G4"),
+            new Pos("H4"))), rook.validMoves());
   }
 }

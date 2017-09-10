@@ -1,6 +1,6 @@
 package se.lovebrandefelt.chess;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static se.lovebrandefelt.chess.Color.WHITE;
 
 import java.util.Arrays;
@@ -18,19 +18,18 @@ class KingTest {
 
   @Test
   void canMoveToAdjacentSquares() {
-    King king = board.add(new King(WHITE), new Position(3, 3));
-    assertTrue(
-        king.validMoves()
-            .equals(
-                new HashSet<>(
-                    (Arrays.asList(
-                        new Position(2, 2),
-                        new Position(2, 3),
-                        new Position(2, 4),
-                        new Position(3, 2),
-                        new Position(3, 4),
-                        new Position(4, 2),
-                        new Position(4, 3),
-                        new Position(4, 4))))));
+    King king = board.add(new King(WHITE), new Pos(3, 3));
+    assertEquals(
+        new HashSet<>(
+            (Arrays.asList(
+                new Pos(2, 2),
+                new Pos(2, 3),
+                new Pos(2, 4),
+                new Pos(3, 2),
+                new Pos(3, 4),
+                new Pos(4, 2),
+                new Pos(4, 3),
+                new Pos(4, 4)))),
+        king.validMoves());
   }
 }

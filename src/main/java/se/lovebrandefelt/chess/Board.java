@@ -1,7 +1,5 @@
 package se.lovebrandefelt.chess;
 
-import javafx.geometry.Pos;
-
 public class Board {
   private Piece[][] squares;
 
@@ -17,25 +15,36 @@ public class Board {
     return squares[0].length;
   }
 
-  public boolean isInsideBounds(Position position) {
-    return position.getRow() >= 0
-        && position.getRow() < rows()
-        && position.getColumn() >= 0
-        && position.getColumn() < columns();
+  public boolean isInsideBounds(Pos pos) {
+    return pos.getRow() >= 0
+        && pos.getRow() < rows()
+        && pos.getCol() >= 0
+        && pos.getCol() < columns();
   }
 
-  public boolean isEmpty(Position position) {
-    return squares[position.getRow()][position.getColumn()] == null;
+  public boolean isEmpty(Pos pos) {
+    return squares[pos.getRow()][pos.getCol()] == null;
   }
 
-  public Piece get(Position position) {
-    return squares[position.getRow()][position.getColumn()];
+  public Piece get(Pos pos) {
+    return squares[pos.getRow()][pos.getCol()];
   }
 
-  public <T extends Piece> T add(T piece, Position position) {
-    squares[position.getRow()][position.getColumn()] = piece;
+  public <T extends Piece> T add(T piece, Pos pos) {
+    squares[pos.getRow()][pos.getCol()] = piece;
     piece.setBoard(this);
-    piece.setPosition(position);
+    piece.setPos(pos);
     return piece;
+  }
+
+  public Piece remove(Pos pos) {
+    Piece piece = squares[pos.getRow()][pos.getCol()];
+    squares[pos.getRow()][pos.getCol()] = null;
+    return piece;
+  }
+
+  public void move(Pos from, Pos to) {
+    add(squares[from.getRow()][from.getCol()], to);
+    remove(from);
   }
 }

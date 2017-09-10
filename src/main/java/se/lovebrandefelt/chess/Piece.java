@@ -10,62 +10,62 @@ public abstract class Piece {
   }
 
   private Board board;
-  private Position position;
+  private Pos pos;
   private Color color;
 
   protected Piece(Color color) {
     this.board = null;
-    this.position = null;
+    this.pos = null;
     this.color = color;
   }
 
   protected boolean addPosition(
-      Position position, MovementFlag movementFlag, Set<Position> positionSet) {
-    if (!board.isInsideBounds(position)) {
+      Pos pos, MovementFlag movementFlag, Set<Pos> posSet) {
+    if (!board.isInsideBounds(pos)) {
       return false;
     }
     switch (movementFlag) {
       case IF_EMPTY:
-        if (!board.isEmpty(position)) {
+        if (!board.isEmpty(pos)) {
           return false;
         }
         break;
       case IF_ENEMY:
-        if (board.isEmpty(position) || !isEnemy(position)) {
+        if (board.isEmpty(pos) || !isEnemy(pos)) {
           return false;
         }
         break;
       case IF_EMPTY_OR_ENEMY:
-        if (!board.isEmpty(position) && !isEnemy(position)) {
+        if (!board.isEmpty(pos) && !isEnemy(pos)) {
           return false;
         }
         break;
       default:
     }
-    positionSet.add(position);
+    posSet.add(pos);
     return true;
   }
 
   protected void addPositionsInDirection(
-      int rowOffset, int columnOffset, Set<Position> positionSet) {
-    Position position = this.position.offset(rowOffset, columnOffset);
-    while (board.isInsideBounds(position)) {
-      if (!board.isEmpty(position)) {
-        if (isEnemy(position)) {
-          positionSet.add(position);
+      int rowOffset, int columnOffset, Set<Pos> posSet) {
+    Pos pos = this.pos.offset(rowOffset, columnOffset);
+    while (board.isInsideBounds(pos)) {
+      if (!board.isEmpty(pos)) {
+        if (isEnemy(pos)) {
+          posSet.add(pos);
         }
         break;
       }
-      positionSet.add(position);
-      position = position.offset(rowOffset, columnOffset);
+      posSet.add(pos);
+      pos = pos.offset(rowOffset, columnOffset);
     }
   }
 
-  public boolean isEnemy(Position position) {
-    return !board.isEmpty(position) && board.get(position).color != color;
+  public boolean isEnemy(Pos pos) {
+    return !board.isEmpty(pos) && board.get(pos).color != color;
   }
 
-  public abstract Set<Position> validMoves();
+  public abstract Set<Pos> validMoves();
 
   public Board getBoard() {
     return board;
@@ -75,12 +75,12 @@ public abstract class Piece {
     this.board = board;
   }
 
-  public Position getPosition() {
-    return position;
+  public Pos getPos() {
+    return pos;
   }
 
-  public void setPosition(Position position) {
-    this.position = position;
+  public void setPos(Pos pos) {
+    this.pos = pos;
   }
 
   public Color getColor() {

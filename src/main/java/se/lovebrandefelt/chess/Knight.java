@@ -12,17 +12,17 @@ public class Knight extends Piece {
   }
 
   @Override
-  public Set<Position> validMoves() {
-    Set<Position> validMoves = new HashSet<>();
+  public Set<Pos> validMoves() {
+    Set<Pos> validMoves = new HashSet<>();
     Arrays.asList(
-            getPosition().offset(-2, -1),
-            getPosition().offset(-2, 1),
-            getPosition().offset(-1, -2),
-            getPosition().offset(-1, 2),
-            getPosition().offset(1, -2),
-            getPosition().offset(1, 2),
-            getPosition().offset(2, -1),
-            getPosition().offset(2, 1))
+            getPos().offset(-2, -1),
+            getPos().offset(-2, 1),
+            getPos().offset(-1, -2),
+            getPos().offset(-1, 2),
+            getPos().offset(1, -2),
+            getPos().offset(1, 2),
+            getPos().offset(2, -1),
+            getPos().offset(2, 1))
         .forEach((position -> addPosition(position, IF_EMPTY_OR_ENEMY, validMoves)));
     return validMoves;
   }

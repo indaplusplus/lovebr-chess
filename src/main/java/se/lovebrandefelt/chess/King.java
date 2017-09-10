@@ -12,18 +12,18 @@ public class King extends Piece {
   }
 
   @Override
-  public Set<Position> validMoves() {
-    Set<Position> validMoves = new HashSet<>();
+  public Set<Pos> validMoves() {
+    Set<Pos> validMoves = new HashSet<>();
     Arrays.asList(
-            getPosition().offset(-1, -1),
-            getPosition().offset(-1, 0),
-            getPosition().offset(-1, 1),
-            getPosition().offset(0, -1),
-            getPosition().offset(0, 0),
-            getPosition().offset(0, 1),
-            getPosition().offset(1, -1),
-            getPosition().offset(1, 0),
-            getPosition().offset(1, 1))
+            getPos().offset(-1, -1),
+            getPos().offset(-1, 0),
+            getPos().offset(-1, 1),
+            getPos().offset(0, -1),
+            getPos().offset(0, 0),
+            getPos().offset(0, 1),
+            getPos().offset(1, -1),
+            getPos().offset(1, 0),
+            getPos().offset(1, 1))
         .forEach((position -> addPosition(position, IF_EMPTY_OR_ENEMY, validMoves)));
     return validMoves;
   }
