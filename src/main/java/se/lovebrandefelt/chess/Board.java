@@ -53,4 +53,33 @@ public class Board {
     add(squares[from.getRow()][from.getCol()], to);
     remove(from);
   }
+
+  @Override
+  public String toString() {
+    StringBuilder stringBuilder = new StringBuilder("  ");
+    for (int col = 0; col < columns(); col ++) {
+      stringBuilder.append(String.format("%-2s", Pos.colToString(col)));
+    }
+    stringBuilder.append("\n");
+    for (int row = rows() - 1; row >= 0; row--) {
+      stringBuilder.append(String.format("%-2s", Pos.rowToString(row)));
+      for (Piece piece : squares[row]) {
+        if (piece == null) {
+          stringBuilder.append("  ");
+        } else {
+          switch (piece.getColor()) {
+            case WHITE:
+              stringBuilder.append(piece.getTypeId()).append(" ");
+              break;
+            case BLACK:
+              stringBuilder.append(Character.toLowerCase(piece.getTypeId())).append(" ");
+              break;
+            default:
+          }
+        }
+      }
+      stringBuilder.append("\n");
+    }
+    return stringBuilder.toString();
+  }
 }

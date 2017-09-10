@@ -5,7 +5,7 @@ import java.util.Set;
 
 public class Rook extends Piece {
   public Rook(Color color) {
-    super(color);
+    super(color, 'R');
   }
 
   @Override

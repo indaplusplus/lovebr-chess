@@ -5,7 +5,7 @@ import java.util.Set;
 
 public class Queen extends Piece {
   public Queen(Color color) {
-    super(color);
+    super(color, 'Q');
   }
 
   @Override

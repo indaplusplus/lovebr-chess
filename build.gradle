@@ -1,7 +1,5 @@
 version '1.0-SNAPSHOT'
 
-apply plugin: 'java'
-
 buildscript {
     repositories {
         mavenCentral()
@@ -15,18 +13,27 @@ buildscript {
     }
 }
 
-apply plugin: 'org.junit.platform.gradle.plugin'
+allprojects {
+    apply plugin: 'java'
+    apply plugin: 'org.junit.platform.gradle.plugin'
 
-sourceCompatibility = 1.8
+    sourceCompatibility = 1.8
 
-repositories {
-    mavenCentral()
+    repositories {
+        mavenCentral()
+    }
+
+    dependencies {
+        testCompile group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: junitVersion
+        testCompile group: 'org.junit.platform', name: 'junit-platform-runner', version: junitPlatformVersion
+        testRuntime group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: junitVersion
+    }
 }
 
-dependencies {
-    testCompile group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: junitVersion
-    testCompile group: 'org.junit.platform', name: 'junit-platform-runner', version: junitPlatformVersion
-    testRuntime group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: junitVersion
+subprojects {
+    dependencies {
+        compile rootProject
+    }
 }
 
 jar.dependsOn 'javadoc'

@@ -9,18 +9,20 @@ public abstract class Piece {
     IF_EMPTY_OR_ENEMY
   }
 
+  private final char typeId;
+
   private Board board;
   private Pos pos;
   private Color color;
 
-  protected Piece(Color color) {
+  protected Piece(Color color, char typeId) {
     this.board = null;
     this.pos = null;
     this.color = color;
+    this.typeId = typeId;
   }
 
-  protected boolean addPosition(
-      Pos pos, MovementFlag movementFlag, Set<Pos> posSet) {
+  protected boolean addPosition(Pos pos, MovementFlag movementFlag, Set<Pos> posSet) {
     if (!board.isInsideBounds(pos)) {
       return false;
     }
@@ -46,8 +48,7 @@ public abstract class Piece {
     return true;
   }
 
-  protected void addPositionsInDirection(
-      int rowOffset, int columnOffset, Set<Pos> posSet) {
+  protected void addPositionsInDirection(int rowOffset, int columnOffset, Set<Pos> posSet) {
     Pos pos = this.pos.offset(rowOffset, columnOffset);
     while (board.isInsideBounds(pos)) {
       if (!board.isEmpty(pos)) {
@@ -66,6 +67,10 @@ public abstract class Piece {
   }
 
   public abstract Set<Pos> validMoves();
+
+  public char getTypeId() {
+    return typeId;
+  }
 
   public Board getBoard() {
     return board;

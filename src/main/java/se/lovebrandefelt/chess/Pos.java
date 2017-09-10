@@ -13,9 +13,9 @@ public class Pos {
   }
 
   public Pos(String posString) {
-    if (posString.matches("[A-Z]+[0-9]+")) {
-      String rowString = posString.replaceFirst("[A-Z]+", "");
-      String colString = posString.replaceFirst("[0-9]+", "");
+    if (posString.matches("[a-zA-Z]+[0-9]+")) {
+      String rowString = posString.replaceFirst("[a-zA-Z]+", "");
+      String colString = posString.replaceFirst("[0-9]+", "").toUpperCase();
       this.row = Integer.parseInt(rowString) - 1;
       this.col = 0;
       colString.chars().forEach((c) -> {
@@ -39,14 +39,13 @@ public class Pos {
     return col;
   }
 
-  public String rowToString() {
+  public static String rowToString(int row) {
     return "" + (row + 1);
   }
 
-  public String colToString() {
+  public static String colToString(int col) {
     StringBuilder stringBuilder = new StringBuilder();
-    int col = this.col;
-    while (col > 0) {
+    while (col >= 0) {
       char nextLetter = (char) (col % 26 + 65);
       stringBuilder.insert(0, nextLetter);
       col = col / 26 - 1;
