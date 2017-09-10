@@ -30,6 +30,6 @@ class KnightTest {
                 new Pos("F5"),
                 new Pos("C6"),
                 new Pos("E6")))),
-        knight.validMoves());
+        knight.legalMoves());
   }
 }

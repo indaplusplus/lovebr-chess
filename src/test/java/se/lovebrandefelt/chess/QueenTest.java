@@ -47,6 +47,6 @@ public class QueenTest {
                 new Pos("F4"),
                 new Pos("G4"),
                 new Pos("H4"))),
-        queen.validMoves());
+        queen.legalMoves());
   }
 }

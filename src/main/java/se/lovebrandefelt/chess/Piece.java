@@ -66,7 +66,7 @@ public abstract class Piece {
     return !board.isEmpty(pos) && board.get(pos).color != color;
   }
 
-  public abstract Set<Pos> validMoves();
+  public abstract Set<Pos> legalMoves();
 
   public char getTypeId() {
     return typeId;

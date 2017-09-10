@@ -3,14 +3,45 @@ package se.lovebrandefelt.chess.console;
 import static se.lovebrandefelt.chess.Color.WHITE;
 import static se.lovebrandefelt.chess.Game.defaultSetup;
 
+import java.util.Scanner;
 import se.lovebrandefelt.chess.Game;
 import se.lovebrandefelt.chess.Pos;
 
 public class ConsoleMain {
   public static void main(String[] args) {
+    Scanner scanner = new Scanner(System.in);
     Game game = new Game(defaultSetup(), WHITE);
-    game.makeMove(new Pos("E2"), new Pos("E3"));
-    game.makeMove(new Pos("B8"), new Pos("C6"));
-    System.out.println(game.getBoard());
+    while (true) {
+      System.out.println(game.getBoard());
+      Pos from;
+      Pos to;
+      while (true) {
+        System.out.print("Move from: ");
+        try {
+          from = new Pos(scanner.next());
+        } catch (IllegalArgumentException e) {
+          System.out.println("That is not a square!");
+          continue;
+        }
+        if (game.validFroms().contains(from)) {
+          break;
+        }
+        System.out.println("You don't have a piece on that square!");
+      }
+      while (true) {
+        System.out.print("Move to: ");
+        try {
+          to = new Pos(scanner.next());
+        } catch (IllegalArgumentException e) {
+          System.out.println("That is not a square!");
+          continue;
+        }
+        if (game.getBoard().get(from).legalMoves().contains(to)) {
+          break;
+        }
+        System.out.println("That move is not legal!");
+      }
+      game.makeMove(from, to);
+    }
   }
 }

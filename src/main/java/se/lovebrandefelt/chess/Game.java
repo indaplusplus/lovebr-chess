@@ -5,6 +5,7 @@ import static se.lovebrandefelt.chess.Color.WHITE;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -45,9 +46,22 @@ public class Game {
     return board;
   }
 
+  public Set<Pos> validFroms() {
+    Set<Pos> validFroms = new HashSet<>();
+    for (int row = 0; row < getBoard().rows(); row++) {
+      for (int col = 0; col < getBoard().columns(); col++) {
+        Pos pos = new Pos(row, col);
+        if (!getBoard().isEmpty(pos) && getBoard().get(pos).getColor() == currentPlayer) {
+          validFroms.add(pos);
+        }
+      }
+    }
+    return validFroms;
+  }
+
   public boolean makeMove(Pos from, Pos to) {
     if (!board.isEmpty(from) && board.get(from).getColor() == currentPlayer) {
-      Set<Pos> validMoves = board.get(from).validMoves();
+      Set<Pos> validMoves = board.get(from).legalMoves();
       if (validMoves.contains(to)) {
         if (!board.isEmpty(to)) {
           captures.get(currentPlayer).add(board.get(to));

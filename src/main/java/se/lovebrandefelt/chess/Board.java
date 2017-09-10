@@ -56,16 +56,19 @@ public class Board {
 
   @Override
   public String toString() {
-    StringBuilder stringBuilder = new StringBuilder("  ");
+    StringBuilder stringBuilder = new StringBuilder("");
+    StringBuilder colStringBuilder = new StringBuilder("  ");
     for (int col = 0; col < columns(); col ++) {
-      stringBuilder.append(String.format("%-2s", Pos.colToString(col)));
+      colStringBuilder.append(String.format("%-2s", Pos.colToString(col)));
     }
+    stringBuilder.append(colStringBuilder);
     stringBuilder.append("\n");
     for (int row = rows() - 1; row >= 0; row--) {
-      stringBuilder.append(String.format("%-2s", Pos.rowToString(row)));
+      String rowString = String.format("%-2s", Pos.rowToString(row));
+      stringBuilder.append(rowString);
       for (Piece piece : squares[row]) {
         if (piece == null) {
-          stringBuilder.append("  ");
+          stringBuilder.append("- ");
         } else {
           switch (piece.getColor()) {
             case WHITE:
@@ -78,8 +81,10 @@ public class Board {
           }
         }
       }
+      stringBuilder.append(rowString);
       stringBuilder.append("\n");
     }
+    stringBuilder.append(colStringBuilder.toString().toLowerCase());
     return stringBuilder.toString();
   }
 }

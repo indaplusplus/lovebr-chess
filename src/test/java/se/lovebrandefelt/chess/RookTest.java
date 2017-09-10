@@ -33,6 +33,6 @@ public class RookTest {
             new Pos("E4"),
             new Pos("F4"),
             new Pos("G4"),
-            new Pos("H4"))), rook.validMoves());
+            new Pos("H4"))), rook.legalMoves());
   }
 }

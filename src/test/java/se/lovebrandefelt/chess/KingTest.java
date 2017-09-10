@@ -30,6 +30,6 @@ class KingTest {
                 new Pos("C5"),
                 new Pos("D5"),
                 new Pos("E5")))),
-        king.validMoves());
+        king.legalMoves());
   }
 }

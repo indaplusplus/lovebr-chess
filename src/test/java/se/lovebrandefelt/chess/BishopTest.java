@@ -35,6 +35,6 @@ public class BishopTest {
                 new Pos("C5"),
                 new Pos("B6"),
                 new Pos("A7"))),
-        bishop.validMoves());
+        bishop.legalMoves());
   }
 }
