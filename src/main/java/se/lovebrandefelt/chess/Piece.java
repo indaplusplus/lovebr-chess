@@ -22,7 +22,7 @@ public abstract class Piece {
     this.typeId = typeId;
   }
 
-  protected boolean addPosition(Pos pos, MovementFlag movementFlag, Set<Pos> posSet) {
+  protected boolean addPositionToSet(Pos pos, MovementFlag movementFlag, Set<Pos> posSet) {
     if (!board.isInsideBounds(pos)) {
       return false;
     }
@@ -48,7 +48,7 @@ public abstract class Piece {
     return true;
   }
 
-  protected void addPositionsInDirection(int rowOffset, int columnOffset, Set<Pos> posSet) {
+  protected void addPositionsInDirectionToSet(int rowOffset, int columnOffset, Set<Pos> posSet) {
     Pos pos = this.pos.offset(rowOffset, columnOffset);
     while (board.isInsideBounds(pos)) {
       if (!board.isEmpty(pos)) {
@@ -68,6 +68,8 @@ public abstract class Piece {
 
   public abstract Set<Pos> legalMoves();
 
+  public void onMove() {}
+
   public char getTypeId() {
     return typeId;
   }
@@ -85,7 +87,12 @@ public abstract class Piece {
   }
 
   public void setPos(Pos pos) {
-    this.pos = pos;
+    if (this.pos == null) {
+      this.pos = pos;
+    } else {
+      this.pos = pos;
+      onMove();
+    }
   }
 
   public Color getColor() {

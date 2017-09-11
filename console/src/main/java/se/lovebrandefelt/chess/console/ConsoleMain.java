@@ -13,6 +13,7 @@ public class ConsoleMain {
     Game game = new Game(defaultSetup(), WHITE);
     while (true) {
       System.out.println(game.getBoard());
+      System.out.println(game.getCurrentPlayer() + "'s turn");
       Pos from;
       Pos to;
       while (true) {

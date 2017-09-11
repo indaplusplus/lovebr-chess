@@ -47,4 +47,22 @@ class PawnTest {
     assertFalse(whitePawn.legalMoves().contains(new Pos("B2")));
     assertFalse(blackPawn.legalMoves().contains(new Pos("G7")));
   }
+
+  @Test
+  void canMoveTwoStepsForwardOnFirstMove() {
+    Pawn whitePawn = board.add(new Pawn(WHITE), new Pos("A1"));
+    Pawn blackPawn = board.add(new Pawn(BLACK), new Pos("H8"));
+    assertTrue(whitePawn.legalMoves().contains(new Pos("A3")));
+    assertTrue(blackPawn.legalMoves().contains(new Pos("H6")));
+  }
+
+  @Test
+  void cantMoveTwoStepsOnNonFirstMove() {
+    Pawn whitePawn = board.add(new Pawn(WHITE), new Pos("A1"));
+    whitePawn.setPos(whitePawn.getPos().offset(1, 0));
+    Pawn blackPawn = board.add(new Pawn(BLACK), new Pos("H8"));
+    blackPawn.setPos(whitePawn.getPos().offset(-1, 0));
+    assertFalse(whitePawn.legalMoves().contains(new Pos("A4")));
+    assertFalse(blackPawn.legalMoves().contains(new Pos("H5")));
+  }
 }

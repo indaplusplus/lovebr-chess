@@ -11,14 +11,14 @@ public class Queen extends Piece {
   @Override
   public Set<Pos> legalMoves() {
     Set<Pos> legalMoves = new HashSet<>();
-    addPositionsInDirection(-1, -1, legalMoves);
-    addPositionsInDirection(-1, 1, legalMoves);
-    addPositionsInDirection(1, -1, legalMoves);
-    addPositionsInDirection(1, 1, legalMoves);
-    addPositionsInDirection(0, -1, legalMoves);
-    addPositionsInDirection(0, 1, legalMoves);
-    addPositionsInDirection(-1, 0, legalMoves);
-    addPositionsInDirection(1, 0, legalMoves);
+    addPositionsInDirectionToSet(-1, -1, legalMoves);
+    addPositionsInDirectionToSet(-1, 1, legalMoves);
+    addPositionsInDirectionToSet(1, -1, legalMoves);
+    addPositionsInDirectionToSet(1, 1, legalMoves);
+    addPositionsInDirectionToSet(0, -1, legalMoves);
+    addPositionsInDirectionToSet(0, 1, legalMoves);
+    addPositionsInDirectionToSet(-1, 0, legalMoves);
+    addPositionsInDirectionToSet(1, 0, legalMoves);
     return legalMoves;
   }
 }

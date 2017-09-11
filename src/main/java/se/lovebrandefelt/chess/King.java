@@ -24,7 +24,7 @@ public class King extends Piece {
             getPos().offset(1, -1),
             getPos().offset(1, 0),
             getPos().offset(1, 1))
-        .forEach((position -> addPosition(position, IF_EMPTY_OR_ENEMY, legalMoves)));
+        .forEach((position -> addPositionToSet(position, IF_EMPTY_OR_ENEMY, legalMoves)));
     return legalMoves;
   }
 }

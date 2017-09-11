@@ -23,7 +23,7 @@ public class Knight extends Piece {
             getPos().offset(1, 2),
             getPos().offset(2, -1),
             getPos().offset(2, 1))
-        .forEach((position -> addPosition(position, IF_EMPTY_OR_ENEMY, legalMoves)));
+        .forEach((position -> addPositionToSet(position, IF_EMPTY_OR_ENEMY, legalMoves)));
     return legalMoves;
   }
 }
