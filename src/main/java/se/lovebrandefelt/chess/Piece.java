@@ -1,6 +1,7 @@
 package se.lovebrandefelt.chess;
 
 import java.util.Set;
+import se.lovebrandefelt.chess.Board.MoveEvent;
 
 public abstract class Piece {
   public enum MovementFlag {
@@ -68,7 +69,9 @@ public abstract class Piece {
 
   public abstract Set<Pos> legalMoves();
 
-  public void onMove() {}
+  public void onMove(MoveEvent move) {}
+
+  public void onUndoMove(MoveEvent move) {}
 
   public char getTypeId() {
     return typeId;
@@ -87,12 +90,7 @@ public abstract class Piece {
   }
 
   public void setPos(Pos pos) {
-    if (this.pos == null) {
-      this.pos = pos;
-    } else {
-      this.pos = pos;
-      onMove();
-    }
+    this.pos = pos;
   }
 
   public Color getColor() {
