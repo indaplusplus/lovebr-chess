@@ -15,16 +15,15 @@ public class King extends Piece {
   public Set<Pos> legalMoves() {
     Set<Pos> legalMoves = new HashSet<>();
     Arrays.asList(
-            getPos().offset(-1, -1),
-            getPos().offset(-1, 0),
-            getPos().offset(-1, 1),
-            getPos().offset(0, -1),
-            getPos().offset(0, 0),
-            getPos().offset(0, 1),
-            getPos().offset(1, -1),
-            getPos().offset(1, 0),
-            getPos().offset(1, 1))
-        .forEach((position -> addPositionToSet(position, IF_EMPTY_OR_ENEMY, legalMoves)));
+            getPos().offset(new Pos(-1, -1)),
+            getPos().offset(new Pos(-1, 0)),
+            getPos().offset(new Pos(-1, 1)),
+            getPos().offset(new Pos(0, -1)),
+            getPos().offset(new Pos(0, 1)),
+            getPos().offset(new Pos(1, -1)),
+            getPos().offset(new Pos(1, 0)),
+            getPos().offset(new Pos(1, 1)))
+        .forEach((position -> addMoveIfLegal(position, IF_EMPTY_OR_ENEMY, legalMoves)));
     return legalMoves;
   }
 }

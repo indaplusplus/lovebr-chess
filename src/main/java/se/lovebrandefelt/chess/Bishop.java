@@ -11,10 +11,10 @@ public class Bishop extends Piece {
   @Override
   public Set<Pos> legalMoves() {
     Set<Pos> legalMoves = new HashSet<>();
-    addPositionsInDirectionToSet(-1, -1, legalMoves);
-    addPositionsInDirectionToSet(-1, 1, legalMoves);
-    addPositionsInDirectionToSet(1, -1, legalMoves);
-    addPositionsInDirectionToSet(1, 1, legalMoves);
+    addMovesInDirectionIfLegal(new Pos(-1, -1), legalMoves);
+    addMovesInDirectionIfLegal(new Pos(-1, 1), legalMoves);
+    addMovesInDirectionIfLegal(new Pos(1, -1), legalMoves);
+    addMovesInDirectionIfLegal(new Pos(1, 1), legalMoves);
     return legalMoves;
   }
 }

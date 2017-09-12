@@ -59,9 +59,9 @@ class PawnTest {
   @Test
   void cantMoveTwoStepsOnNonFirstMove() {
     Pawn whitePawn = board.add(new Pawn(WHITE), new Pos("A1"));
-    whitePawn.setPos(whitePawn.getPos().offset(1, 0));
+    board.move(whitePawn.getPos(), new Pos("A2"));
     Pawn blackPawn = board.add(new Pawn(BLACK), new Pos("H8"));
-    blackPawn.setPos(whitePawn.getPos().offset(-1, 0));
+    board.move(blackPawn.getPos(), new Pos("H7"));
     assertFalse(whitePawn.legalMoves().contains(new Pos("A4")));
     assertFalse(blackPawn.legalMoves().contains(new Pos("H5")));
   }

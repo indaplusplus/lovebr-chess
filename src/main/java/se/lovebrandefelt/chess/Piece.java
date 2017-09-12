@@ -1,7 +1,6 @@
 package se.lovebrandefelt.chess;
 
 import java.util.Set;
-import se.lovebrandefelt.chess.Board.MoveEvent;
 
 public abstract class Piece {
   public enum MovementFlag {
@@ -23,7 +22,7 @@ public abstract class Piece {
     this.typeId = typeId;
   }
 
-  protected boolean addPositionToSet(Pos pos, MovementFlag movementFlag, Set<Pos> posSet) {
+  protected boolean addMoveIfLegal(Pos pos, MovementFlag movementFlag, Set<Pos> posSet) {
     if (!board.isInsideBounds(pos)) {
       return false;
     }
@@ -49,8 +48,8 @@ public abstract class Piece {
     return true;
   }
 
-  protected void addPositionsInDirectionToSet(int rowOffset, int columnOffset, Set<Pos> posSet) {
-    Pos pos = this.pos.offset(rowOffset, columnOffset);
+  protected void addMovesInDirectionIfLegal(Pos direction, Set<Pos> posSet) {
+    Pos pos = this.pos.offset(direction);
     while (board.isInsideBounds(pos)) {
       if (!board.isEmpty(pos)) {
         if (isEnemy(pos)) {
@@ -59,7 +58,7 @@ public abstract class Piece {
         break;
       }
       posSet.add(pos);
-      pos = pos.offset(rowOffset, columnOffset);
+      pos = pos.offset(direction);
     }
   }
 
@@ -68,10 +67,6 @@ public abstract class Piece {
   }
 
   public abstract Set<Pos> legalMoves();
-
-  public void onMove(MoveEvent move) {}
-
-  public void onUndoMove(MoveEvent move) {}
 
   public char getTypeId() {
     return typeId;

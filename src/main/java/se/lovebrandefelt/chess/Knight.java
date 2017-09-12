@@ -15,15 +15,15 @@ public class Knight extends Piece {
   public Set<Pos> legalMoves() {
     Set<Pos> legalMoves = new HashSet<>();
     Arrays.asList(
-            getPos().offset(-2, -1),
-            getPos().offset(-2, 1),
-            getPos().offset(-1, -2),
-            getPos().offset(-1, 2),
-            getPos().offset(1, -2),
-            getPos().offset(1, 2),
-            getPos().offset(2, -1),
-            getPos().offset(2, 1))
-        .forEach((position -> addPositionToSet(position, IF_EMPTY_OR_ENEMY, legalMoves)));
+            getPos().offset(new Pos(-2, -1)),
+            getPos().offset(new Pos(-2, 1)),
+            getPos().offset(new Pos(-1, -2)),
+            getPos().offset(new Pos(-1, 2)),
+          getPos().offset(new Pos(1, -2)),
+            getPos().offset(new Pos(1, 2)),
+            getPos().offset(new Pos(2, -1)),
+            getPos().offset(new Pos(2, 1)))
+        .forEach((position -> addMoveIfLegal(position, IF_EMPTY_OR_ENEMY, legalMoves)));
     return legalMoves;
   }
 }

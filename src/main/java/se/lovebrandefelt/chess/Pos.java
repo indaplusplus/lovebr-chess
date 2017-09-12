@@ -1,8 +1,5 @@
 package se.lovebrandefelt.chess;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 public class Pos {
   private int row;
   private int col;
@@ -27,8 +24,8 @@ public class Pos {
     throw new IllegalArgumentException();
   }
 
-  public Pos offset(int row, int column) {
-    return new Pos(this.row + row, this.col + column);
+  public Pos offset(Pos offset) {
+    return new Pos(this.row + offset.row, this.col + offset.col);
   }
 
   public int getRow() {

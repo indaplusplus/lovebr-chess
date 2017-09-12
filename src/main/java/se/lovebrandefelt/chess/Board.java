@@ -1,6 +1,5 @@
 package se.lovebrandefelt.chess;
 
-import java.util.ArrayList;
 import java.util.Stack;
 
 public class Board {
@@ -90,11 +89,6 @@ public class Board {
             squares[from.getRow()][from.getCol()], from, to, squares[to.getRow()][to.getCol()]));
     add(squares[from.getRow()][from.getCol()], to);
     remove(from);
-    for (int row = 0; row < rows(); row++) {
-      for (int col = 0; col < columns(); col++) {
-        squares[row][col].onMove(history.peek());
-      }
-    }
   }
 
   public void undoMove() {
@@ -103,11 +97,10 @@ public class Board {
     if (move.getCaptured() != null) {
       add(move.getCaptured(), move.getTo());
     }
-    for (int row = 0; row < rows(); row++) {
-      for (int col = 0; col < columns(); col++) {
-        squares[row][col].onUndoMove(move);
-      }
-    }
+  }
+
+  public Stack<MoveEvent> getHistory() {
+    return history;
   }
 
   @Override
