@@ -1,6 +1,7 @@
 package se.lovebrandefelt.chess;
 
 import java.util.Set;
+import java.util.function.BiPredicate;
 
 public abstract class Piece {
   public enum MovementFlag {
@@ -59,6 +60,16 @@ public abstract class Piece {
       }
       posSet.add(pos);
       pos = pos.offset(direction);
+    }
+  }
+
+  protected void addMovesInDirection(
+      Pos direction, int maxMoves, boolean canCapture, Set<Pos> posSet) {
+    Pos pos = this.pos.offset(direction);
+    for (int i = 0; i < maxMoves && board.isInsideBounds(pos); i++) {
+      if ( ! canCapture && !board.isEmpty(pos) ) {
+
+      }
     }
   }
 
