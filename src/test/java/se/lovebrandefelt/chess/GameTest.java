@@ -42,15 +42,14 @@ public class GameTest {
   void onlyTheCurrentPlayerCanMoveHisPieces() {
     Pos from = new Pos("B8");
     Pos to = new Pos("C6");
-    game.makeMove(from, to);
-    assertFalse(game.legalMovesWithCheck(from).contains(to));
+    game.makeMove(from,  to);
+    assertFalse(game.legalMovesWithCheck(from).stream().anyMatch((move) -> move.getTo().equals(to)));
   }
 
   @Test
   void makingAValidMoveShouldPassTheTurn() {
     Pos from = new Pos("B1");
     Pos to = new Pos("C3");
-    Piece toBeMoved = game.getBoard().get(from);
     game.makeMove(from, to);
     assertEquals(BLACK, game.getCurrentPlayer());
   }

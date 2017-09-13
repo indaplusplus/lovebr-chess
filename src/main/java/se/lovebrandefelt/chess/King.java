@@ -10,8 +10,8 @@ public class King extends Piece {
   }
 
   @Override
-  public Set<Pos> legalMoves() {
-    Set<Pos> legalMoves = new HashSet<>();
+  public Set<Move> legalMoves() {
+    Set<Move> legalMoves = new HashSet<>();
     Arrays.asList(
             new Pos(-1, -1),
             new Pos(-1, 0),
@@ -21,7 +21,7 @@ public class King extends Piece {
             new Pos(1, -1),
             new Pos(1, 0),
             new Pos(1, 1))
-        .forEach((direction -> addMoveInDirection(direction, legalMoves)));
+        .forEach((direction -> addMoveInDirection(direction, legalMoves, Move::new)));
     return legalMoves;
   }
 }

@@ -6,54 +6,8 @@ import static se.lovebrandefelt.chess.Color.WHITE;
 import java.util.Stack;
 
 public class Board {
-  public class MoveEvent {
-    private Piece piece;
-    private Pos from;
-    private Pos to;
-    private Piece captured;
-
-    protected MoveEvent(Piece piece, Pos from, Pos to, Piece captured) {
-      this.piece = piece;
-      this.from = from;
-      this.to = to;
-      this.captured = captured;
-    }
-
-    public Piece getPiece() {
-      return piece;
-    }
-
-    public void setPiece(Piece piece) {
-      this.piece = piece;
-    }
-
-    public Pos getFrom() {
-      return from;
-    }
-
-    public void setFrom(Pos from) {
-      this.from = from;
-    }
-
-    public Pos getTo() {
-      return to;
-    }
-
-    public void setTo(Pos to) {
-      this.to = to;
-    }
-
-    public Piece getCaptured() {
-      return captured;
-    }
-
-    public void setCaptured(Piece captured) {
-      this.captured = captured;
-    }
-  }
-
   private Piece[][] squares;
-  private Stack<MoveEvent> history;
+  private Stack<Move> history;
 
   public Board(int rows, int columns) {
     this.squares = new Piece[rows][columns];
@@ -89,7 +43,7 @@ public class Board {
         Pos currentPos = new Pos(row, col);
         if (!isEmpty(currentPos)
             && get(currentPos).getColor() == by
-            && get(currentPos).legalMoves().contains(pos)) {
+            && get(currentPos).legalMoves().stream().anyMatch((move) -> move.getTo().equals(pos))) {
           return true;
         }
       }
@@ -131,22 +85,16 @@ public class Board {
     return piece;
   }
 
-  public void move(Pos from, Pos to) {
-    history.push(new MoveEvent(remove(from), from, to, get(to)));
-    add(history.peek().getPiece(), to);
+  public void move(Move move) {
+    move.perform(this);
+    history.push(move);
   }
 
   public void undoMove() {
-    MoveEvent move = history.pop();
-    add(move.piece, move.from);
-    if (move.captured != null) {
-      add(move.captured, move.to);
-    } else {
-      remove(move.to);
-    }
+    history.pop().undo(this);
   }
 
-  public Stack<MoveEvent> getHistory() {
+  public Stack<Move> getHistory() {
     return history;
   }
 
@@ -161,9 +109,8 @@ public class Board {
     stringBuilder.append(colStringBuilder);
     stringBuilder.append("Captures: ");
     history
-        .stream()
-        .filter((move) -> move.getCaptured() != null && move.getCaptured().getColor() == WHITE)
-        .map(MoveEvent::getCaptured)
+        .stream().filter((move) -> move.getCaptured() != null && move.getCaptured().getColor() == WHITE)
+        .map(Move::getCaptured)
         .sorted()
         .forEach((captured) -> stringBuilder.append(captured.getTypeId()).append(' '));
     stringBuilder.append('\n');
@@ -193,7 +140,7 @@ public class Board {
     history
         .stream()
         .filter((move) -> move.getCaptured() != null && move.getCaptured().getColor() == BLACK)
-        .map(MoveEvent::getCaptured)
+        .map(Move::getCaptured)
         .sorted()
         .forEach((captured) -> stringBuilder.append(captured.getTypeId()).append(' '));
     return stringBuilder.toString();

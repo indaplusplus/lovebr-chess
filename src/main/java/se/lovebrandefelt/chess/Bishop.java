@@ -9,12 +9,12 @@ public class Bishop extends Piece {
   }
 
   @Override
-  public Set<Pos> legalMoves() {
-    Set<Pos> legalMoves = new HashSet<>();
-    addMovesInDirection(new Pos(-1, -1), legalMoves);
-    addMovesInDirection(new Pos(-1, 1), legalMoves);
-    addMovesInDirection(new Pos(1, -1), legalMoves);
-    addMovesInDirection(new Pos(1, 1), legalMoves);
+  public Set<Move> legalMoves() {
+    Set<Move> legalMoves = new HashSet<>();
+    addMovesInDirection(new Pos(-1, -1), legalMoves, Move::new);
+    addMovesInDirection(new Pos(-1, 1), legalMoves, Move::new);
+    addMovesInDirection(new Pos(1, -1), legalMoves, Move::new);
+    addMovesInDirection(new Pos(1, 1), legalMoves, Move::new);
     return legalMoves;
   }
 }

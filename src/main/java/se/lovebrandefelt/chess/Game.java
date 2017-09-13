@@ -8,6 +8,7 @@ import static se.lovebrandefelt.chess.Game.State.IN_PROGRESS;
 import static se.lovebrandefelt.chess.Game.State.WHITE_WON;
 
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -64,24 +65,28 @@ public class Game {
   }
 
   public void makeMove(Pos from, Pos to) {
-    board.move(from, to);
-    currentPlayer = currentPlayer.next();
+    Optional<Move> maybeMove = getBoard().get(from).legalMoves().stream().filter((move) -> move.getTo().equals(to)).findFirst();
+    maybeMove.ifPresent((move) -> {
+      board.move(move);
+      currentPlayer = currentPlayer.next();
+    });
   }
 
-  public Set<Pos> legalMovesWithCheck(Pos from) {
-    Set<Pos> posSet = new HashSet<>();
+  public Set<Move> legalMovesWithCheck(Pos from) {
+    Set<Move> moveSet = new HashSet<>();
     if (!board.isEmpty(from) && board.get(from).getColor() == currentPlayer) {
-      for (Pos to : board.get(from).legalMoves()) {
-        if (!movePutsCurrentPlayerInCheck(from, to)) {
-          posSet.add(to);
+      for (Move move : board.get(from).legalMoves()) {
+        if (!movePutsCurrentPlayerInCheck(move)) {
+          moveSet.add(move);
         }
       }
+
     }
-    return posSet;
+    return moveSet;
   }
 
-  public boolean movePutsCurrentPlayerInCheck(Pos from, Pos to) {
-    board.move(from, to);
+  public boolean movePutsCurrentPlayerInCheck(Move move) {
+    board.move(move);
     if (board.kingInCheck(currentPlayer)) {
       board.undoMove();
       return true;

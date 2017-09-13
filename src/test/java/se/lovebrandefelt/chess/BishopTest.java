@@ -6,6 +6,7 @@ import static se.lovebrandefelt.chess.Color.WHITE;
 
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.stream.Collectors;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -35,6 +36,6 @@ public class BishopTest {
                 new Pos("C5"),
                 new Pos("B6"),
                 new Pos("A7"))),
-        bishop.legalMoves());
+        bishop.legalMoves().stream().map(Move::getTo).collect(Collectors.toSet()));
   }
 }

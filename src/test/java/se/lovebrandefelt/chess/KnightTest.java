@@ -5,6 +5,7 @@ import static se.lovebrandefelt.chess.Color.WHITE;
 
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.stream.Collectors;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -30,6 +31,6 @@ class KnightTest {
                 new Pos("F5"),
                 new Pos("C6"),
                 new Pos("E6")))),
-        knight.legalMoves());
+        knight.legalMoves().stream().map(Move::getTo).collect(Collectors.toSet()));
   }
 }
