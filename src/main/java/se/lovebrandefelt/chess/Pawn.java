@@ -19,7 +19,7 @@ public class Pawn extends Piece {
         addMovesInDirection(new Pos(1, 0), legalMoves, CANT_CAPTURE, 1);
         addMovesInDirection(new Pos(1, -1), legalMoves, MUST_CAPTURE, 1);
         addMovesInDirection(new Pos(1, 1), legalMoves, MUST_CAPTURE, 1);
-        if (getBoard().getHistory().parallelStream().noneMatch((move) -> move.getPiece() != this)
+        if (getBoard().getHistory().stream().noneMatch((move) -> move.getPiece() == this)
             && getBoard().isEmpty(getPos().offset(new Pos(1, 0)))) {
           addMovesInDirection(new Pos(2, 0), legalMoves, CANT_CAPTURE, 1);
         }
@@ -28,7 +28,7 @@ public class Pawn extends Piece {
         addMovesInDirection(new Pos(-1, 0), legalMoves, CANT_CAPTURE, 1);
         addMovesInDirection(new Pos(-1, -1), legalMoves, MUST_CAPTURE, 1);
         addMovesInDirection(new Pos(-1, 1), legalMoves, MUST_CAPTURE, 1);
-        if (getBoard().getHistory().parallelStream().noneMatch((move) -> move.getPiece() != this)
+        if (getBoard().getHistory().stream().noneMatch((move) -> move.getPiece() == this)
             && getBoard().isEmpty(getPos().offset(new Pos(-1, 0)))) {
           addMovesInDirection(new Pos(-2, 0), legalMoves, CANT_CAPTURE, 1);
         }

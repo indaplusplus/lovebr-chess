@@ -43,7 +43,7 @@ public class GameTest {
     Pos from = new Pos("B8");
     Pos to = new Pos("C6");
     game.makeMove(from, to);
-    assertFalse(game.makeMove(from, to));
+    assertFalse(game.legalMovesWithCheck(from).contains(to));
   }
 
   @Test

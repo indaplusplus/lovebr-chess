@@ -2,25 +2,29 @@ package se.lovebrandefelt.chess;
 
 import static se.lovebrandefelt.chess.Color.BLACK;
 import static se.lovebrandefelt.chess.Color.WHITE;
+import static se.lovebrandefelt.chess.Game.State.BLACK_WON;
+import static se.lovebrandefelt.chess.Game.State.DRAW;
+import static se.lovebrandefelt.chess.Game.State.IN_PROGRESS;
+import static se.lovebrandefelt.chess.Game.State.WHITE_WON;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public class Game {
+  public enum State {
+    IN_PROGRESS,
+    WHITE_WON,
+    BLACK_WON,
+    DRAW
+  }
+
   private Board board;
   private Color currentPlayer;
-  private Map<Color, List<Piece>> captures;
 
   public <T extends Piece> Game(Board setup, Color startingPlayer) {
     board = setup;
     currentPlayer = startingPlayer;
-    captures = new HashMap<>();
-    captures.put(WHITE, new ArrayList<>());
-    captures.put(BLACK, new ArrayList<>());
   }
 
   public static Board defaultSetup() {
@@ -50,28 +54,62 @@ public class Game {
     Set<Pos> validFroms = new HashSet<>();
     for (int row = 0; row < getBoard().rows(); row++) {
       for (int col = 0; col < getBoard().columns(); col++) {
-        Pos pos = new Pos(row, col);
-        if (!getBoard().isEmpty(pos) && getBoard().get(pos).getColor() == currentPlayer) {
-          validFroms.add(pos);
+        Pos from = new Pos(row, col);
+        if (legalMovesWithCheck(from).size() > 0) {
+          validFroms.add(from);
         }
       }
     }
     return validFroms;
   }
 
-  public boolean makeMove(Pos from, Pos to) {
+  public void makeMove(Pos from, Pos to) {
+    board.move(from, to);
+    currentPlayer = currentPlayer.next();
+  }
+
+  public Set<Pos> legalMovesWithCheck(Pos from) {
+    Set<Pos> posSet = new HashSet<>();
     if (!board.isEmpty(from) && board.get(from).getColor() == currentPlayer) {
-      Set<Pos> validMoves = board.get(from).legalMoves();
-      if (validMoves.contains(to)) {
-        if (!board.isEmpty(to)) {
-          captures.get(currentPlayer).add(board.get(to));
+      for (Pos to : board.get(from).legalMoves()) {
+        if (!movePutsCurrentPlayerInCheck(from, to)) {
+          posSet.add(to);
         }
-        board.move(from, to);
-        currentPlayer = Color.values()[(currentPlayer.ordinal() + 1) % Color.values().length];
-        return true;
+      }
+      /*return board
+          .get(from)
+          .legalMoves()
+          .stream()
+          .filter((to) -> !movePutsCurrentPlayerInCheck(from, to))
+          .collect(Collectors.toSet());*/
+    }
+    return posSet;
+  }
+
+  public boolean movePutsCurrentPlayerInCheck(Pos from, Pos to) {
+    board.move(from, to);
+    if (board.kingInCheck(currentPlayer)) {
+      board.undoMove();
+      return true;
+    }
+    board.undoMove();
+    return false;
+  }
+
+  public State result() {
+    if (!validFroms().isEmpty()) {
+      return IN_PROGRESS;
+    }
+    if (board.kingInCheck(currentPlayer)) {
+      switch (currentPlayer) {
+        case WHITE:
+          return BLACK_WON;
+        case BLACK:
+          return WHITE_WON;
+        default:
       }
     }
-    return false;
+    return DRAW;
   }
 
   public Board getBoard() {
@@ -80,9 +118,5 @@ public class Game {
 
   public Color getCurrentPlayer() {
     return currentPlayer;
-  }
-
-  public Map<Color, List<Piece>> getCaptures() {
-    return captures;
   }
 }
