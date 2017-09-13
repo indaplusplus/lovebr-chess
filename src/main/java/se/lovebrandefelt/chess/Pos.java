@@ -15,9 +15,12 @@ public class Pos {
       String colString = posString.replaceFirst("[0-9]+", "").toUpperCase();
       this.row = Integer.parseInt(rowString) - 1;
       this.col = 0;
-      colString.chars().forEach((c) -> {
-        col = col * 26 + c - 64;
-      });
+      colString
+          .chars()
+          .forEach(
+              (c) -> {
+                col = col * 26 + c - 64;
+              });
       col -= 1;
       return;
     }

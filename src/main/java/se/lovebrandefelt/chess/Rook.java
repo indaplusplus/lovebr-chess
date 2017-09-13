@@ -11,10 +11,10 @@ public class Rook extends Piece {
   @Override
   public Set<Pos> legalMoves() {
     Set<Pos> legalMoves = new HashSet<>();
-    addMovesInDirectionIfLegal(new Pos(-1, 0), legalMoves);
-    addMovesInDirectionIfLegal(new Pos(1, 0), legalMoves);
-    addMovesInDirectionIfLegal(new Pos(0, -1), legalMoves);
-    addMovesInDirectionIfLegal(new Pos(0, 1), legalMoves);
+    addMovesInDirection(new Pos(-1, 0), legalMoves);
+    addMovesInDirection(new Pos(1, 0), legalMoves);
+    addMovesInDirection(new Pos(0, -1), legalMoves);
+    addMovesInDirection(new Pos(0, 1), legalMoves);
     return legalMoves;
   }
 }

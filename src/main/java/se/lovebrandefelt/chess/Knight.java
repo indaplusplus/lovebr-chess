@@ -1,7 +1,5 @@
 package se.lovebrandefelt.chess;
 
-import static se.lovebrandefelt.chess.Piece.MovementFlag.IF_EMPTY_OR_ENEMY;
-
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
@@ -15,15 +13,15 @@ public class Knight extends Piece {
   public Set<Pos> legalMoves() {
     Set<Pos> legalMoves = new HashSet<>();
     Arrays.asList(
-            getPos().offset(new Pos(-2, -1)),
-            getPos().offset(new Pos(-2, 1)),
-            getPos().offset(new Pos(-1, -2)),
-            getPos().offset(new Pos(-1, 2)),
-          getPos().offset(new Pos(1, -2)),
-            getPos().offset(new Pos(1, 2)),
-            getPos().offset(new Pos(2, -1)),
-            getPos().offset(new Pos(2, 1)))
-        .forEach((position -> addMoveIfLegal(position, IF_EMPTY_OR_ENEMY, legalMoves)));
+            new Pos(-2, -1),
+            new Pos(-2, 1),
+            new Pos(-1, -2),
+            new Pos(-1, 2),
+          new Pos(1, -2),
+            new Pos(1, 2),
+            new Pos(2, -1),
+            new Pos(2, 1))
+        .forEach((direction -> addMoveInDirection(direction, legalMoves)));
     return legalMoves;
   }
 }

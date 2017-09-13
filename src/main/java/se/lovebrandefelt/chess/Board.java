@@ -111,7 +111,7 @@ public class Board {
       colStringBuilder.append(String.format("%-2s", Pos.colToString(col)));
     }
     stringBuilder.append(colStringBuilder);
-    stringBuilder.append("\n");
+    stringBuilder.append('\n');
     for (int row = rows() - 1; row >= 0; row--) {
       String rowString = String.format("%-2s", Pos.rowToString(row));
       stringBuilder.append(rowString);
@@ -131,7 +131,7 @@ public class Board {
         }
       }
       stringBuilder.append(rowString);
-      stringBuilder.append("\n");
+      stringBuilder.append('\n');
     }
     stringBuilder.append(colStringBuilder.toString().toLowerCase());
     return stringBuilder.toString();
