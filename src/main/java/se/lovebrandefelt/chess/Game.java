@@ -76,12 +76,6 @@ public class Game {
           posSet.add(to);
         }
       }
-      /*return board
-          .get(from)
-          .legalMoves()
-          .stream()
-          .filter((to) -> !movePutsCurrentPlayerInCheck(from, to))
-          .collect(Collectors.toSet());*/
     }
     return posSet;
   }

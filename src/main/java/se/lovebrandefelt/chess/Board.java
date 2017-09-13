@@ -12,7 +12,7 @@ public class Board {
     private Pos to;
     private Piece captured;
 
-    private MoveEvent(Piece piece, Pos from, Pos to, Piece captured) {
+    protected MoveEvent(Piece piece, Pos from, Pos to, Piece captured) {
       this.piece = piece;
       this.from = from;
       this.to = to;
@@ -23,16 +23,32 @@ public class Board {
       return piece;
     }
 
+    public void setPiece(Piece piece) {
+      this.piece = piece;
+    }
+
     public Pos getFrom() {
       return from;
+    }
+
+    public void setFrom(Pos from) {
+      this.from = from;
     }
 
     public Pos getTo() {
       return to;
     }
 
+    public void setTo(Pos to) {
+      this.to = to;
+    }
+
     public Piece getCaptured() {
       return captured;
+    }
+
+    public void setCaptured(Piece captured) {
+      this.captured = captured;
     }
   }
 
@@ -122,11 +138,11 @@ public class Board {
 
   public void undoMove() {
     MoveEvent move = history.pop();
-    add(move.getPiece(), move.getFrom());
-    if (move.getCaptured() != null) {
-      add(move.getCaptured(), move.getTo());
+    add(move.piece, move.from);
+    if (move.captured != null) {
+      add(move.captured, move.to);
     } else {
-      remove(move.getTo());
+      remove(move.to);
     }
   }
 
@@ -149,7 +165,7 @@ public class Board {
         .filter((move) -> move.getCaptured() != null && move.getCaptured().getColor() == WHITE)
         .map(MoveEvent::getCaptured)
         .sorted()
-        .forEach((capture) -> stringBuilder.append(capture.getTypeId()).append(' '));
+        .forEach((captured) -> stringBuilder.append(captured.getTypeId()).append(' '));
     stringBuilder.append('\n');
     for (int row = rows() - 1; row >= 0; row--) {
       String rowString = String.format("%-2s", Pos.rowToString(row));
@@ -179,7 +195,7 @@ public class Board {
         .filter((move) -> move.getCaptured() != null && move.getCaptured().getColor() == BLACK)
         .map(MoveEvent::getCaptured)
         .sorted()
-        .forEach((capture) -> stringBuilder.append(capture.getTypeId()).append(' '));
+        .forEach((captured) -> stringBuilder.append(captured.getTypeId()).append(' '));
     return stringBuilder.toString();
   }
 }

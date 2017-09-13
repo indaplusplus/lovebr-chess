@@ -1,12 +1,17 @@
 package se.lovebrandefelt.chess;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static se.lovebrandefelt.chess.Color.BLACK;
 import static se.lovebrandefelt.chess.Color.WHITE;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import se.lovebrandefelt.chess.Board.MoveEvent;
 
 class PawnTest {
   private Board board;
@@ -64,5 +69,18 @@ class PawnTest {
     board.move(blackPawn.getPos(), new Pos("H7"));
     assertFalse(whitePawn.legalMoves().contains(new Pos("A4")));
     assertFalse(blackPawn.legalMoves().contains(new Pos("H5")));
+  }
+
+  @Test
+  void canEnPassant() {
+    Pawn whitePawn = board.add(new Pawn(WHITE), new Pos("A2"));
+    board.move(whitePawn.getPos(), new Pos("A4"));
+    Pawn blackPawn = board.add(new Pawn(BLACK), new Pos("B4"));
+    board.move(blackPawn.getPos(), new Pos("A3"));
+    MoveEvent lastMove = board.getHistory().peek();
+    assertSame(whitePawn, lastMove.getCaptured());
+    assertEquals(new Pos("A4"), lastMove.getTo());
+    assertSame(blackPawn, board.get(new Pos("A3")));
+    assertNull(board.get(new Pos("A4")));
   }
 }
