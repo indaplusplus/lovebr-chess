@@ -8,7 +8,7 @@ import static se.lovebrandefelt.chess.Game.standardSetup;
 import java.util.Scanner;
 import se.lovebrandefelt.chess.Bishop;
 import se.lovebrandefelt.chess.Game;
-import se.lovebrandefelt.chess.King;
+import se.lovebrandefelt.chess.Knight;
 import se.lovebrandefelt.chess.Pawn;
 import se.lovebrandefelt.chess.Piece;
 import se.lovebrandefelt.chess.Pos;
@@ -75,8 +75,8 @@ public class ConsoleMain {
               case 'B':
                 ((Pawn)piece).promote(new Bishop(piece.getColor()));
                 break loop;
-              case 'K':
-                ((Pawn)piece).promote(new King(piece.getColor()));
+              case 'N':
+                ((Pawn) piece).promote(new Knight(piece.getColor()));
                 break loop;
               case 'R':
                 ((Pawn)piece).promote(new Rook(piece.getColor()));

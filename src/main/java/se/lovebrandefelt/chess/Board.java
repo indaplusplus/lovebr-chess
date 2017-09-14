@@ -3,16 +3,24 @@ package se.lovebrandefelt.chess;
 import static se.lovebrandefelt.chess.Color.BLACK;
 import static se.lovebrandefelt.chess.Color.WHITE;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Stack;
 
 public class Board {
   private Game game;
   private Piece[][] squares;
+  private Map<Color, List<Piece>> pieces;
   private Stack<Move> history;
 
   public Board(int rows, int columns) {
-    this.squares = new Piece[rows][columns];
-    this.history = new Stack<>();
+    squares = new Piece[rows][columns];
+    pieces = new HashMap<>();
+    pieces.put(WHITE, new ArrayList<>());
+    pieces.put(BLACK, new ArrayList<>());
+    history = new Stack<>();
   }
 
   public int rows() {
@@ -36,38 +44,28 @@ public class Board {
   }
 
   public boolean isThreatened(Pos pos, Color by) {
-    for (int row = 0; row < rows(); row++) {
-      for (int col = 0; col < cols(); col++) {
-        Pos currentPos = new Pos(row, col);
-        if (!isEmpty(currentPos)
-            && get(currentPos).getColor() == by
-            && get(currentPos).recursionSafeLegalMoves().containsKey(pos)) {
-          return true;
-        }
-      }
-    }
-    return false;
+    return pieces
+        .get(by)
+        .stream()
+        .anyMatch((piece -> piece.recursionSafeLegalMoves().containsKey(pos)));
   }
 
   public boolean kingInCheck(Color color) {
-    for (int row = 0; row < rows(); row++) {
-      for (int col = 0; col < cols(); col++) {
-        Pos currentPos = new Pos(row, col);
-        if (!isEmpty(currentPos)
-            && get(currentPos).getTypeId() == 'K'
-            && get(currentPos).getColor() == color
-            && isThreatened(currentPos, color.next())) {
-          return true;
-        }
-      }
-    }
-    return false;
+    return pieces
+        .get(color)
+        .stream()
+        .anyMatch(
+            (piece) -> piece.getTypeId() == 'K' && isThreatened(piece.getPos(), color.next()));
   }
 
   public <T extends Piece> T add(T piece, Pos pos) {
+    if (!isEmpty(pos)) {
+      pieces.get(get(pos).getColor()).remove(get(pos));
+    }
     squares[pos.getRow()][pos.getCol()] = piece;
     piece.setBoard(this);
     piece.setPos(pos);
+    pieces.get(piece.getColor()).add(piece);
     return piece;
   }
 
@@ -79,6 +77,9 @@ public class Board {
 
   public Piece remove(Pos pos) {
     Piece piece = get(pos);
+    if (piece != null) {
+      pieces.get(piece.getColor()).remove(piece);
+    }
     squares[pos.getRow()][pos.getCol()] = null;
     return piece;
   }
@@ -98,6 +99,10 @@ public class Board {
 
   public void setGame(Game game) {
     this.game = game;
+  }
+
+  public Map<Color, List<Piece>> getPieces() {
+    return pieces;
   }
 
   public Stack<Move> getHistory() {

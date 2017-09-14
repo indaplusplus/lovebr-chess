@@ -12,9 +12,11 @@ import org.junit.jupiter.api.Test;
 
 public class GameTest {
   private Game game;
+  private Board board;
 
   @BeforeEach
   void beforeEach() {
+    board = new Board(8, 8);
     game = new Game(standardSetup(), WHITE);
   }
 
@@ -40,10 +42,8 @@ public class GameTest {
 
   @Test
   void onlyTheCurrentPlayerCanMoveHisPieces() {
-    Pos from = new Pos("B8");
-    Pos to = new Pos("C6");
-    game.makeMove(from,  to);
-    assertFalse(game.legalMoves().get(from).containsKey(to));
+    Pawn pawn = board.add(new Pawn(BLACK), new Pos("E5"));
+    assertFalse(game.legalMoves().containsKey(pawn.getPos()));
   }
 
   @Test

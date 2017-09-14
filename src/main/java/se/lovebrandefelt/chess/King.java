@@ -27,7 +27,7 @@ public class King extends Piece {
       for (Pos pos = getPos().offset(new Pos(0, 1));
           getBoard().isInsideBounds(pos);
           pos = pos.offset(new Pos(0, 1))) {
-        if (pos.getCol() < 6 && getBoard().isThreatened(pos, getColor().next())) {
+        if (pos.getCol() < 7 && getBoard().isThreatened(pos, getColor().next())) {
           break;
         }
         if (!getBoard().isEmpty(pos)) {
@@ -46,7 +46,7 @@ public class King extends Piece {
       for (Pos pos = getPos().offset(new Pos(0, -1));
            getBoard().isInsideBounds(pos);
            pos = pos.offset(new Pos(0, -1))) {
-        if (pos.getCol() > 2 && getBoard().isThreatened(pos, getColor().next())) {
+        if (pos.getCol() > 1 && getBoard().isThreatened(pos, getColor().next())) {
           break;
         }
         if (!getBoard().isEmpty(pos)) {

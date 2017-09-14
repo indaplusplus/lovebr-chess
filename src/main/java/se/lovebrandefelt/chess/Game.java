@@ -7,7 +7,10 @@ import static se.lovebrandefelt.chess.Game.State.DRAW;
 import static se.lovebrandefelt.chess.Game.State.IN_PROGRESS;
 import static se.lovebrandefelt.chess.Game.State.WHITE_WON;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Random;
@@ -23,11 +26,13 @@ public class Game {
 
   private Board board;
   private Color currentPlayer;
+  private Map<Pos, Map<Pos, Move>> legalMoves;
 
   public <T extends Piece> Game(Board setup, Color startingPlayer) {
     board = setup;
     board.setGame(this);
     currentPlayer = startingPlayer;
+    legalMoves = new HashMap<>();
   }
 
   public static Board standardSetup() {
@@ -56,79 +61,60 @@ public class Game {
   public static Board chess960Setup() {
     Board board = new Board(8, 8);
     Random random = new Random();
-    Pos bishopPos = new Pos(0, random.nextInt(4) * 2);
-    board.add(new Bishop(WHITE), bishopPos);
-    board.add(new Bishop(BLACK), bishopPos.offset(new Pos(7, 0)));
-    bishopPos = new Pos(0, random.nextInt(4) * 2 + 1);
-    board.add(new Bishop(WHITE), bishopPos);
-    board.add(new Bishop(BLACK), bishopPos.offset(new Pos(7, 0)));
-
-    Pos leftRookPos = new Pos(0, random.nextInt(6));
-    while (!board.isEmpty(leftRookPos)) {
-      leftRookPos = new Pos(0, random.nextInt(6));
-    }
-
-    Pos kingPos = new Pos(0, random.nextInt(6 - leftRookPos.getCol()) + leftRookPos.getCol() + 1);
-    while (!board.isEmpty(kingPos)) {
-      kingPos = new Pos(0, random.nextInt(6 - leftRookPos.getCol()) + leftRookPos.getCol() + 1);
-    }
-
-    Pos rightRookPos =
-        new Pos(0, (int) (Math.random() * (6 - kingPos.getCol()) + kingPos.getCol() + 1));
-    while (!board.isEmpty(rightRookPos)) {
-      rightRookPos =
-          new Pos(0, (int) (Math.random() * (6 - kingPos.getCol()) + kingPos.getCol() + 1));
-    }
-
-    board.add(new Rook(WHITE), leftRookPos);
-    board.add(new Rook(BLACK), leftRookPos.offset(new Pos(7, 0)));
-    board.add(new King(WHITE), kingPos);
-    board.add(new King(BLACK), kingPos.offset(new Pos(7, 0)));
-    board.add(new Rook(WHITE), rightRookPos);
-    board.add(new Rook(BLACK), rightRookPos.offset(new Pos(7, 0)));
-
-    for (int i = 0; i < 2; i++) {
-      Pos knightPos = new Pos(0, random.nextInt(8));
-      while (!board.isEmpty(knightPos)) {
-        knightPos = new Pos(0, random.nextInt(8));
+    List<Character> pieces = new ArrayList<>(Arrays.asList('R', 'R', 'N', 'N', 'B', 'B', 'Q', 'K'));
+    while (pieces.indexOf('B') % 2 == pieces.lastIndexOf('B') % 2
+        || pieces.indexOf('R') > pieces.indexOf('K')
+        || pieces.lastIndexOf('R') < pieces.indexOf('K')) {
+      for (int i = 0; i < 7; i++) {
+        pieces.add(i, pieces.remove(random.nextInt(8 - i) + i));
       }
-      board.add(new Knight(WHITE), knightPos);
-      board.add(new Knight(BLACK), knightPos.offset(new Pos(7, 0)));
     }
-
-    Pos queenPos = new Pos(0, random.nextInt(8));
-    while (!board.isEmpty(queenPos)) {
-      queenPos = new Pos(0, random.nextInt(8));
+    for (int i = 0; i < 8; i++) {
+      switch (pieces.get(i)) {
+        case 'B':
+          board.add(new Bishop(WHITE), new Pos(0, i));
+          board.add(new Bishop(BLACK), new Pos(7, i));
+          break;
+        case 'K':
+          board.add(new King(WHITE), new Pos(0, i));
+          board.add(new King(BLACK), new Pos(7, i));
+          break;
+        case 'N':
+          board.add(new Knight(WHITE), new Pos(0, i));
+          board.add(new Knight(BLACK), new Pos(7, i));
+          break;
+        case 'R':
+          board.add(new Rook(WHITE), new Pos(0, i));
+          board.add(new Rook(BLACK), new Pos(7, i));
+          break;
+        case 'Q':
+          board.add(new Queen(WHITE), new Pos(0, i));
+          board.add(new Queen(BLACK), new Pos(7, i));
+          break;
+        default:
+      }
     }
-    board.add(new Queen(WHITE), queenPos);
-    board.add(new Queen(BLACK), queenPos.offset(new Pos(7, 0)));
-
     board.addPawnRow(WHITE, 1);
     board.addPawnRow(BLACK, 6);
     return board;
   }
 
   public Map<Pos, Map<Pos, Move>> legalMoves() {
-    Map<Pos, Map<Pos, Move>> legalMoves = new HashMap<>();
-    for (int row = 0; row < getBoard().rows(); row++) {
-      for (int col = 0; col < getBoard().cols(); col++) {
-        Pos from = new Pos(row, col);
-        legalMoves.put(from, legalMovesWithCheck(from));
-      }
+    if (legalMoves.isEmpty()) {
+      new ArrayList<>(getBoard().getPieces().get(currentPlayer))
+          .forEach((piece) -> legalMoves.put(piece.getPos(), legalMovesWithCheck(piece.getPos())));
     }
     return legalMoves;
   }
 
   public Map<Pos, Move> legalMovesWithCheck(Pos from) {
-    if (!board.isEmpty(from) && board.get(from).getColor() == currentPlayer) {
-      return board
+    return board
           .get(from)
           .legalMoves()
           .entrySet()
-          .stream().filter((entry) -> !movePutsCurrentPlayerInCheck(entry.getValue()))
+        .stream()
+        .filter((entry) -> !movePutsCurrentPlayerInCheck(entry.getValue()))
           .collect(Collectors.toMap(Entry::getKey, Entry::getValue));
-    }
-    return new HashMap<>();
   }
 
   public boolean movePutsCurrentPlayerInCheck(Move move) {
@@ -147,6 +133,7 @@ public class Game {
       board.move(move);
       currentPlayer = currentPlayer.next();
     }
+    legalMoves = new HashMap<>();
   }
 
   public State result() {
