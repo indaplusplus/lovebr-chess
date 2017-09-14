@@ -27,6 +27,7 @@ public class EnPassantMove extends Move {
   @Override
   public void undo(Board board) {
     board.add(getPiece(), getFrom());
+    board.remove(getTo());
     board.add(getCaptured(), capturedPos);
   }
 }

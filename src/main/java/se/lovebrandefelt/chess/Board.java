@@ -6,6 +6,7 @@ import static se.lovebrandefelt.chess.Color.WHITE;
 import java.util.Stack;
 
 public class Board {
+  private Game game;
   private Piece[][] squares;
   private Stack<Move> history;
 
@@ -23,10 +24,7 @@ public class Board {
   }
 
   public boolean isInsideBounds(Pos pos) {
-    return pos.getRow() >= 0
-        && pos.getRow() < rows()
-        && pos.getCol() >= 0
-        && pos.getCol() < cols();
+    return pos.getRow() >= 0 && pos.getRow() < rows() && pos.getCol() >= 0 && pos.getCol() < cols();
   }
 
   public boolean isEmpty(Pos pos) {
@@ -94,6 +92,14 @@ public class Board {
     history.pop().undo(this);
   }
 
+  public Game getGame() {
+    return game;
+  }
+
+  public void setGame(Game game) {
+    this.game = game;
+  }
+
   public Stack<Move> getHistory() {
     return history;
   }
@@ -109,10 +115,11 @@ public class Board {
     stringBuilder.append(colStringBuilder);
     stringBuilder.append("Captures: ");
     history
-        .stream().filter((move) -> move.getCaptured() != null && move.getCaptured().getColor() == WHITE)
-        .map(Move::getCaptured)
+        .stream()
+        .filter((move) -> move.getCaptured() != null && move.getCaptured().getColor() == WHITE)
+        .map((move) -> move.getCaptured().getTypeId())
         .sorted()
-        .forEach((captured) -> stringBuilder.append(captured.getTypeId()).append(' '));
+        .forEach((typeId) -> stringBuilder.append(typeId).append(' '));
     stringBuilder.append('\n');
     for (int row = rows() - 1; row >= 0; row--) {
       String rowString = String.format("%-2s", Pos.rowToString(row));
@@ -140,9 +147,9 @@ public class Board {
     history
         .stream()
         .filter((move) -> move.getCaptured() != null && move.getCaptured().getColor() == BLACK)
-        .map(Move::getCaptured)
+        .map((move) -> move.getCaptured().getTypeId())
         .sorted()
-        .forEach((captured) -> stringBuilder.append(captured.getTypeId()).append(' '));
+        .forEach((typeId) -> stringBuilder.append(typeId).append(' '));
     return stringBuilder.toString();
   }
 }

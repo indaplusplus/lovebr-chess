@@ -26,6 +26,7 @@ public class Game {
 
   public <T extends Piece> Game(Board setup, Color startingPlayer) {
     board = setup;
+    board.setGame(this);
     currentPlayer = startingPlayer;
   }
 

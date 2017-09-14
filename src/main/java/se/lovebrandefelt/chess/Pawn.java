@@ -1,5 +1,7 @@
 package se.lovebrandefelt.chess;
 
+import static se.lovebrandefelt.chess.Color.BLACK;
+import static se.lovebrandefelt.chess.Color.WHITE;
 import static se.lovebrandefelt.chess.Piece.CaptureRule.CANT_CAPTURE;
 import static se.lovebrandefelt.chess.Piece.CaptureRule.CAN_CAPTURE;
 import static se.lovebrandefelt.chess.Piece.CaptureRule.MUST_CAPTURE;
@@ -65,5 +67,14 @@ public class Pawn extends Piece {
       default:
     }
     return legalMoves;
+  }
+
+  public boolean canPromote() {
+    return (getPos().getRow() == getBoard().rows() - 1 && getColor() == WHITE)
+        || (getPos().getRow() == 0 && getColor() == BLACK);
+  }
+
+  public void promote(Piece promoteInto) {
+    getBoard().add(promoteInto, getPos());
   }
 }

@@ -6,8 +6,14 @@ import static se.lovebrandefelt.chess.Game.chess960Setup;
 import static se.lovebrandefelt.chess.Game.standardSetup;
 
 import java.util.Scanner;
+import se.lovebrandefelt.chess.Bishop;
 import se.lovebrandefelt.chess.Game;
+import se.lovebrandefelt.chess.King;
+import se.lovebrandefelt.chess.Pawn;
+import se.lovebrandefelt.chess.Piece;
 import se.lovebrandefelt.chess.Pos;
+import se.lovebrandefelt.chess.Queen;
+import se.lovebrandefelt.chess.Rook;
 
 public class ConsoleMain {
   public static void main(String[] args) {
@@ -42,7 +48,7 @@ public class ConsoleMain {
         if (!game.legalMoves().get(from).isEmpty()) {
           break;
         }
-        System.out.println("You don't have a piece on that square!");
+        System.out.println("You can't move from there!");
       }
       while (true) {
         System.out.print("Move to: ");
@@ -58,6 +64,32 @@ public class ConsoleMain {
         System.out.println("That move is not legal!");
       }
       game.makeMove(from, to);
+      Piece piece = game.getBoard().get(to);
+      if (piece.getTypeId() == 'P' && ((Pawn)piece).canPromote()) {
+        String promoteInto;
+        loop: while (true) {
+          System.out.print("Promote into: ");
+          promoteInto = scanner.next();
+          if (promoteInto.length() == 1) {
+            switch (promoteInto.charAt(0)) {
+              case 'B':
+                ((Pawn)piece).promote(new Bishop(piece.getColor()));
+                break loop;
+              case 'K':
+                ((Pawn)piece).promote(new King(piece.getColor()));
+                break loop;
+              case 'R':
+                ((Pawn)piece).promote(new Rook(piece.getColor()));
+                break loop;
+              case 'Q':
+                ((Pawn)piece).promote(new Queen(piece.getColor()));
+                break loop;
+              default:
+            }
+          }
+          System.out.println("You can't promote into that!");
+        }
+      }
     }
     switch (game.result()) {
       case WHITE_WON:
