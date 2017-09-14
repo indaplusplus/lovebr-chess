@@ -38,6 +38,10 @@ public abstract class Piece {
 
   public abstract Map<Pos, Move> legalMoves();
 
+  public Map<Pos, Move> recursionSafeLegalMoves() {
+    return legalMoves();
+  }
+
   public boolean isEnemy(Pos pos) {
     return !board.isEmpty(pos) && board.get(pos).color != color;
   }

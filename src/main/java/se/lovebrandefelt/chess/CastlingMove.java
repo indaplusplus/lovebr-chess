@@ -14,9 +14,9 @@ public class CastlingMove extends Move {
     setPiece(board.get(getFrom()));
     rookFrom = rook.getPos();
     if (getFrom().getCol() < getTo().getCol()) {
-      rookTo = new Pos(0, -1);
+      rookTo = getTo().offset(new Pos(0, -1));
     } else {
-      rookTo = new Pos(0, 1);
+      rookTo = getTo().offset(new Pos(0, 1));
     }
     board.remove(getFrom());
     board.remove(rookFrom);

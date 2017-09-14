@@ -124,8 +124,7 @@ public class Game {
           .get(from)
           .legalMoves()
           .entrySet()
-          .stream()
-          .filter((entry) -> !movePutsCurrentPlayerInCheck(entry.getValue()))
+          .stream().filter((entry) -> !movePutsCurrentPlayerInCheck(entry.getValue()))
           .collect(Collectors.toMap(Entry::getKey, Entry::getValue));
     }
     return new HashMap<>();

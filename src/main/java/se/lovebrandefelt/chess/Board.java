@@ -43,7 +43,7 @@ public class Board {
         Pos currentPos = new Pos(row, col);
         if (!isEmpty(currentPos)
             && get(currentPos).getColor() == by
-            && get(currentPos).legalMoves().containsKey(pos)) {
+            && get(currentPos).recursionSafeLegalMoves().containsKey(pos)) {
           return true;
         }
       }

@@ -33,8 +33,8 @@ public class Pawn extends Piece {
               && lastMove.getTo().subtract(lastMove.getFrom()).equals(new Pos(-2, 0))) {
             Pos difference = lastMove.getTo().subtract(getPos());
             if (difference.equals(new Pos(0, -1)) || difference.equals(new Pos(0, 1))) {
-              addMovesInDirection(
-                  new Pos(1, 0).offset(difference), legalMoves, EnPassantMove::new, CAN_CAPTURE, 1);
+              Pos to = getPos().offset(new Pos(1, 0)).offset(difference);
+              legalMoves.put(to, new EnPassantMove(getPos(), to));
             }
           }
         }
@@ -56,12 +56,8 @@ public class Pawn extends Piece {
               && lastMove.getTo().subtract(lastMove.getFrom()).equals(new Pos(2, 0))) {
             Pos difference = lastMove.getTo().subtract(getPos());
             if (difference.equals(new Pos(0, -1)) || difference.equals(new Pos(0, 1))) {
-              addMovesInDirection(
-                  new Pos(-1, 0).offset(difference),
-                  legalMoves,
-                  EnPassantMove::new,
-                  CAN_CAPTURE,
-                  1);
+              Pos to = getPos().offset(new Pos(-1, 0)).offset(difference);
+              legalMoves.put(to, new EnPassantMove(getPos(), to));
             }
           }
         }
