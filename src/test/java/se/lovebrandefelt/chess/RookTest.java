@@ -6,7 +6,6 @@ import static se.lovebrandefelt.chess.Color.WHITE;
 
 import java.util.Arrays;
 import java.util.HashSet;
-import java.util.stream.Collectors;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -36,6 +35,6 @@ public class RookTest {
                 new Pos("F4"),
                 new Pos("G4"),
                 new Pos("H4"))),
-        rook.legalMoves().stream().map(Move::getTo).collect(Collectors.toSet()));
+        rook.legalMoves().keySet());
   }
 }

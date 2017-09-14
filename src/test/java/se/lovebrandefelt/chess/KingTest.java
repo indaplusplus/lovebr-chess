@@ -8,7 +8,6 @@ import static se.lovebrandefelt.chess.Color.WHITE;
 
 import java.util.Arrays;
 import java.util.HashSet;
-import java.util.stream.Collectors;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -36,34 +35,22 @@ class KingTest {
                 new Pos("C5"),
                 new Pos("D5"),
                 new Pos("E5")))),
-        king.legalMoves().stream().map(Move::getTo).collect(Collectors.toSet()));
+        king.legalMoves().keySet());
   }
 
   @Test
   void cantMoveIntoCheck() {
     King king = board.add(new King(WHITE), new Pos("D4"));
     board.add(new Pawn(BLACK), new Pos("D6"));
-    assertFalse(
-        game.legalMovesWithCheck(king.getPos())
-            .stream()
-            .anyMatch((move) -> move.getTo().equals(new Pos("C5"))));
-    assertFalse(
-        game.legalMovesWithCheck(king.getPos())
-            .stream()
-            .anyMatch((move) -> move.getTo().equals(new Pos("E5"))));
+    assertFalse(game.legalMoves().get(king.getPos()).containsKey(new Pos("C5")));
+    assertFalse(game.legalMoves().get(king.getPos()).containsKey(new Pos("E5")));
   }
 
   @Test
   void cantBeCheckedByOwnPieces() {
     King king = board.add(new King(WHITE), new Pos("D4"));
     board.add(new Pawn(WHITE), new Pos("D6"));
-    assertTrue(
-        game.legalMovesWithCheck(king.getPos())
-            .stream()
-            .anyMatch((move) -> move.getTo().equals(new Pos("C5"))));
-    assertTrue(
-        game.legalMovesWithCheck(king.getPos())
-            .stream()
-            .anyMatch((move) -> move.getTo().equals(new Pos("E5"))));
+    assertTrue(game.legalMoves().get(king.getPos()).containsKey(new Pos("C5")));
+    assertTrue(game.legalMoves().get(king.getPos()).containsKey(new Pos("E5")));
   }
 }

@@ -1,6 +1,8 @@
 package se.lovebrandefelt.chess;
 
 public class EnPassantMove extends Move {
+  private Pos capturedPos;
+
   protected EnPassantMove(Pos from, Pos to) {
     super(from, to);
   }
@@ -9,10 +11,12 @@ public class EnPassantMove extends Move {
   public void perform(Board board) {
     switch (board.get(getFrom()).getColor()) {
       case WHITE:
-        setCaptured(board.remove(getTo().offset(new Pos(-1, 0))));
+        capturedPos = getTo().offset(new Pos(-1, 0));
+        setCaptured(board.remove(capturedPos));
         break;
       case BLACK:
-        setCaptured(board.remove(getTo().offset(new Pos(1, 0))));
+        capturedPos = getTo().offset(new Pos(1, 0));
+        setCaptured(board.remove(capturedPos));
         break;
       default:
     }
@@ -23,14 +27,6 @@ public class EnPassantMove extends Move {
   @Override
   public void undo(Board board) {
     board.add(getPiece(), getFrom());
-    switch (board.get(getFrom()).getColor()) {
-      case WHITE:
-        board.add(getCaptured(), getTo().offset(new Pos(-1, 0)));
-        break;
-      case BLACK:
-        board.add(getCaptured(), getTo().offset(new Pos(1, 0)));
-        break;
-      default:
-    }
+    board.add(getCaptured(), capturedPos);
   }
 }

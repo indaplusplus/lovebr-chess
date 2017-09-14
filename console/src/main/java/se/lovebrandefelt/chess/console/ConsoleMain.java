@@ -2,7 +2,8 @@ package se.lovebrandefelt.chess.console;
 
 import static se.lovebrandefelt.chess.Color.WHITE;
 import static se.lovebrandefelt.chess.Game.State.IN_PROGRESS;
-import static se.lovebrandefelt.chess.Game.defaultSetup;
+import static se.lovebrandefelt.chess.Game.chess960Setup;
+import static se.lovebrandefelt.chess.Game.standardSetup;
 
 import java.util.Scanner;
 import se.lovebrandefelt.chess.Game;
@@ -11,7 +12,16 @@ import se.lovebrandefelt.chess.Pos;
 public class ConsoleMain {
   public static void main(String[] args) {
     Scanner scanner = new Scanner(System.in);
-    Game game = new Game(defaultSetup(), WHITE);
+    Game game;
+    if (args.length > 0) {
+      if (args[0].equals("960")) {
+        game = new Game(chess960Setup(), WHITE);
+      } else {
+        game = new Game(standardSetup(), WHITE);
+      }
+    } else {
+      game = new Game(standardSetup(), WHITE);
+    }
     while (game.result() == IN_PROGRESS) {
       System.out.println(game.getBoard());
       if (game.getBoard().kingInCheck(game.getCurrentPlayer())) {
@@ -29,7 +39,7 @@ public class ConsoleMain {
           System.out.println("That is not a square!");
           continue;
         }
-        if (game.validFroms().contains(from)) {
+        if (!game.legalMoves().get(from).isEmpty()) {
           break;
         }
         System.out.println("You don't have a piece on that square!");
@@ -42,7 +52,7 @@ public class ConsoleMain {
           System.out.println("That is not a square!");
           continue;
         }
-        if (game.legalMovesWithCheck(from).contains(to)) {
+        if (game.legalMoves().get(from).containsKey(to)) {
           break;
         }
         System.out.println("That move is not legal!");

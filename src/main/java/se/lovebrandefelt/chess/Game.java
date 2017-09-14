@@ -7,9 +7,10 @@ import static se.lovebrandefelt.chess.Game.State.DRAW;
 import static se.lovebrandefelt.chess.Game.State.IN_PROGRESS;
 import static se.lovebrandefelt.chess.Game.State.WHITE_WON;
 
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.Set;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Random;
 import java.util.stream.Collectors;
 
 public class Game {
@@ -28,7 +29,7 @@ public class Game {
     currentPlayer = startingPlayer;
   }
 
-  public static Board defaultSetup() {
+  public static Board standardSetup() {
     Board board = new Board(8, 8);
     board.add(new Rook(WHITE), new Pos(0, 0));
     board.add(new Knight(WHITE), new Pos(0, 1));
@@ -51,38 +52,83 @@ public class Game {
     return board;
   }
 
-  public Set<Pos> validFroms() {
-    Set<Pos> validFroms = new HashSet<>();
+  public static Board chess960Setup() {
+    Board board = new Board(8, 8);
+    Random random = new Random();
+    Pos bishopPos = new Pos(0, random.nextInt(4) * 2);
+    board.add(new Bishop(WHITE), bishopPos);
+    board.add(new Bishop(BLACK), bishopPos.offset(new Pos(7, 0)));
+    bishopPos = new Pos(0, random.nextInt(4) * 2 + 1);
+    board.add(new Bishop(WHITE), bishopPos);
+    board.add(new Bishop(BLACK), bishopPos.offset(new Pos(7, 0)));
+
+    Pos leftRookPos = new Pos(0, random.nextInt(6));
+    while (!board.isEmpty(leftRookPos)) {
+      leftRookPos = new Pos(0, random.nextInt(6));
+    }
+
+    Pos kingPos = new Pos(0, random.nextInt(6 - leftRookPos.getCol()) + leftRookPos.getCol() + 1);
+    while (!board.isEmpty(kingPos)) {
+      kingPos = new Pos(0, random.nextInt(6 - leftRookPos.getCol()) + leftRookPos.getCol() + 1);
+    }
+
+    Pos rightRookPos =
+        new Pos(0, (int) (Math.random() * (6 - kingPos.getCol()) + kingPos.getCol() + 1));
+    while (!board.isEmpty(rightRookPos)) {
+      rightRookPos =
+          new Pos(0, (int) (Math.random() * (6 - kingPos.getCol()) + kingPos.getCol() + 1));
+    }
+
+    board.add(new Rook(WHITE), leftRookPos);
+    board.add(new Rook(BLACK), leftRookPos.offset(new Pos(7, 0)));
+    board.add(new King(WHITE), kingPos);
+    board.add(new King(BLACK), kingPos.offset(new Pos(7, 0)));
+    board.add(new Rook(WHITE), rightRookPos);
+    board.add(new Rook(BLACK), rightRookPos.offset(new Pos(7, 0)));
+
+    for (int i = 0; i < 2; i++) {
+      Pos knightPos = new Pos(0, random.nextInt(8));
+      while (!board.isEmpty(knightPos)) {
+        knightPos = new Pos(0, random.nextInt(8));
+      }
+      board.add(new Knight(WHITE), knightPos);
+      board.add(new Knight(BLACK), knightPos.offset(new Pos(7, 0)));
+    }
+
+    Pos queenPos = new Pos(0, random.nextInt(8));
+    while (!board.isEmpty(queenPos)) {
+      queenPos = new Pos(0, random.nextInt(8));
+    }
+    board.add(new Queen(WHITE), queenPos);
+    board.add(new Queen(BLACK), queenPos.offset(new Pos(7, 0)));
+
+    board.addPawnRow(WHITE, 1);
+    board.addPawnRow(BLACK, 6);
+    return board;
+  }
+
+  public Map<Pos, Map<Pos, Move>> legalMoves() {
+    Map<Pos, Map<Pos, Move>> legalMoves = new HashMap<>();
     for (int row = 0; row < getBoard().rows(); row++) {
-      for (int col = 0; col < getBoard().columns(); col++) {
+      for (int col = 0; col < getBoard().cols(); col++) {
         Pos from = new Pos(row, col);
-        if (legalMovesWithCheck(from).size() > 0) {
-          validFroms.add(from);
-        }
+        legalMoves.put(from, legalMovesWithCheck(from));
       }
     }
-    return validFroms;
+    return legalMoves;
   }
 
-  public void makeMove(Pos from, Pos to) {
-    Optional<Move> maybeMove = getBoard().get(from).legalMoves().stream().filter((move) -> move.getTo().equals(to)).findFirst();
-    maybeMove.ifPresent((move) -> {
-      board.move(move);
-      currentPlayer = currentPlayer.next();
-    });
-  }
-
-  public Set<Move> legalMovesWithCheck(Pos from) {
-    Set<Move> moveSet = new HashSet<>();
+  public Map<Pos, Move> legalMovesWithCheck(Pos from) {
     if (!board.isEmpty(from) && board.get(from).getColor() == currentPlayer) {
-      for (Move move : board.get(from).legalMoves()) {
-        if (!movePutsCurrentPlayerInCheck(move)) {
-          moveSet.add(move);
-        }
-      }
-
+      return board
+          .get(from)
+          .legalMoves()
+          .entrySet()
+          .stream()
+          .filter((entry) -> !movePutsCurrentPlayerInCheck(entry.getValue()))
+          .collect(Collectors.toMap(Entry::getKey, Entry::getValue));
     }
-    return moveSet;
+    return new HashMap<>();
   }
 
   public boolean movePutsCurrentPlayerInCheck(Move move) {
@@ -95,8 +141,16 @@ public class Game {
     return false;
   }
 
+  public void makeMove(Pos from, Pos to) {
+    Move move = legalMoves().get(from).get(to);
+    if (move != null) {
+      board.move(move);
+      currentPlayer = currentPlayer.next();
+    }
+  }
+
   public State result() {
-    if (!validFroms().isEmpty()) {
+    if (!legalMoves().isEmpty()) {
       return IN_PROGRESS;
     }
     if (board.kingInCheck(currentPlayer)) {

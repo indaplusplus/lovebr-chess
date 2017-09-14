@@ -1,8 +1,8 @@
 package se.lovebrandefelt.chess;
 
 import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.HashMap;
+import java.util.Map;
 
 public class King extends Piece {
   public King(Color color) {
@@ -10,8 +10,8 @@ public class King extends Piece {
   }
 
   @Override
-  public Set<Move> legalMoves() {
-    Set<Move> legalMoves = new HashSet<>();
+  public Map<Pos, Move> legalMoves() {
+    Map<Pos, Move> legalMoves = new HashMap<>();
     Arrays.asList(
             new Pos(-1, -1),
             new Pos(-1, 0),
@@ -21,7 +21,7 @@ public class King extends Piece {
             new Pos(1, -1),
             new Pos(1, 0),
             new Pos(1, 1))
-        .forEach((direction -> addMoveInDirection(direction, legalMoves, Move::new)));
+        .forEach((direction -> addMoveInDirection(direction, legalMoves)));
     return legalMoves;
   }
 }

@@ -18,7 +18,7 @@ public class Board {
     return squares.length;
   }
 
-  public int columns() {
+  public int cols() {
     return squares[0].length;
   }
 
@@ -26,7 +26,7 @@ public class Board {
     return pos.getRow() >= 0
         && pos.getRow() < rows()
         && pos.getCol() >= 0
-        && pos.getCol() < columns();
+        && pos.getCol() < cols();
   }
 
   public boolean isEmpty(Pos pos) {
@@ -39,11 +39,11 @@ public class Board {
 
   public boolean isThreatened(Pos pos, Color by) {
     for (int row = 0; row < rows(); row++) {
-      for (int col = 0; col < columns(); col++) {
+      for (int col = 0; col < cols(); col++) {
         Pos currentPos = new Pos(row, col);
         if (!isEmpty(currentPos)
             && get(currentPos).getColor() == by
-            && get(currentPos).legalMoves().stream().anyMatch((move) -> move.getTo().equals(pos))) {
+            && get(currentPos).legalMoves().containsKey(pos)) {
           return true;
         }
       }
@@ -53,7 +53,7 @@ public class Board {
 
   public boolean kingInCheck(Color color) {
     for (int row = 0; row < rows(); row++) {
-      for (int col = 0; col < columns(); col++) {
+      for (int col = 0; col < cols(); col++) {
         Pos currentPos = new Pos(row, col);
         if (!isEmpty(currentPos)
             && get(currentPos).getTypeId() == 'K'
@@ -74,7 +74,7 @@ public class Board {
   }
 
   public void addPawnRow(Color color, int row) {
-    for (int i = 0; i < columns(); i++) {
+    for (int i = 0; i < cols(); i++) {
       add(new Pawn(color), new Pos(row, i));
     }
   }
@@ -102,7 +102,7 @@ public class Board {
   public String toString() {
     StringBuilder stringBuilder = new StringBuilder("");
     StringBuilder colStringBuilder = new StringBuilder("  ");
-    for (int col = 0; col < columns(); col++) {
+    for (int col = 0; col < cols(); col++) {
       colStringBuilder.append(String.format("%-2s", Pos.colToString(col)));
     }
     colStringBuilder.append("  ");

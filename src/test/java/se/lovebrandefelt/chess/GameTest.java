@@ -5,7 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static se.lovebrandefelt.chess.Color.BLACK;
 import static se.lovebrandefelt.chess.Color.WHITE;
-import static se.lovebrandefelt.chess.Game.defaultSetup;
+import static se.lovebrandefelt.chess.Game.standardSetup;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -15,7 +15,7 @@ public class GameTest {
 
   @BeforeEach
   void beforeEach() {
-    game = new Game(defaultSetup(), WHITE);
+    game = new Game(standardSetup(), WHITE);
   }
 
   @Test
@@ -43,7 +43,7 @@ public class GameTest {
     Pos from = new Pos("B8");
     Pos to = new Pos("C6");
     game.makeMove(from,  to);
-    assertFalse(game.legalMovesWithCheck(from).stream().anyMatch((move) -> move.getTo().equals(to)));
+    assertFalse(game.legalMoves().get(from).containsKey(to));
   }
 
   @Test

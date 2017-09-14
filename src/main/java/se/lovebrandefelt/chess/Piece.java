@@ -2,78 +2,17 @@ package se.lovebrandefelt.chess;
 
 import static se.lovebrandefelt.chess.Piece.CaptureRule.CAN_CAPTURE;
 
-import java.util.Set;
+import java.util.Map;
 import java.util.function.BiFunction;
-import java.util.function.Supplier;
 
 public abstract class Piece {
-  public enum CaptureRule {
-    CAN_CAPTURE {
-      @Override
-      public void perform(Pos direction, Set<Move> legalMoves, BiFunction<Pos, Pos, Move> moveSupplier, int maxMoves, Piece piece) {
-        Pos pos = piece.pos.offset(direction);
-        if (maxMoves < 0) {
-          while (piece.board.isInsideBounds(pos)) {
-            if (!piece.board.isEmpty(pos)) {
-              if (piece.isEnemy(pos)) {
-                legalMoves.add(moveSupplier.apply(piece.pos, pos));
-              }
-              break;
-            }
-            legalMoves.add(moveSupplier.apply(piece.pos, pos));
-            pos = pos.offset(direction);
-          }
-        } else {
-          for (int i = 0; i < maxMoves && piece.board.isInsideBounds(pos); i++) {
-            if (!piece.board.isEmpty(pos)) {
-              if (piece.isEnemy(pos)) {
-                legalMoves.add(moveSupplier.apply(piece.pos, pos));
-              }
-              break;
-            }
-            legalMoves.add(moveSupplier.apply(piece.pos, pos));
-            pos = pos.offset(direction);
-          }
-        }
-      }
-    },
-    CANT_CAPTURE {
-      @Override
-      public void perform(Pos direction, Set<Move> legalMoves, BiFunction<Pos, Pos, Move> moveSupplier, int maxMoves, Piece piece) {
-        Pos pos = piece.pos.offset(direction);
-        if (maxMoves < 0) {
-          while (piece.board.isInsideBounds(pos) && piece.board.isEmpty(pos)) {
-            legalMoves.add(moveSupplier.apply(piece.pos, pos));
-            pos = pos.offset(direction);
-          }
-        } else {
-          for (int i = 0;
-              i < maxMoves && piece.board.isInsideBounds(pos) && piece.board.isEmpty(pos);
-              i++) {
-            legalMoves.add(moveSupplier.apply(piece.pos, pos));
-            pos = pos.offset(direction);
-          }
-        }
-      }
-    },
-    MUST_CAPTURE {
-      @Override
-      public void perform(Pos direction, Set<Move> legalMoves, BiFunction<Pos, Pos, Move> moveSupplier, int maxMoves, Piece piece) {
-        Pos pos = piece.pos.offset(direction);
-        if (maxMoves < 0) {
-          if (piece.board.isInsideBounds(pos) && !piece.board.isEmpty(pos) && piece.isEnemy(pos)) {
-            legalMoves.add(moveSupplier.apply(piece.pos, pos));
-          }
-        } else if (maxMoves > 0
-            && piece.board.isInsideBounds(pos)
-            && !piece.board.isEmpty(pos)
-            && piece.isEnemy(pos)) {
-          legalMoves.add(moveSupplier.apply(piece.pos, pos));
-        }
-      }
-    };
-
-    public abstract void perform(Pos direction, Set<Move> legalMoves, BiFunction<Pos, Pos, Move> moveSupplier, int maxMoves, Piece piece);
+  protected void addMovesInDirection(
+      Pos direction,
+      Map<Pos, Move> legalMoves,
+      BiFunction<Pos, Pos, Move> moveSupplier,
+      CaptureRule captureRule,
+      int maxMoves) {
+    captureRule.perform(direction, legalMoves, moveSupplier, maxMoves, this);
   }
 
   private final char typeId;
@@ -89,30 +28,108 @@ public abstract class Piece {
     this.typeId = typeId;
   }
 
-  protected void addMovesInDirection(
-      Pos direction,
-      Set<Move> legalMoves,
-      BiFunction<Pos, Pos, Move> moveSupplier,
-      CaptureRule captureRule,
-      int maxMoves) {
-    captureRule.perform(direction, legalMoves, moveSupplier, maxMoves, this);
+  protected void addMovesInDirection(Pos direction, Map<Pos, Move> legalMoves) {
+    CAN_CAPTURE.perform(direction, legalMoves, Move::new, -1, this);
   }
 
-  protected void addMovesInDirection(
-      Pos direction, Set<Move> legalMoves, BiFunction<Pos, Pos, Move> moveSupplier) {
-    CAN_CAPTURE.perform(direction, legalMoves, moveSupplier, -1, this);
+  protected void addMoveInDirection(Pos direction, Map<Pos, Move> legalMoves) {
+    CAN_CAPTURE.perform(direction, legalMoves, Move::new, 1, this);
   }
 
-  protected void addMoveInDirection(
-      Pos direction, Set<Move> legalMoves, BiFunction<Pos, Pos, Move> moveSupplier) {
-    CAN_CAPTURE.perform(direction, legalMoves, moveSupplier, 1, this);
-  }
+  public abstract Map<Pos, Move> legalMoves();
 
   public boolean isEnemy(Pos pos) {
     return !board.isEmpty(pos) && board.get(pos).color != color;
   }
 
-  public abstract Set<Move> legalMoves();
+  public enum CaptureRule {
+    CAN_CAPTURE {
+      @Override
+      public void perform(
+          Pos direction,
+          Map<Pos, Move> legalMoves,
+          BiFunction<Pos, Pos, Move> moveSupplier,
+          int maxMoves,
+          Piece piece) {
+        Pos to = piece.pos.offset(direction);
+        if (maxMoves < 0) {
+          while (piece.board.isInsideBounds(to)) {
+            if (!piece.board.isEmpty(to)) {
+              if (piece.isEnemy(to)) {
+                legalMoves.put(to, moveSupplier.apply(piece.pos, to));
+              }
+              break;
+            }
+            legalMoves.put(to, moveSupplier.apply(piece.pos, to));
+            to = to.offset(direction);
+          }
+        } else {
+          for (int i = 0; i < maxMoves && piece.board.isInsideBounds(to); i++) {
+            if (!piece.board.isEmpty(to)) {
+              if (piece.isEnemy(to)) {
+                legalMoves.put(to, moveSupplier.apply(piece.pos, to));
+              }
+              break;
+            }
+            legalMoves.put(to, moveSupplier.apply(piece.pos, to));
+            to = to.offset(direction);
+          }
+        }
+      }
+    },
+    CANT_CAPTURE {
+      @Override
+      public void perform(
+          Pos direction,
+          Map<Pos, Move> legalMoves,
+          BiFunction<Pos, Pos, Move> moveSupplier,
+          int maxMoves,
+          Piece piece) {
+        Pos to = piece.pos.offset(direction);
+        if (maxMoves < 0) {
+          while (piece.board.isInsideBounds(to) && piece.board.isEmpty(to)) {
+            legalMoves.put(to, moveSupplier.apply(piece.pos, to));
+            to = to.offset(direction);
+          }
+        } else {
+          for (int i = 0;
+               i < maxMoves && piece.board.isInsideBounds(to) && piece.board.isEmpty(to);
+               i++) {
+            legalMoves.put(to, moveSupplier.apply(piece.pos, to));
+            to = to.offset(direction);
+          }
+        }
+      }
+    },
+    MUST_CAPTURE {
+      @Override
+      public void perform(
+          Pos direction,
+          Map<Pos, Move> legalMoves,
+          BiFunction<Pos, Pos, Move> moveSupplier,
+          int maxMoves,
+          Piece piece) {
+        Pos to = piece.pos.offset(direction);
+        if (maxMoves < 0) {
+          if (piece.board.isInsideBounds(to) && !piece.board.isEmpty(to) && piece.isEnemy(to)) {
+            legalMoves.put(to, moveSupplier.apply(piece.pos, to));
+          }
+        } else if (maxMoves > 0
+            && piece.board.isInsideBounds(to)
+            && !piece.board.isEmpty(to)
+            && piece.isEnemy(to)) {
+          legalMoves.put(to, moveSupplier.apply(piece.pos, to));
+        }
+      }
+    };
+
+    public abstract void perform(
+        Pos direction,
+        Map<Pos, Move> legalMoves,
+        BiFunction<Pos, Pos, Move> moveSupplier,
+        int maxMoves,
+        Piece piece);
+  }
 
   public char getTypeId() {
     return typeId;

@@ -1,7 +1,7 @@
 package se.lovebrandefelt.chess;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Bishop extends Piece {
   public Bishop(Color color) {
@@ -9,12 +9,12 @@ public class Bishop extends Piece {
   }
 
   @Override
-  public Set<Move> legalMoves() {
-    Set<Move> legalMoves = new HashSet<>();
-    addMovesInDirection(new Pos(-1, -1), legalMoves, Move::new);
-    addMovesInDirection(new Pos(-1, 1), legalMoves, Move::new);
-    addMovesInDirection(new Pos(1, -1), legalMoves, Move::new);
-    addMovesInDirection(new Pos(1, 1), legalMoves, Move::new);
+  public Map<Pos, Move> legalMoves() {
+    Map<Pos, Move> legalMoves = new HashMap<>();
+    addMovesInDirection(new Pos(-1, -1), legalMoves);
+    addMovesInDirection(new Pos(-1, 1), legalMoves);
+    addMovesInDirection(new Pos(1, -1), legalMoves);
+    addMovesInDirection(new Pos(1, 1), legalMoves);
     return legalMoves;
   }
 }
