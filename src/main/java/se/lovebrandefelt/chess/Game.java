@@ -137,7 +137,7 @@ public class Game {
   }
 
   public State result() {
-    if (!legalMoves().values().stream().anyMatch((moves) -> !moves.isEmpty())) {
+    if (legalMoves().values().stream().anyMatch((moves) -> !moves.isEmpty())) {
       return IN_PROGRESS;
     }
     if (board.kingInCheck(currentPlayer)) {
