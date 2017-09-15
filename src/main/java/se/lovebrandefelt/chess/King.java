@@ -22,8 +22,12 @@ public class King extends Piece {
             new Pos(1, 0),
             new Pos(1, 1))
         .forEach((direction -> addMoveInDirection(direction, legalMoves)));
+
+    // Checks for castling moves
     if (!getBoard().kingInCheck(getColor())
         && getBoard().getHistory().stream().noneMatch((move) -> move.getPiece() == this)) {
+      Pos to = new Pos(getPos().getRow(), 6);
+      CastlingMove castlingMove = new CastlingMove(getPos(), to);
       for (Pos pos = getPos().offset(new Pos(0, 1));
           getBoard().isInsideBounds(pos);
           pos = pos.offset(new Pos(0, 1))) {
@@ -32,34 +36,44 @@ public class King extends Piece {
         }
         if (!getBoard().isEmpty(pos)) {
           Piece piece = getBoard().get(pos);
-          if (piece.getTypeId() == 'R'
+          if (castlingMove.getRook() == null
+              && piece.getTypeId() == 'R'
               && getBoard().getHistory().stream().noneMatch((move) -> move.getPiece() == piece)
               && piece.getColor() == getColor()) {
-            Pos to = new Pos(pos.getRow(), 6);
-            CastlingMove move = new CastlingMove(getPos(), to);
-            move.setRook((Rook)piece);
-            legalMoves.put(to, move);
+            castlingMove.setRook((Rook) piece);
+          } else {
+            break;
           }
-          break;
+        }
+        if (pos.getCol() > 5 && castlingMove.getRook() != null) {
+          legalMoves.put(to, castlingMove);
         }
       }
-      for (Pos pos = getPos().offset(new Pos(0, -1));
-           getBoard().isInsideBounds(pos);
-           pos = pos.offset(new Pos(0, -1))) {
-        if (pos.getCol() > 1 && getBoard().isThreatened(pos, getColor().next())) {
-          break;
-        }
-        if (!getBoard().isEmpty(pos)) {
-          Piece piece = getBoard().get(pos);
-          if (piece.getTypeId() == 'R'
-              && getBoard().getHistory().stream().noneMatch((move) -> move.getPiece() == piece)
-              && piece.getColor() == getColor()) {
-            Pos to = new Pos(pos.getRow(), 2);
-            CastlingMove move = new CastlingMove(getPos(), to);
-            move.setRook((Rook)piece);
-            legalMoves.put(to, move);
+      to = new Pos(getPos().getRow(), 2);
+      castlingMove = new CastlingMove(getPos(), to);
+      if (getPos().getCol() != 1
+          || (getBoard().isEmpty(getPos().offset(new Pos(0, 1)))
+          && !getBoard().isThreatened(getPos().offset(new Pos(0, 1)), getColor().next()))) {
+        for (Pos pos = getPos().offset(new Pos(0, -1));
+             getBoard().isInsideBounds(pos);
+             pos = pos.offset(new Pos(0, -1))) {
+          if (pos.getCol() > 1 && getBoard().isThreatened(pos, getColor().next())) {
+            break;
           }
-          break;
+          if (!getBoard().isEmpty(pos)) {
+            Piece piece = getBoard().get(pos);
+            if (castlingMove.getRook() == null
+                && piece.getTypeId() == 'R'
+                && getBoard().getHistory().stream().noneMatch((move) -> move.getPiece() == piece)
+                && piece.getColor() == getColor()) {
+              castlingMove.setRook((Rook) piece);
+            } else {
+              break;
+            }
+          }
+          if (pos.getCol() < 3 && castlingMove.getRook() != null) {
+            legalMoves.put(to, castlingMove);
+          }
         }
       }
     }

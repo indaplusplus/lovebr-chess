@@ -13,10 +13,10 @@ public class CastlingMove extends Move {
   public void perform(Board board) {
     setPiece(board.get(getFrom()));
     rookFrom = rook.getPos();
-    if (getFrom().getCol() < getTo().getCol()) {
-      rookTo = getTo().offset(new Pos(0, -1));
-    } else {
+    if (rookFrom.getCol() < getFrom().getCol()) {
       rookTo = getTo().offset(new Pos(0, 1));
+    } else {
+      rookTo = getTo().offset(new Pos(0, -1));
     }
     board.remove(getFrom());
     board.remove(rookFrom);
