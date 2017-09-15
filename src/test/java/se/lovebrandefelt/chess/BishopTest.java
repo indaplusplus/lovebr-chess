@@ -18,7 +18,7 @@ public class BishopTest {
   }
 
   @Test
-  void canMoveDiogonallyButNotThroughPieces() {
+  void canMoveDiagonallyButNotThroughPieces() {
     Bishop bishop = board.add(new Bishop(WHITE), new Pos("D4"));
     board.add(new Pawn(WHITE), new Pos("B2"));
     board.add(new Pawn(BLACK), new Pos("F2"));

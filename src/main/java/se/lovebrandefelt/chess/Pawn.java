@@ -1,11 +1,9 @@
 package se.lovebrandefelt.chess;
 
-import static se.lovebrandefelt.chess.Color.BLACK;
 import static se.lovebrandefelt.chess.Color.WHITE;
 import static se.lovebrandefelt.chess.Piece.CaptureRule.CANT_CAPTURE;
 import static se.lovebrandefelt.chess.Piece.CaptureRule.MUST_CAPTURE;
 
-import com.sun.org.apache.regexp.internal.RE;
 import java.util.HashMap;
 import java.util.Map;
 

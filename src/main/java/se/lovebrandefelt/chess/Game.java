@@ -17,17 +17,9 @@ import java.util.Random;
 import java.util.stream.Collectors;
 
 public class Game {
-  public enum State {
-    IN_PROGRESS,
-    WHITE_WON,
-    BLACK_WON,
-    DRAW
-  }
-
   private Board board;
   private Color currentPlayer;
   private Map<Pos, Map<Pos, Move>> legalMoves;
-
   public <T extends Piece> Game(Board setup, Color startingPlayer) {
     board = setup;
     currentPlayer = startingPlayer;
@@ -140,7 +132,7 @@ public class Game {
       return IN_PROGRESS;
     }
     if (board.kingInCheck(currentPlayer)) {
-      if(currentPlayer == WHITE) {
+      if (currentPlayer == WHITE) {
         return BLACK_WON;
       } else {
         return WHITE_WON;
@@ -155,5 +147,12 @@ public class Game {
 
   public Color getCurrentPlayer() {
     return currentPlayer;
+  }
+
+  public enum State {
+    IN_PROGRESS,
+    WHITE_WON,
+    BLACK_WON,
+    DRAW
   }
 }

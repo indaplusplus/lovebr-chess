@@ -17,7 +17,7 @@ public class Knight extends Piece {
             new Pos(-2, 1),
             new Pos(-1, -2),
             new Pos(-1, 2),
-          new Pos(1, -2),
+            new Pos(1, -2),
             new Pos(1, 2),
             new Pos(2, -1),
             new Pos(2, 1))

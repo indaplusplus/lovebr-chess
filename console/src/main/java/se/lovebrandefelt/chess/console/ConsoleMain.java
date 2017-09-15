@@ -65,24 +65,25 @@ public class ConsoleMain {
       }
       game.makeMove(from, to);
       Piece piece = game.getBoard().get(to);
-      if (piece.getTypeId() == 'P' && ((Pawn)piece).canPromote()) {
+      if (piece.getTypeId() == 'P' && ((Pawn) piece).canPromote()) {
         String promoteInto;
-        loop: while (true) {
+        loop:
+        while (true) {
           System.out.print("Promote into: ");
           promoteInto = scanner.next();
           if (promoteInto.length() == 1) {
             switch (promoteInto.charAt(0)) {
               case 'B':
-                ((Pawn)piece).promote(new Bishop(piece.getColor()));
+                ((Pawn) piece).promote(new Bishop(piece.getColor()));
                 break loop;
               case 'N':
                 ((Pawn) piece).promote(new Knight(piece.getColor()));
                 break loop;
               case 'R':
-                ((Pawn)piece).promote(new Rook(piece.getColor()));
+                ((Pawn) piece).promote(new Rook(piece.getColor()));
                 break loop;
               case 'Q':
-                ((Pawn)piece).promote(new Queen(piece.getColor()));
+                ((Pawn) piece).promote(new Queen(piece.getColor()));
                 break loop;
               default:
             }

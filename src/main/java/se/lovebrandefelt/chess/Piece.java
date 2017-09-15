@@ -6,6 +6,17 @@ import java.util.Map;
 import java.util.function.BiFunction;
 
 public abstract class Piece {
+  private final char typeId;
+  private Board board;
+  private Pos pos;
+  private Color color;
+  protected Piece(Color color, char typeId) {
+    this.board = null;
+    this.pos = null;
+    this.color = color;
+    this.typeId = typeId;
+  }
+
   protected void addMovesInDirection(
       Pos direction,
       Map<Pos, Move> legalMoves,
@@ -13,19 +24,6 @@ public abstract class Piece {
       CaptureRule captureRule,
       int maxMoves) {
     captureRule.perform(direction, legalMoves, moveSupplier, maxMoves, this);
-  }
-
-  private final char typeId;
-
-  private Board board;
-  private Pos pos;
-  private Color color;
-
-  protected Piece(Color color, char typeId) {
-    this.board = null;
-    this.pos = null;
-    this.color = color;
-    this.typeId = typeId;
   }
 
   protected void addMovesInDirection(Pos direction, Map<Pos, Move> legalMoves) {
@@ -44,6 +42,34 @@ public abstract class Piece {
 
   public boolean isEnemy(Pos pos) {
     return !board.isEmpty(pos) && board.get(pos).color != color;
+  }
+
+  public char getTypeId() {
+    return typeId;
+  }
+
+  public Board getBoard() {
+    return board;
+  }
+
+  public void setBoard(Board board) {
+    this.board = board;
+  }
+
+  public Pos getPos() {
+    return pos;
+  }
+
+  public void setPos(Pos pos) {
+    this.pos = pos;
+  }
+
+  public Color getColor() {
+    return color;
+  }
+
+  public void setColor(Color color) {
+    this.color = color;
   }
 
   public enum CaptureRule {
@@ -97,8 +123,8 @@ public abstract class Piece {
           }
         } else {
           for (int i = 0;
-               i < maxMoves && piece.board.isInsideBounds(to) && piece.board.isEmpty(to);
-               i++) {
+              i < maxMoves && piece.board.isInsideBounds(to) && piece.board.isEmpty(to);
+              i++) {
             legalMoves.put(to, moveSupplier.apply(piece.pos, to));
             to = to.offset(direction);
           }
@@ -133,33 +159,5 @@ public abstract class Piece {
         BiFunction<Pos, Pos, Move> moveSupplier,
         int maxMoves,
         Piece piece);
-  }
-
-  public char getTypeId() {
-    return typeId;
-  }
-
-  public Board getBoard() {
-    return board;
-  }
-
-  public void setBoard(Board board) {
-    this.board = board;
-  }
-
-  public Pos getPos() {
-    return pos;
-  }
-
-  public void setPos(Pos pos) {
-    this.pos = pos;
-  }
-
-  public Color getColor() {
-    return color;
-  }
-
-  public void setColor(Color color) {
-    this.color = color;
   }
 }

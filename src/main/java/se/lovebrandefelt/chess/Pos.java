@@ -27,6 +27,20 @@ public class Pos {
     throw new IllegalArgumentException();
   }
 
+  public static String rowToString(int row) {
+    return "" + (row + 1);
+  }
+
+  public static String colToString(int col) {
+    StringBuilder stringBuilder = new StringBuilder();
+    while (col >= 0) {
+      char nextLetter = (char) (col % 26 + 65);
+      stringBuilder.insert(0, nextLetter);
+      col = col / 26 - 1;
+    }
+    return stringBuilder.toString();
+  }
+
   public Pos offset(Pos offset) {
     return new Pos(this.row + offset.row, this.col + offset.col);
   }
@@ -41,20 +55,6 @@ public class Pos {
 
   public int getCol() {
     return col;
-  }
-
-  public static String rowToString(int row) {
-    return "" + (row + 1);
-  }
-
-  public static String colToString(int col) {
-    StringBuilder stringBuilder = new StringBuilder();
-    while (col >= 0) {
-      char nextLetter = (char) (col % 26 + 65);
-      stringBuilder.insert(0, nextLetter);
-      col = col / 26 - 1;
-    }
-    return stringBuilder.toString();
   }
 
   @Override

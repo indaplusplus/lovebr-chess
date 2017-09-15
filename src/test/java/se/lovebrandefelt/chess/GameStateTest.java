@@ -1,8 +1,6 @@
 package se.lovebrandefelt.chess;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertSame;
 import static se.lovebrandefelt.chess.Color.BLACK;
 import static se.lovebrandefelt.chess.Color.WHITE;
 import static se.lovebrandefelt.chess.Game.State.BLACK_WON;

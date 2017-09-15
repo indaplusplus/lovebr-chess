@@ -18,7 +18,7 @@ public class QueenTest {
   }
 
   @Test
-  void canMoveDiogonallyOrOrthogonallyButNotThroughPieces() {
+  void canMoveDiagonallyOrOrthogonallyButNotThroughPieces() {
     Queen queen = board.add(new Queen(WHITE), new Pos(3, 3));
     board.add(new Pawn(WHITE), new Pos(1, 1));
     board.add(new Pawn(BLACK), new Pos(1, 5));

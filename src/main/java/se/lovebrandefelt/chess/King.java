@@ -53,10 +53,10 @@ public class King extends Piece {
       castlingMove = new CastlingMove(getPos(), to);
       if (getPos().getCol() != 1
           || (getBoard().isEmpty(getPos().offset(new Pos(0, 1)))
-          && !getBoard().isThreatened(getPos().offset(new Pos(0, 1)), getColor().next()))) {
+              && !getBoard().isThreatened(getPos().offset(new Pos(0, 1)), getColor().next()))) {
         for (Pos pos = getPos().offset(new Pos(0, -1));
-             getBoard().isInsideBounds(pos);
-             pos = pos.offset(new Pos(0, -1))) {
+            getBoard().isInsideBounds(pos);
+            pos = pos.offset(new Pos(0, -1))) {
           if (pos.getCol() > 1 && getBoard().isThreatened(pos, getColor().next())) {
             break;
           }
@@ -84,14 +84,14 @@ public class King extends Piece {
   public Map<Pos, Move> recursionSafeLegalMoves() {
     Map<Pos, Move> legalMoves = new HashMap<>();
     Arrays.asList(
-        new Pos(-1, -1),
-        new Pos(-1, 0),
-        new Pos(-1, 1),
-        new Pos(0, -1),
-        new Pos(0, 1),
-        new Pos(1, -1),
-        new Pos(1, 0),
-        new Pos(1, 1))
+            new Pos(-1, -1),
+            new Pos(-1, 0),
+            new Pos(-1, 1),
+            new Pos(0, -1),
+            new Pos(0, 1),
+            new Pos(1, -1),
+            new Pos(1, 0),
+            new Pos(1, 1))
         .forEach((direction -> addMoveInDirection(direction, legalMoves)));
     return legalMoves;
   }
