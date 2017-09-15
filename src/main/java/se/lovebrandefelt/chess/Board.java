@@ -10,7 +10,6 @@ import java.util.Map;
 import java.util.Stack;
 
 public class Board {
-  private Game game;
   private Piece[][] squares;
   private Map<Color, List<Piece>> pieces;
   private Stack<Move> history;
@@ -93,14 +92,6 @@ public class Board {
     history.pop().undo(this);
   }
 
-  public Game getGame() {
-    return game;
-  }
-
-  public void setGame(Game game) {
-    this.game = game;
-  }
-
   public Map<Color, List<Piece>> getPieces() {
     return pieces;
   }
@@ -133,14 +124,10 @@ public class Board {
         if (piece == null) {
           stringBuilder.append("- ");
         } else {
-          switch (piece.getColor()) {
-            case WHITE:
-              stringBuilder.append(piece.getTypeId()).append(" ");
-              break;
-            case BLACK:
-              stringBuilder.append(Character.toLowerCase(piece.getTypeId())).append(" ");
-              break;
-            default:
+          if (piece.getColor() == WHITE) {
+            stringBuilder.append(piece.getTypeId()).append(" ");
+          } else {
+            stringBuilder.append(Character.toLowerCase(piece.getTypeId())).append(" ");
           }
         }
       }

@@ -5,6 +5,7 @@ import static se.lovebrandefelt.chess.Color.WHITE;
 import static se.lovebrandefelt.chess.Piece.CaptureRule.CANT_CAPTURE;
 import static se.lovebrandefelt.chess.Piece.CaptureRule.MUST_CAPTURE;
 
+import com.sun.org.apache.regexp.internal.RE;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -22,14 +23,17 @@ public class Pawn extends Piece {
 
     if (getBoard().getHistory().stream().noneMatch((move) -> move.getPiece() == this)
         && getBoard().isEmpty(getPos().offset(new Pos(moveDirection(), 0)))) {
-      addMovesInDirection(new Pos(2*moveDirection(), 0), legalMoves, Move::new, CANT_CAPTURE, 1);
+      addMovesInDirection(new Pos(2 * moveDirection(), 0), legalMoves, Move::new, CANT_CAPTURE, 1);
     }
 
     // Checks for available en passant moves
     if (!getBoard().getHistory().empty()) {
       Move lastMove = getBoard().getHistory().peek();
       if (lastMove.getPiece().getTypeId() == 'P'
-          && lastMove.getFrom().subtract(lastMove.getTo()).equals(new Pos(2*moveDirection(), 0))) {
+          && lastMove
+              .getFrom()
+              .subtract(lastMove.getTo())
+              .equals(new Pos(2 * moveDirection(), 0))) {
         Pos difference = lastMove.getTo().subtract(getPos());
         if (difference.equals(new Pos(0, -1)) || difference.equals(new Pos(0, 1))) {
           Pos to = getPos().offset(new Pos(moveDirection(), 0)).offset(difference);
@@ -41,23 +45,18 @@ public class Pawn extends Piece {
   }
 
   public int moveDirection() {
-    switch (getColor()) {
-      case WHITE:
-        return 1;
-      case BLACK:
-        return -1;
-      default:
-        throw new IllegalArgumentException();
+    if (getColor() == WHITE) {
+      return 1;
+    } else {
+      return -1;
     }
   }
 
   public boolean canPromote() {
-    return (getPos().getRow() == getBoard().rows() - 1 && getColor() == WHITE)
-        || (getPos().getRow() == 0 && getColor() == BLACK);
+    return ((getPos().getRow() + moveDirection()) % (getBoard().rows() + 1) == 8);
   }
 
   public void promote(Piece promoteInto) {
     getBoard().add(promoteInto, getPos());
-
   }
 }

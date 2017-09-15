@@ -30,7 +30,6 @@ public class Game {
 
   public <T extends Piece> Game(Board setup, Color startingPlayer) {
     board = setup;
-    board.setGame(this);
     currentPlayer = startingPlayer;
     legalMoves = new HashMap<>();
   }
@@ -136,17 +135,15 @@ public class Game {
     legalMoves = new HashMap<>();
   }
 
-  public State result() {
+  public State state() {
     if (legalMoves().values().stream().anyMatch((moves) -> !moves.isEmpty())) {
       return IN_PROGRESS;
     }
     if (board.kingInCheck(currentPlayer)) {
-      switch (currentPlayer) {
-        case WHITE:
-          return BLACK_WON;
-        case BLACK:
-          return WHITE_WON;
-        default:
+      if(currentPlayer == WHITE) {
+        return BLACK_WON;
+      } else {
+        return WHITE_WON;
       }
     }
     return DRAW;

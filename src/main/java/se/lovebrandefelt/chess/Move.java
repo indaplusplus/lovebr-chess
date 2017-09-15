@@ -23,16 +23,8 @@ public class Move {
     return from;
   }
 
-  protected void setFrom(Pos from) {
-    this.from = from;
-  }
-
   public Pos getTo() {
     return to;
-  }
-
-  protected void setTo(Pos to) {
-    this.to = to;
   }
 
   public Piece getCaptured() {

@@ -78,10 +78,25 @@ class KingTest {
   }
 
   @Test
-  void cantCastleWhenThreatenedSquaresInBetween() {
+  void cantCastleLeftWhenThreatenedSquaresInBetween() {
+    King king = board.add(new King(WHITE), new Pos("E1"));
+    board.add(new Rook(WHITE), new Pos("A1"));
+    board.add(new Rook(BLACK), new Pos("D2"));
+    assertFalse(game.legalMoves().get(king.getPos()).containsKey(new Pos("C1")));
+  }
+
+  @Test
+  void cantCastleRightWhenThreatenedSquaresInBetween() {
     King king = board.add(new King(WHITE), new Pos("E1"));
     board.add(new Rook(WHITE), new Pos("H1"));
     board.add(new Rook(BLACK), new Pos("F2"));
     assertFalse(game.legalMoves().get(king.getPos()).containsKey(new Pos("G1")));
+  }
+
+  @Test
+  void canCastleFromSecondColumnInFischerChess() {
+    King king = board.add(new King(WHITE), new Pos("B1"));
+    board.add(new Rook(WHITE), new Pos("A1"));
+    assertTrue(game.legalMoves().get(king.getPos()).containsKey(new Pos("C1")));
   }
 }
