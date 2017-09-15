@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static se.lovebrandefelt.chess.Color.BLACK;
 import static se.lovebrandefelt.chess.Color.WHITE;
+import static se.lovebrandefelt.chess.Game.State.WHITE_WON;
 import static se.lovebrandefelt.chess.Game.standardSetup;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -16,8 +17,8 @@ public class GameTest {
 
   @BeforeEach
   void beforeEach() {
-    board = new Board(8, 8);
-    game = new Game(standardSetup(), WHITE);
+    board = standardSetup();
+    game = new Game(board, WHITE);
   }
 
   @Test

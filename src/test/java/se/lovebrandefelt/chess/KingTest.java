@@ -58,7 +58,17 @@ class KingTest {
   }
 
   @Test
-  void canCastle() {
+  void canCastleLeft() {
+    King king = board.add(new King(WHITE), new Pos("E1"));
+    final Rook rook = board.add(new Rook(WHITE), new Pos("A1"));
+    assertTrue(game.legalMoves().get(king.getPos()).containsKey(new Pos("C1")));
+    game.makeMove(new Pos("E1"), new Pos("C1"));
+    assertSame(king, board.get(new Pos("C1")));
+    assertSame(rook, board.get(new Pos("D1")));
+  }
+
+  @Test
+  void canCastleRight() {
     King king = board.add(new King(WHITE), new Pos("E1"));
     final Rook rook = board.add(new Rook(WHITE), new Pos("H1"));
     assertTrue(game.legalMoves().get(king.getPos()).containsKey(new Pos("G1")));

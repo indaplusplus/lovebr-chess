@@ -96,12 +96,20 @@ class PawnTest {
     assertNull(board.get(new Pos("A4")));
   }
 
+  @Test
+  void canPromote() {
+    Pawn pawn = board.add(new Pawn(WHITE), new Pos("E7"));
+    game.makeMove(new Pos("E7"), new Pos("E8"));
+    assertTrue(pawn.canPromote());
+  }
+
   @Test void
-  promotionCanBeUndone() {
-    Pawn pawn = board.add(new Pawn(WHITE), new Pos("E6"));
-    game.makeMove(new Pos("E6"), new Pos("E7"));
+  promotionCanBeDoneAndUndone() {
+    Pawn pawn = board.add(new Pawn(WHITE), new Pos("E7"));
+    game.makeMove(new Pos("E7"), new Pos("E8"));
+    pawn.promote(new Knight(WHITE));
     board.undoMove();
-    assertNull(board.get(new Pos("E7")));
-    assertSame(pawn, board.get(new Pos("E6")));
+    assertNull(board.get(new Pos("E8")));
+    assertSame(pawn, board.get(new Pos("E7")));
   }
 }

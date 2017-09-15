@@ -3,7 +3,6 @@ package se.lovebrandefelt.chess;
 import static se.lovebrandefelt.chess.Color.BLACK;
 import static se.lovebrandefelt.chess.Color.WHITE;
 import static se.lovebrandefelt.chess.Piece.CaptureRule.CANT_CAPTURE;
-import static se.lovebrandefelt.chess.Piece.CaptureRule.CAN_CAPTURE;
 import static se.lovebrandefelt.chess.Piece.CaptureRule.MUST_CAPTURE;
 
 import java.util.HashMap;
@@ -17,56 +16,39 @@ public class Pawn extends Piece {
   @Override
   public Map<Pos, Move> legalMoves() {
     Map<Pos, Move> legalMoves = new HashMap<>();
-    switch (getColor()) {
-      case WHITE:
-        addMovesInDirection(new Pos(1, 0), legalMoves, Move::new, CANT_CAPTURE, 1);
-        addMovesInDirection(new Pos(1, -1), legalMoves, Move::new, MUST_CAPTURE, 1);
-        addMovesInDirection(new Pos(1, 1), legalMoves, Move::new, MUST_CAPTURE, 1);
+    addMovesInDirection(new Pos(moveDirection(), 0), legalMoves, Move::new, CANT_CAPTURE, 1);
+    addMovesInDirection(new Pos(moveDirection(), -1), legalMoves, Move::new, MUST_CAPTURE, 1);
+    addMovesInDirection(new Pos(moveDirection(), 1), legalMoves, Move::new, MUST_CAPTURE, 1);
 
-        if (getBoard().getHistory().stream().noneMatch((move) -> move.getPiece() == this)
-            && getBoard().isEmpty(getPos().offset(new Pos(1, 0)))) {
-          addMovesInDirection(new Pos(2, 0), legalMoves, Move::new, CANT_CAPTURE, 1);
-        }
+    if (getBoard().getHistory().stream().noneMatch((move) -> move.getPiece() == this)
+        && getBoard().isEmpty(getPos().offset(new Pos(moveDirection(), 0)))) {
+      addMovesInDirection(new Pos(2*moveDirection(), 0), legalMoves, Move::new, CANT_CAPTURE, 1);
+    }
 
-        // Checks for available en passant moves
-        if (!getBoard().getHistory().empty()) {
-          Move lastMove = getBoard().getHistory().peek();
-          if (lastMove.getPiece().getTypeId() == 'P'
-              && lastMove.getTo().subtract(lastMove.getFrom()).equals(new Pos(-2, 0))) {
-            Pos difference = lastMove.getTo().subtract(getPos());
-            if (difference.equals(new Pos(0, -1)) || difference.equals(new Pos(0, 1))) {
-              Pos to = getPos().offset(new Pos(1, 0)).offset(difference);
-              legalMoves.put(to, new EnPassantMove(getPos(), to));
-            }
-          }
+    // Checks for available en passant moves
+    if (!getBoard().getHistory().empty()) {
+      Move lastMove = getBoard().getHistory().peek();
+      if (lastMove.getPiece().getTypeId() == 'P'
+          && lastMove.getFrom().subtract(lastMove.getTo()).equals(new Pos(2*moveDirection(), 0))) {
+        Pos difference = lastMove.getTo().subtract(getPos());
+        if (difference.equals(new Pos(0, -1)) || difference.equals(new Pos(0, 1))) {
+          Pos to = getPos().offset(new Pos(moveDirection(), 0)).offset(difference);
+          legalMoves.put(to, new EnPassantMove(getPos(), to));
         }
-        break;
-      case BLACK:
-        addMovesInDirection(new Pos(-1, 0), legalMoves, Move::new, CANT_CAPTURE, 1);
-        addMovesInDirection(new Pos(-1, -1), legalMoves, Move::new, MUST_CAPTURE, 1);
-        addMovesInDirection(new Pos(-1, 1), legalMoves, Move::new, MUST_CAPTURE, 1);
-
-        if (getBoard().getHistory().stream().noneMatch((move) -> move.getPiece() == this)
-            && getBoard().isEmpty(getPos().offset(new Pos(-1, 0)))) {
-          addMovesInDirection(new Pos(-2, 0), legalMoves, Move::new, CANT_CAPTURE, 1);
-        }
-
-        // Checks for available en passant moves
-        if (!getBoard().getHistory().empty()) {
-          Move lastMove = getBoard().getHistory().peek();
-          if (lastMove.getPiece().getTypeId() == 'P'
-              && lastMove.getTo().subtract(lastMove.getFrom()).equals(new Pos(2, 0))) {
-            Pos difference = lastMove.getTo().subtract(getPos());
-            if (difference.equals(new Pos(0, -1)) || difference.equals(new Pos(0, 1))) {
-              Pos to = getPos().offset(new Pos(-1, 0)).offset(difference);
-              legalMoves.put(to, new EnPassantMove(getPos(), to));
-            }
-          }
-        }
-        break;
-      default:
+      }
     }
     return legalMoves;
+  }
+
+  public int moveDirection() {
+    switch (getColor()) {
+      case WHITE:
+        return 1;
+      case BLACK:
+        return -1;
+      default:
+        throw new IllegalArgumentException();
+    }
   }
 
   public boolean canPromote() {
@@ -76,5 +58,6 @@ public class Pawn extends Piece {
 
   public void promote(Piece promoteInto) {
     getBoard().add(promoteInto, getPos());
+
   }
 }

@@ -9,18 +9,10 @@ public class EnPassantMove extends Move {
 
   @Override
   public void perform(Board board) {
-    switch (board.get(getFrom()).getColor()) {
-      case WHITE:
-        capturedPos = getTo().offset(new Pos(-1, 0));
-        setCaptured(board.remove(capturedPos));
-        break;
-      case BLACK:
-        capturedPos = getTo().offset(new Pos(1, 0));
-        setCaptured(board.remove(capturedPos));
-        break;
-      default:
-    }
-    setPiece(board.add(board.get(getFrom()), getTo()));
+    Pawn piece = (Pawn) board.get(getFrom());
+    capturedPos = getTo().offset(new Pos(-piece.moveDirection(), 0));
+    setCaptured(board.remove(capturedPos));
+    setPiece(board.add(piece, getTo()));
     board.remove(getFrom());
   }
 
