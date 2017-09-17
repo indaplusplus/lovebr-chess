@@ -197,7 +197,10 @@ public class Game {
               legalMoves()
                   .keySet()
                   .stream()
-                  .filter((fromCandidate) -> board.get(fromCandidate).getTypeId() == typeId)
+                  .filter(
+                      (fromCandidate) ->
+                          board.get(fromCandidate).getTypeId() == typeId
+                              && legalMoves().get(fromCandidate).containsKey(to))
                   .findFirst()
                   .orElseThrow(IllegalArgumentException::new);
           board.move(legalMoves().get(from).get(to));
@@ -211,6 +214,7 @@ public class Game {
                     .filter(
                         (fromCandidate) ->
                             board.get(fromCandidate).getTypeId() == typeId
+                                && legalMoves().get(fromCandidate).containsKey(to)
                                 && rowToString(fromCandidate.getRow()).equals(fromString))
                     .findFirst()
                     .orElseThrow(IllegalArgumentException::new);
@@ -222,6 +226,7 @@ public class Game {
                     .filter(
                         (fromCandidate) ->
                             board.get(fromCandidate).getTypeId() == typeId
+                                && legalMoves().get(fromCandidate).containsKey(to)
                                 && colToString(fromCandidate.getCol()).equals(fromString))
                     .findFirst()
                     .orElseThrow(IllegalArgumentException::new);
@@ -236,6 +241,7 @@ public class Game {
                   .filter(
                       (fromCandidate) ->
                           board.get(fromCandidate).getTypeId() == typeId
+                              && legalMoves().get(fromCandidate).containsKey(to)
                               && fromCandidate.toString().equals(fromString))
                   .findFirst()
                   .orElseThrow(IllegalArgumentException::new);
@@ -244,6 +250,8 @@ public class Game {
         default:
       }
     }
+    currentPlayer = currentPlayer.next();
+    legalMoves = new HashMap<>();
   }
 
   /**

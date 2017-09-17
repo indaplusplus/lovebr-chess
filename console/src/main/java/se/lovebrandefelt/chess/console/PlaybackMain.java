@@ -20,8 +20,24 @@ public class PlaybackMain {
       while (!line[0].startsWith("1.")) {
         line = reader.readLine().split(" ");
       }
+      gameLoop:
       while (game.state() == IN_PROGRESS) {
         for (String move : line) {
+          if (move.contains("-") && !move.contains("O")) {
+            switch (move) {
+              case "1-0":
+                System.out.println("WHITE won");
+                break;
+              case "1/2-1/2":
+                System.out.println("DRAW");
+                break;
+              case "0-1":
+                System.out.println("BLACK won");
+                break;
+              default:
+            }
+            break gameLoop;
+          }
           if (!move.endsWith(".")) {
             game.makeMove(move);
           }
@@ -40,6 +56,7 @@ public class PlaybackMain {
           break;
         default:
       }
+      System.out.println(game.getBoard());
     }
   }
 }
