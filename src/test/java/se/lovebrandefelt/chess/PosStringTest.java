@@ -29,7 +29,7 @@ class PosStringTest {
 
   @Test
   void posColumnToStringReturnsCorrectString() {
-    assertEquals("U", colToString(20));
-    assertEquals("BC", colToString(54));
+    assertEquals("u", colToString(20));
+    assertEquals("bc", colToString(54));
   }
 }

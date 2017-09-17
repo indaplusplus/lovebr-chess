@@ -11,6 +11,7 @@ public class Pos {
 
   /**
    * Creates a new pos from the specified string written in chess notation.
+   *
    * @param posString a string written in chess notation
    */
   public Pos(String posString) {
@@ -33,6 +34,7 @@ public class Pos {
 
   /**
    * Returns a string for the specified row.
+   *
    * @param row the row
    * @return a string for the specified row
    */
@@ -42,13 +44,14 @@ public class Pos {
 
   /**
    * Returns a string for the specified column.
+   *
    * @param col the column
    * @return a string for the specified column
    */
   public static String colToString(int col) {
     StringBuilder stringBuilder = new StringBuilder();
     while (col >= 0) {
-      char nextLetter = (char) (col % 26 + 65);
+      char nextLetter = (char) (col % 26 + 97);
       stringBuilder.insert(0, nextLetter);
       col = col / 26 - 1;
     }
@@ -57,6 +60,7 @@ public class Pos {
 
   /**
    * Returns a position created by offsetting this position by the specified amount.
+   *
    * @param offset the position to offset this position by
    * @return a position created by offsetting this position by the specified amount
    */
@@ -66,6 +70,7 @@ public class Pos {
 
   /**
    * Returns the direction between this position and the specified position.
+   *
    * @param other the position to compare with
    * @return the direction between this position and the specified position
    */
@@ -83,7 +88,7 @@ public class Pos {
 
   @Override
   public String toString() {
-    return "Pos{" + "row=" + row + ", col=" + col + '}';
+    return colToString(col) + rowToString(row);
   }
 
   @Override

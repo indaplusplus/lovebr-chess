@@ -10,6 +10,7 @@ import java.util.Map;
 import java.util.Stack;
 
 public class Board {
+  private Game game;
   private Piece[][] squares;
   private Map<Color, List<Piece>> pieces;
   private Stack<Move> history;
@@ -151,7 +152,8 @@ public class Board {
 
   /**
    * Performs the specified move.
-   * @param move the move to perform.
+   *
+   * @param move the move to perform
    */
   public void move(Move move) {
     move.perform(this);
@@ -163,6 +165,14 @@ public class Board {
    */
   public void undoMove() {
     history.pop().undo(this);
+  }
+
+  public Game getGame() {
+    return game;
+  }
+
+  public void setGame(Game game) {
+    this.game = game;
   }
 
   public Map<Color, List<Piece>> getPieces() {

@@ -6,6 +6,8 @@ import static se.lovebrandefelt.chess.Game.State.BLACK_WON;
 import static se.lovebrandefelt.chess.Game.State.DRAW;
 import static se.lovebrandefelt.chess.Game.State.IN_PROGRESS;
 import static se.lovebrandefelt.chess.Game.State.WHITE_WON;
+import static se.lovebrandefelt.chess.Pos.colToString;
+import static se.lovebrandefelt.chess.Pos.rowToString;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -29,6 +31,7 @@ public class Game {
    */
   public Game(Board setup, Color startingPlayer) {
     board = setup;
+    board.setGame(this);
     currentPlayer = startingPlayer;
     legalMoves = new HashMap<>();
   }
@@ -155,6 +158,92 @@ public class Game {
       currentPlayer = currentPlayer.next();
     }
     legalMoves = new HashMap<>();
+  }
+
+  /**
+   * Makes a move according to the specified move written in chess notation.
+   *
+   * @param moveString a move written in chess notation
+   */
+  public void makeMove(String moveString) {
+    if (moveString.charAt(0) == 'O') {
+      Pos from =
+          legalMoves()
+              .keySet()
+              .stream()
+              .filter((fromCandidate) -> board.get(fromCandidate).getTypeId() == 'K')
+              .findFirst()
+              .orElseThrow(IllegalArgumentException::new);
+      if (moveString.length() == 3) {
+        board.move(legalMoves().get(from).get(from.offset(new Pos(0, 2))));
+      } else {
+        board.move(legalMoves().get(from).get(from.offset(new Pos(0, -2))));
+      }
+    } else {
+      moveString = moveString.replace("x", "").replace("+", "");
+      char typeId;
+      String fromString;
+      if (Character.isUpperCase(moveString.charAt(0))) {
+        typeId = moveString.charAt(0);
+        fromString = moveString.substring(1, moveString.length() - 2);
+      } else {
+        typeId = 'P';
+        fromString = moveString.substring(0, moveString.length() - 2);
+      }
+      Pos to = new Pos(moveString.substring(moveString.length() - 2));
+      switch (fromString.length()) {
+        case 0:
+          Pos from =
+              legalMoves()
+                  .keySet()
+                  .stream()
+                  .filter((fromCandidate) -> board.get(fromCandidate).getTypeId() == typeId)
+                  .findFirst()
+                  .orElseThrow(IllegalArgumentException::new);
+          board.move(legalMoves().get(from).get(to));
+          break;
+        case 1:
+          if (Character.isDigit(fromString.charAt(0))) {
+            from =
+                legalMoves()
+                    .keySet()
+                    .stream()
+                    .filter(
+                        (fromCandidate) ->
+                            board.get(fromCandidate).getTypeId() == typeId
+                                && rowToString(fromCandidate.getRow()).equals(fromString))
+                    .findFirst()
+                    .orElseThrow(IllegalArgumentException::new);
+          } else {
+            from =
+                legalMoves()
+                    .keySet()
+                    .stream()
+                    .filter(
+                        (fromCandidate) ->
+                            board.get(fromCandidate).getTypeId() == typeId
+                                && colToString(fromCandidate.getCol()).equals(fromString))
+                    .findFirst()
+                    .orElseThrow(IllegalArgumentException::new);
+          }
+          board.move(legalMoves().get(from).get(to));
+          break;
+        case 2:
+          from =
+              legalMoves()
+                  .keySet()
+                  .stream()
+                  .filter(
+                      (fromCandidate) ->
+                          board.get(fromCandidate).getTypeId() == typeId
+                              && fromCandidate.toString().equals(fromString))
+                  .findFirst()
+                  .orElseThrow(IllegalArgumentException::new);
+          board.move(legalMoves().get(from).get(to));
+          break;
+        default:
+      }
+    }
   }
 
   /**
