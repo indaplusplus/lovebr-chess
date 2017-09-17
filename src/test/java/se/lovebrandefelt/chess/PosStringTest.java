@@ -7,7 +7,7 @@ import static se.lovebrandefelt.chess.Pos.rowToString;
 
 import org.junit.jupiter.api.Test;
 
-public class PosStringTest {
+class PosStringTest {
   @Test
   void posStringConstructorReturnsTheCorrectPos() {
     assertEquals(new Pos(3, 5), new Pos("F4"));

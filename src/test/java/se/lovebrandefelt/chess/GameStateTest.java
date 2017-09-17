@@ -11,7 +11,7 @@ import static se.lovebrandefelt.chess.Game.State.WHITE_WON;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-public class GameStateTest {
+class GameStateTest {
   private Game game;
   private Board board;
 

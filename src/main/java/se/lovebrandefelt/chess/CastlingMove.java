@@ -5,12 +5,12 @@ public class CastlingMove extends Move {
   private Pos rookFrom;
   private Pos rookTo;
 
-  protected CastlingMove(Pos from, Pos to) {
+  CastlingMove(Pos from, Pos to) {
     super(from, to);
   }
 
   @Override
-  public void perform(Board board) {
+  protected void perform(Board board) {
     setPiece(board.get(getFrom()));
     rookFrom = rook.getPos();
     if (rookFrom.getCol() < getFrom().getCol()) {
@@ -25,18 +25,18 @@ public class CastlingMove extends Move {
   }
 
   @Override
-  public void undo(Board board) {
+  protected void undo(Board board) {
     board.remove(getTo());
     board.remove(rookTo);
     board.add(getPiece(), getFrom());
     board.add(rook, rookFrom);
   }
 
-  public Rook getRook() {
+  Rook getRook() {
     return rook;
   }
 
-  public void setRook(Rook rook) {
+  void setRook(Rook rook) {
     this.rook = rook;
   }
 }

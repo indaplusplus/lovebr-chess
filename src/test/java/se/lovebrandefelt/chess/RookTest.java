@@ -9,7 +9,7 @@ import java.util.HashSet;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-public class RookTest {
+class RookTest {
   private Board board;
 
   @BeforeEach
@@ -19,7 +19,7 @@ public class RookTest {
 
   @Test
   void canMoveOrthogonallyButNotThroughPieces() {
-    Rook rook = board.add(new Rook(WHITE), new Pos("D4"));
+    Piece rook = board.add(new Rook(WHITE), new Pos("D4"));
     board.add(new Pawn(WHITE), new Pos("D2"));
     board.add(new Pawn(BLACK), new Pos("D6"));
     assertEquals(

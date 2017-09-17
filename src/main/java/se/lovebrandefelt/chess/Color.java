@@ -4,7 +4,11 @@ public enum Color {
   WHITE,
   BLACK;
 
-  Color next() {
+  /**
+   * Returns the next color.
+   * @return the next color
+   */
+  public Color next() {
     return Color.values()[(this.ordinal() + 1) % Color.values().length];
   }
 }

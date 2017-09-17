@@ -20,12 +20,24 @@ public class Game {
   private Board board;
   private Color currentPlayer;
   private Map<Pos, Map<Pos, Move>> legalMoves;
-  public <T extends Piece> Game(Board setup, Color startingPlayer) {
+
+  /**
+   * Creates a new game using the specified setup with the specified starting player.
+   *
+   * @param setup the setup to use
+   * @param startingPlayer the starting player
+   */
+  public Game(Board setup, Color startingPlayer) {
     board = setup;
     currentPlayer = startingPlayer;
     legalMoves = new HashMap<>();
   }
 
+  /**
+   * Returns a board with the standard chess setup.
+   *
+   * @return a board with the standard chess setup
+   */
   public static Board standardSetup() {
     Board board = new Board(8, 8);
     board.add(new Rook(WHITE), new Pos(0, 0));
@@ -36,7 +48,7 @@ public class Game {
     board.add(new Bishop(WHITE), new Pos(0, 5));
     board.add(new Knight(WHITE), new Pos(0, 6));
     board.add(new Rook(WHITE), new Pos(0, 7));
-    board.addPawnRow(WHITE, 1);
+    board.addPawnRow(1, WHITE);
     board.add(new Rook(BLACK), new Pos(7, 0));
     board.add(new Knight(BLACK), new Pos(7, 1));
     board.add(new Bishop(BLACK), new Pos(7, 2));
@@ -45,10 +57,15 @@ public class Game {
     board.add(new Bishop(BLACK), new Pos(7, 5));
     board.add(new Knight(BLACK), new Pos(7, 6));
     board.add(new Rook(BLACK), new Pos(7, 7));
-    board.addPawnRow(BLACK, 6);
+    board.addPawnRow(6, BLACK);
     return board;
   }
 
+  /**
+   * Returns a board with a random Chess 960 setup.
+   *
+   * @return a board with a random Chess 960 setup
+   */
   public static Board chess960Setup() {
     Board board = new Board(8, 8);
     Random random = new Random();
@@ -85,11 +102,18 @@ public class Game {
         default:
       }
     }
-    board.addPawnRow(WHITE, 1);
-    board.addPawnRow(BLACK, 6);
+    board.addPawnRow(1, WHITE);
+    board.addPawnRow(6, BLACK);
     return board;
   }
 
+  /**
+   * Returns a map where each key is a position the current player can move from and each value a
+   * map where each key is a position that piece can move to and each value is a corresponding Move
+   * object.
+   *
+   * @return a map of legal moves
+   */
   public Map<Pos, Map<Pos, Move>> legalMoves() {
     if (legalMoves.isEmpty()) {
       new ArrayList<>(getBoard().getPieces().get(currentPlayer))
@@ -98,7 +122,7 @@ public class Game {
     return legalMoves;
   }
 
-  public Map<Pos, Move> legalMovesWithCheck(Pos from) {
+  private Map<Pos, Move> legalMovesWithCheck(Pos from) {
     return board
         .get(from)
         .legalMoves()
@@ -108,7 +132,7 @@ public class Game {
         .collect(Collectors.toMap(Entry::getKey, Entry::getValue));
   }
 
-  public boolean movePutsCurrentPlayerInCheck(Move move) {
+  private boolean movePutsCurrentPlayerInCheck(Move move) {
     board.move(move);
     if (board.kingInCheck(currentPlayer)) {
       board.undoMove();
@@ -118,6 +142,12 @@ public class Game {
     return false;
   }
 
+  /**
+   * Makes a move from one position to another, if the move is legal.
+   *
+   * @param from the position to move from
+   * @param to the position to move to
+   */
   public void makeMove(Pos from, Pos to) {
     Move move = legalMoves().get(from).get(to);
     if (move != null) {
@@ -127,6 +157,11 @@ public class Game {
     legalMoves = new HashMap<>();
   }
 
+  /**
+   * Returns the current state of the game.
+   *
+   * @return the current state of the game
+   */
   public State state() {
     if (legalMoves().values().stream().anyMatch((moves) -> !moves.isEmpty())) {
       return IN_PROGRESS;

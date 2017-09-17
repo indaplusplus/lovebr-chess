@@ -10,7 +10,7 @@ import static se.lovebrandefelt.chess.Game.standardSetup;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-public class GameTest {
+class GameTest {
   private Game game;
   private Board board;
 
@@ -42,7 +42,7 @@ public class GameTest {
 
   @Test
   void onlyTheCurrentPlayerCanMoveHisPieces() {
-    Pawn pawn = board.add(new Pawn(BLACK), new Pos("E5"));
+    Piece pawn = board.add(new Pawn(BLACK), new Pos("E5"));
     assertFalse(game.legalMoves().containsKey(pawn.getPos()));
   }
 

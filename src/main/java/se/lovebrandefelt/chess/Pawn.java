@@ -42,6 +42,11 @@ public class Pawn extends Piece {
     return legalMoves;
   }
 
+  /**
+   * Returns the direction this pawn moves in.
+   *
+   * @return the direction this pawn moves in
+   */
   public int moveDirection() {
     if (getColor() == WHITE) {
       return 1;
@@ -50,11 +55,21 @@ public class Pawn extends Piece {
     }
   }
 
+  /**
+   * Returns whether this pawn can promote.
+   *
+   * @return whether this pawn can promote
+   */
   public boolean canPromote() {
     return ((getPos().getRow() + moveDirection()) % (getBoard().rows() + 1) == 8);
   }
 
-  public void promote(Piece promoteInto) {
-    getBoard().add(promoteInto, getPos());
+  /**
+   * Promotes this pawn into the specified piece.
+   *
+   * @param piece the piece to promote into
+   */
+  public void promote(Piece piece) {
+    getBoard().add(piece, getPos());
   }
 }

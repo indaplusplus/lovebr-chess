@@ -5,7 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-public class BoardTest {
+class BoardTest {
   private Board board;
 
   @BeforeEach

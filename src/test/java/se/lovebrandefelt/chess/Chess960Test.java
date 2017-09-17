@@ -9,7 +9,7 @@ import java.util.stream.Collectors;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-public class Chess960Test {
+class Chess960Test {
   private Board board;
 
   @BeforeEach

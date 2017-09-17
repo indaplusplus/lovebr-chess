@@ -9,7 +9,7 @@ import java.util.HashSet;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-public class QueenTest {
+class QueenTest {
   private Board board;
 
   @BeforeEach
@@ -19,7 +19,7 @@ public class QueenTest {
 
   @Test
   void canMoveDiagonallyOrOrthogonallyButNotThroughPieces() {
-    Queen queen = board.add(new Queen(WHITE), new Pos(3, 3));
+    final Piece queen = board.add(new Queen(WHITE), new Pos(3, 3));
     board.add(new Pawn(WHITE), new Pos(1, 1));
     board.add(new Pawn(BLACK), new Pos(1, 5));
     board.add(new Pawn(WHITE), new Pos(1, 3));

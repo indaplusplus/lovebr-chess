@@ -9,6 +9,10 @@ public class Pos {
     this.col = col;
   }
 
+  /**
+   * Creates a new pos from the specified string written in chess notation.
+   * @param posString a string written in chess notation
+   */
   public Pos(String posString) {
     if (posString.matches("[a-zA-Z]+[0-9]+")) {
       String rowString = posString.replaceFirst("[a-zA-Z]+", "");
@@ -27,10 +31,20 @@ public class Pos {
     throw new IllegalArgumentException();
   }
 
+  /**
+   * Returns a string for the specified row.
+   * @param row the row
+   * @return a string for the specified row
+   */
   public static String rowToString(int row) {
     return "" + (row + 1);
   }
 
+  /**
+   * Returns a string for the specified column.
+   * @param col the column
+   * @return a string for the specified column
+   */
   public static String colToString(int col) {
     StringBuilder stringBuilder = new StringBuilder();
     while (col >= 0) {
@@ -41,10 +55,20 @@ public class Pos {
     return stringBuilder.toString();
   }
 
+  /**
+   * Returns a position created by offsetting this position by the specified amount.
+   * @param offset the position to offset this position by
+   * @return a position created by offsetting this position by the specified amount
+   */
   public Pos offset(Pos offset) {
     return new Pos(this.row + offset.row, this.col + offset.col);
   }
 
+  /**
+   * Returns the direction between this position and the specified position.
+   * @param other the position to compare with
+   * @return the direction between this position and the specified position
+   */
   public Pos subtract(Pos other) {
     return new Pos(this.row - other.row, this.col - other.col);
   }

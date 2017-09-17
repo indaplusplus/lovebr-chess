@@ -35,13 +35,21 @@ public class Move {
     this.captured = captured;
   }
 
-  public void perform(Board board) {
+  /**
+   * Performs this move on the specified board.
+   * @param board the board to perform this move on.
+   */
+  protected void perform(Board board) {
     captured = board.remove(to);
     piece = board.add(board.get(from), to);
     board.remove(from);
   }
 
-  public void undo(Board board) {
+  /**
+   * Undoes this move on the specified board.
+   * @param board the board to undo this move on.
+   */
+  protected void undo(Board board) {
     board.add(piece, from);
     if (captured != null) {
       board.add(captured, to);
