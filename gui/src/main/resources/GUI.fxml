@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.layout.BorderPane?>
+<BorderPane xmlns:fx="http://javafx.com/fxml"
+            xmlns="http://javafx.com/javafx"
+            fx:controller="se.lovebrandefelt.chess.gui.GUIController"
+            prefHeight="400.0" prefWidth="600.0">
+
+    <top>
+        <Button text="Hello world!" onAction="#buttonClicked"/>
+    </top>
+</BorderPane>

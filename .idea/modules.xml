@@ -5,6 +5,9 @@
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/console/console.iml" filepath="$PROJECT_DIR$/.idea/modules/console/console.iml" group="console" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/console/console_main.iml" filepath="$PROJECT_DIR$/.idea/modules/console/console_main.iml" group="console" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/console/console_test.iml" filepath="$PROJECT_DIR$/.idea/modules/console/console_test.iml" group="console" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/gui/gui.iml" filepath="$PROJECT_DIR$/.idea/modules/gui/gui.iml" group="gui" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/gui/gui_main.iml" filepath="$PROJECT_DIR$/.idea/modules/gui/gui_main.iml" group="gui" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/gui/gui_test.iml" filepath="$PROJECT_DIR$/.idea/modules/gui/gui_test.iml" group="gui" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/lovebr-chess.iml" filepath="$PROJECT_DIR$/.idea/modules/lovebr-chess.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/lovebr-chess_main.iml" filepath="$PROJECT_DIR$/.idea/modules/lovebr-chess_main.iml" group="lovebr-chess" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/lovebr-chess_test.iml" filepath="$PROJECT_DIR$/.idea/modules/lovebr-chess_test.iml" group="lovebr-chess" />

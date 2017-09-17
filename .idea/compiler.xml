@@ -4,6 +4,8 @@
     <bytecodeTargetLevel>
       <module name="console_main" target="1.8" />
       <module name="console_test" target="1.8" />
+      <module name="gui_main" target="1.8" />
+      <module name="gui_test" target="1.8" />
       <module name="lovebr-chess_main" target="1.8" />
       <module name="lovebr-chess_test" target="1.8" />
     </bytecodeTargetLevel>

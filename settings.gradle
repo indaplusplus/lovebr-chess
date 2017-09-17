@@ -1,2 +1,2 @@
-include 'console'
+include 'console', 'gui'
 rootProject.name = 'lovebr-chess'

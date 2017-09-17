@@ -210,6 +210,7 @@ public abstract class Piece {
      * @param legalMoves the map of legal moves
      * @param moveSupplier the constructor for creating the moves
      * @param maxMoves the maximum number of moves to add
+     * @param piece the piece to add moves for
      */
     public abstract void perform(
         Pos direction,
