@@ -19,22 +19,22 @@ class BishopTest {
 
   @Test
   void canMoveDiagonallyButNotThroughPieces() {
-    Piece bishop = board.add(new Bishop(WHITE), new Pos("D4"));
-    board.add(new Pawn(WHITE), new Pos("B2"));
-    board.add(new Pawn(BLACK), new Pos("F2"));
+    Piece bishop = board.add(new Bishop(WHITE), new Pos("d4"));
+    board.add(new Pawn(WHITE), new Pos("b2"));
+    board.add(new Pawn(BLACK), new Pos("f2"));
     assertEquals(
         new HashSet<>(
             Arrays.asList(
-                new Pos("C3"),
-                new Pos("E3"),
-                new Pos("F2"),
-                new Pos("E5"),
-                new Pos("F6"),
-                new Pos("G7"),
-                new Pos("H8"),
-                new Pos("C5"),
-                new Pos("B6"),
-                new Pos("A7"))),
+                new Pos("c3"),
+                new Pos("e3"),
+                new Pos("f2"),
+                new Pos("e5"),
+                new Pos("f6"),
+                new Pos("g7"),
+                new Pos("h8"),
+                new Pos("c5"),
+                new Pos("b6"),
+                new Pos("a7"))),
         bishop.legalMoves().keySet());
   }
 }

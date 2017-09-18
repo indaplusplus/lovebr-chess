@@ -22,8 +22,8 @@ class GameTest {
 
   @Test
   void makingAValidMoveShouldUpdateTheBoard() {
-    Pos from = new Pos("B1");
-    Pos to = new Pos("C3");
+    Pos from = new Pos("b1");
+    Pos to = new Pos("c3");
     Piece toBeMoved = game.getBoard().get(from);
     game.makeMove(from, to);
     assertSame(null, game.getBoard().get(from));
@@ -32,8 +32,8 @@ class GameTest {
 
   @Test
   void makingAValidMoveShouldUpdateTheMovedPiece() {
-    Pos from = new Pos("B1");
-    Pos to = new Pos("C3");
+    Pos from = new Pos("b1");
+    Pos to = new Pos("c3");
     Piece toBeMoved = game.getBoard().get(from);
     game.makeMove(from, to);
     assertEquals(toBeMoved.getPos().getRow(), to.getRow());
@@ -42,14 +42,14 @@ class GameTest {
 
   @Test
   void onlyTheCurrentPlayerCanMoveHisPieces() {
-    Piece pawn = board.add(new Pawn(BLACK), new Pos("E5"));
+    Piece pawn = board.add(new Pawn(BLACK), new Pos("e5"));
     assertFalse(game.legalMoves().containsKey(pawn.getPos()));
   }
 
   @Test
   void makingAValidMoveShouldPassTheTurn() {
-    Pos from = new Pos("B1");
-    Pos to = new Pos("C3");
+    Pos from = new Pos("b1");
+    Pos to = new Pos("c3");
     game.makeMove(from, to);
     assertEquals(BLACK, game.getCurrentPlayer());
   }

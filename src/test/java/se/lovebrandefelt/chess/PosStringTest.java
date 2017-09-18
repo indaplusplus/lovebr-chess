@@ -10,7 +10,7 @@ import org.junit.jupiter.api.Test;
 class PosStringTest {
   @Test
   void posStringConstructorReturnsTheCorrectPos() {
-    assertEquals(new Pos(3, 5), new Pos("F4"));
+    assertEquals(new Pos(3, 5), new Pos("f4"));
     assertEquals(new Pos(11, 0), new Pos("A12"));
     assertEquals(new Pos(9, 26), new Pos("AA10"));
   }

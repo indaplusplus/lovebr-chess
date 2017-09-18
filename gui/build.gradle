@@ -1,4 +1,5 @@
 jar {
+    from rootProject.sourceSets.main.output
     manifest {
         attributes(
                 'Class-Path': 'se.lovebrandefelt.chess.gui',

@@ -17,6 +17,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Random;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class Game {
   private Board board;
@@ -166,19 +167,15 @@ public class Game {
    * @param moveString a move written in chess notation
    */
   public void makeMove(String moveString) {
-    if (moveString.charAt(0) == 'O') {
-      Pos from =
-          legalMoves()
-              .keySet()
-              .stream()
-              .filter((fromCandidate) -> board.get(fromCandidate).getTypeId() == 'K')
-              .findFirst()
-              .orElseThrow(IllegalArgumentException::new);
-      if (moveString.length() == 3) {
-        board.move(legalMoves().get(from).get(from.offset(new Pos(0, 2))));
-      } else {
-        board.move(legalMoves().get(from).get(from.offset(new Pos(0, -2))));
+    if (moveString.startsWith("O-O")) {
+      Stream<Pos> fromCanditates =
+          legalMoves().keySet().stream().filter((from) -> board.get(from).getTypeId() == 'K');
+      if (fromCanditates.count() != 1) {
+        throw new IllegalArgumentException();
       }
+      Pos from = fromCanditates.findFirst().orElseThrow(IllegalArgumentException::new);
+      Pos to = moveString.equals("O-O") ? new Pos(from.getRow(), 6) : new Pos(from.getRow(), 2);
+      board.move(legalMoves().get(from).get(to));
     } else {
       moveString = moveString.replace("x", "").replace("+", "");
       char typeId;
@@ -191,64 +188,33 @@ public class Game {
         fromString = moveString.substring(0, moveString.length() - 2);
       }
       Pos to = new Pos(moveString.substring(moveString.length() - 2));
-      switch (fromString.length()) {
-        case 0:
-          Pos from =
-              legalMoves()
-                  .keySet()
-                  .stream()
-                  .filter(
-                      (fromCandidate) ->
-                          board.get(fromCandidate).getTypeId() == typeId
-                              && legalMoves().get(fromCandidate).containsKey(to))
-                  .findFirst()
-                  .orElseThrow(IllegalArgumentException::new);
-          board.move(legalMoves().get(from).get(to));
-          break;
-        case 1:
-          if (Character.isDigit(fromString.charAt(0))) {
-            from =
-                legalMoves()
-                    .keySet()
-                    .stream()
-                    .filter(
-                        (fromCandidate) ->
-                            board.get(fromCandidate).getTypeId() == typeId
-                                && legalMoves().get(fromCandidate).containsKey(to)
-                                && rowToString(fromCandidate.getRow()).equals(fromString))
-                    .findFirst()
-                    .orElseThrow(IllegalArgumentException::new);
-          } else {
-            from =
-                legalMoves()
-                    .keySet()
-                    .stream()
-                    .filter(
-                        (fromCandidate) ->
-                            board.get(fromCandidate).getTypeId() == typeId
-                                && legalMoves().get(fromCandidate).containsKey(to)
-                                && colToString(fromCandidate.getCol()).equals(fromString))
-                    .findFirst()
-                    .orElseThrow(IllegalArgumentException::new);
-          }
-          board.move(legalMoves().get(from).get(to));
-          break;
-        case 2:
-          from =
-              legalMoves()
-                  .keySet()
-                  .stream()
-                  .filter(
-                      (fromCandidate) ->
-                          board.get(fromCandidate).getTypeId() == typeId
-                              && legalMoves().get(fromCandidate).containsKey(to)
-                              && fromCandidate.toString().equals(fromString))
-                  .findFirst()
-                  .orElseThrow(IllegalArgumentException::new);
-          board.move(legalMoves().get(from).get(to));
-          break;
-        default:
+      Stream<Pos> fromCandidates =
+          legalMoves()
+              .keySet()
+              .stream()
+              .filter(
+                  (from) ->
+                      board.get(from).getTypeId() == typeId
+                          && legalMoves().get(from).containsKey(to));
+      if (fromString.length() == 1) {
+        if (Character.isDigit(fromString.charAt(0))) {
+          fromCandidates =
+              fromCandidates.filter(
+                  (fromCandidate) -> rowToString(fromCandidate.getRow()).equals(fromString));
+        } else {
+          fromCandidates =
+              fromCandidates.filter(
+                  (fromCandidate) -> colToString(fromCandidate.getCol()).equals(fromString));
+        }
+      } else if (fromString.length() == 2) {
+        fromCandidates =
+            fromCandidates.filter((fromCandidate) -> fromCandidate.toString().equals(fromString));
       }
+      if (fromCandidates.count() != 1) {
+        throw new IllegalArgumentException();
+      }
+      Pos from = fromCandidates.findFirst().orElseThrow(IllegalArgumentException::new);
+      board.move(legalMoves().get(from).get(to));
     }
     currentPlayer = currentPlayer.next();
     legalMoves = new HashMap<>();

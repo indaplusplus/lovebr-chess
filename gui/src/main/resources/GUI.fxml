@@ -8,6 +8,8 @@
             prefHeight="400.0" prefWidth="600.0">
 
     <top>
-        <Button text="Hello world!" onAction="#buttonClicked"/>
+        <Button fx:id="button"
+                text="Hello world!"
+                onAction="#buttonClicked"/>
     </top>
 </BorderPane>

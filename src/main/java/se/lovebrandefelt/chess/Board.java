@@ -182,49 +182,4 @@ public class Board {
   public Stack<Move> getHistory() {
     return history;
   }
-
-  @Override
-  public String toString() {
-    StringBuilder stringBuilder = new StringBuilder("");
-    StringBuilder colStringBuilder = new StringBuilder("  ");
-    for (int col = 0; col < cols(); col++) {
-      colStringBuilder.append(String.format("%-2s", Pos.colToString(col)));
-    }
-    colStringBuilder.append("  ");
-    stringBuilder.append(colStringBuilder);
-    stringBuilder.append("Captures: ");
-    history
-        .stream()
-        .filter((move) -> move.getCaptured() != null && move.getCaptured().getColor() == WHITE)
-        .map((move) -> move.getCaptured().getTypeId())
-        .sorted()
-        .forEach((typeId) -> stringBuilder.append(typeId).append(' '));
-    stringBuilder.append('\n');
-    for (int row = rows() - 1; row >= 0; row--) {
-      String rowString = String.format("%-2s", Pos.rowToString(row));
-      stringBuilder.append(rowString);
-      for (Piece piece : squares[row]) {
-        if (piece == null) {
-          stringBuilder.append("- ");
-        } else {
-          if (piece.getColor() == WHITE) {
-            stringBuilder.append(piece.getTypeId()).append(" ");
-          } else {
-            stringBuilder.append(Character.toLowerCase(piece.getTypeId())).append(" ");
-          }
-        }
-      }
-      stringBuilder.append(rowString);
-      stringBuilder.append('\n');
-    }
-    stringBuilder.append(colStringBuilder.toString().toLowerCase());
-    stringBuilder.append("Captures: ");
-    history
-        .stream()
-        .filter((move) -> move.getCaptured() != null && move.getCaptured().getColor() == BLACK)
-        .map((move) -> move.getCaptured().getTypeId())
-        .sorted()
-        .forEach((typeId) -> stringBuilder.append(typeId).append(' '));
-    return stringBuilder.toString();
-  }
 }

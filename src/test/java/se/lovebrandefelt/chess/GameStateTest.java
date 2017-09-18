@@ -23,34 +23,34 @@ class GameStateTest {
 
   @Test
   void stateIsInProgressWhenGameHasNotEnded() {
-    board.add(new Rook(WHITE), new Pos("H6"));
-    board.add(new Rook(WHITE), new Pos("G7"));
-    board.add(new King(BLACK), new Pos("B8"));
+    board.add(new Rook(WHITE), new Pos("h6"));
+    board.add(new Rook(WHITE), new Pos("g7"));
+    board.add(new King(BLACK), new Pos("b8"));
     assertEquals(IN_PROGRESS, game.state());
   }
 
   @Test
   void whiteCanWin() {
-    board.add(new Rook(WHITE), new Pos("H6"));
-    board.add(new Rook(WHITE), new Pos("G7"));
-    board.add(new King(BLACK), new Pos("B8"));
-    game.makeMove(new Pos("H6"), new Pos("H8"));
+    board.add(new Rook(WHITE), new Pos("h6"));
+    board.add(new Rook(WHITE), new Pos("g7"));
+    board.add(new King(BLACK), new Pos("b8"));
+    game.makeMove(new Pos("h6"), new Pos("h8"));
     assertEquals(WHITE_WON, game.state());
   }
 
   @Test
   void blackCanWin() {
-    board.add(new Rook(BLACK), new Pos("H8"));
-    board.add(new Rook(BLACK), new Pos("G7"));
-    board.add(new King(WHITE), new Pos("B8"));
+    board.add(new Rook(BLACK), new Pos("h8"));
+    board.add(new Rook(BLACK), new Pos("g7"));
+    board.add(new King(WHITE), new Pos("b8"));
     assertEquals(BLACK_WON, game.state());
   }
 
   @Test
   void gameEndsInDrawWhenOnePlayerCantMove() {
-    board.add(new Rook(BLACK), new Pos("H7"));
-    board.add(new Rook(BLACK), new Pos("B1"));
-    board.add(new King(WHITE), new Pos("A8"));
+    board.add(new Rook(BLACK), new Pos("h7"));
+    board.add(new Rook(BLACK), new Pos("b1"));
+    board.add(new King(WHITE), new Pos("a8"));
     assertEquals(DRAW, game.state());
   }
 }

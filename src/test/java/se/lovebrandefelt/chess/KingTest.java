@@ -23,79 +23,79 @@ class KingTest {
 
   @Test
   void canMoveToAdjacentSquares() {
-    Piece king = board.add(new King(WHITE), new Pos("D4"));
+    Piece king = board.add(new King(WHITE), new Pos("d4"));
     assertTrue(
         king.legalMoves()
             .keySet()
             .containsAll(
                 new HashSet<>(
                     (Arrays.asList(
-                        new Pos("C3"),
-                        new Pos("D3"),
-                        new Pos("E3"),
-                        new Pos("C4"),
-                        new Pos("E4"),
-                        new Pos("C5"),
-                        new Pos("D5"),
-                        new Pos("E5"))))));
+                        new Pos("c3"),
+                        new Pos("d3"),
+                        new Pos("e3"),
+                        new Pos("c4"),
+                        new Pos("e4"),
+                        new Pos("c5"),
+                        new Pos("d5"),
+                        new Pos("e5"))))));
   }
 
   @Test
   void cantMoveIntoCheck() {
-    Piece king = board.add(new King(WHITE), new Pos("D4"));
-    board.add(new Pawn(BLACK), new Pos("D6"));
-    assertFalse(game.legalMoves().get(king.getPos()).containsKey(new Pos("C5")));
-    assertFalse(game.legalMoves().get(king.getPos()).containsKey(new Pos("E5")));
+    Piece king = board.add(new King(WHITE), new Pos("d4"));
+    board.add(new Pawn(BLACK), new Pos("d6"));
+    assertFalse(game.legalMoves().get(king.getPos()).containsKey(new Pos("c5")));
+    assertFalse(game.legalMoves().get(king.getPos()).containsKey(new Pos("e5")));
   }
 
   @Test
   void cantBeCheckedByOwnPieces() {
-    Piece king = board.add(new King(WHITE), new Pos("D4"));
-    board.add(new Pawn(WHITE), new Pos("D6"));
-    assertTrue(game.legalMoves().get(king.getPos()).containsKey(new Pos("C5")));
-    assertTrue(game.legalMoves().get(king.getPos()).containsKey(new Pos("E5")));
+    Piece king = board.add(new King(WHITE), new Pos("d4"));
+    board.add(new Pawn(WHITE), new Pos("d6"));
+    assertTrue(game.legalMoves().get(king.getPos()).containsKey(new Pos("c5")));
+    assertTrue(game.legalMoves().get(king.getPos()).containsKey(new Pos("e5")));
   }
 
   @Test
   void canCastleLeft() {
-    Piece king = board.add(new King(WHITE), new Pos("E1"));
-    final Piece rook = board.add(new Rook(WHITE), new Pos("A1"));
-    assertTrue(game.legalMoves().get(king.getPos()).containsKey(new Pos("C1")));
-    game.makeMove(new Pos("E1"), new Pos("C1"));
-    assertSame(king, board.get(new Pos("C1")));
-    assertSame(rook, board.get(new Pos("D1")));
+    Piece king = board.add(new King(WHITE), new Pos("e1"));
+    final Piece rook = board.add(new Rook(WHITE), new Pos("a1"));
+    assertTrue(game.legalMoves().get(king.getPos()).containsKey(new Pos("c1")));
+    game.makeMove(new Pos("e1"), new Pos("c1"));
+    assertSame(king, board.get(new Pos("c1")));
+    assertSame(rook, board.get(new Pos("d1")));
   }
 
   @Test
   void canCastleRight() {
-    Piece king = board.add(new King(WHITE), new Pos("E1"));
-    final Piece rook = board.add(new Rook(WHITE), new Pos("H1"));
-    assertTrue(game.legalMoves().get(king.getPos()).containsKey(new Pos("G1")));
-    game.makeMove(new Pos("E1"), new Pos("G1"));
-    assertSame(king, board.get(new Pos("G1")));
-    assertSame(rook, board.get(new Pos("F1")));
+    Piece king = board.add(new King(WHITE), new Pos("e1"));
+    final Piece rook = board.add(new Rook(WHITE), new Pos("h1"));
+    assertTrue(game.legalMoves().get(king.getPos()).containsKey(new Pos("g1")));
+    game.makeMove(new Pos("e1"), new Pos("g1"));
+    assertSame(king, board.get(new Pos("g1")));
+    assertSame(rook, board.get(new Pos("f1")));
   }
 
   @Test
   void cantCastleLeftWhenThreatenedSquaresInBetween() {
-    Piece king = board.add(new King(WHITE), new Pos("E1"));
-    board.add(new Rook(WHITE), new Pos("A1"));
-    board.add(new Rook(BLACK), new Pos("D2"));
-    assertFalse(game.legalMoves().get(king.getPos()).containsKey(new Pos("C1")));
+    Piece king = board.add(new King(WHITE), new Pos("e1"));
+    board.add(new Rook(WHITE), new Pos("a1"));
+    board.add(new Rook(BLACK), new Pos("d2"));
+    assertFalse(game.legalMoves().get(king.getPos()).containsKey(new Pos("c1")));
   }
 
   @Test
   void cantCastleRightWhenThreatenedSquaresInBetween() {
-    Piece king = board.add(new King(WHITE), new Pos("E1"));
-    board.add(new Rook(WHITE), new Pos("H1"));
-    board.add(new Rook(BLACK), new Pos("F2"));
-    assertFalse(game.legalMoves().get(king.getPos()).containsKey(new Pos("G1")));
+    Piece king = board.add(new King(WHITE), new Pos("e1"));
+    board.add(new Rook(WHITE), new Pos("h1"));
+    board.add(new Rook(BLACK), new Pos("f2"));
+    assertFalse(game.legalMoves().get(king.getPos()).containsKey(new Pos("g1")));
   }
 
   @Test
   void canCastleFromSecondColumnInFischerChess() {
-    Piece king = board.add(new King(WHITE), new Pos("B1"));
-    board.add(new Rook(WHITE), new Pos("A1"));
-    assertTrue(game.legalMoves().get(king.getPos()).containsKey(new Pos("C1")));
+    Piece king = board.add(new King(WHITE), new Pos("b1"));
+    board.add(new Rook(WHITE), new Pos("a1"));
+    assertTrue(game.legalMoves().get(king.getPos()).containsKey(new Pos("c1")));
   }
 }

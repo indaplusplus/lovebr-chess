@@ -19,22 +19,22 @@ class RookTest {
 
   @Test
   void canMoveOrthogonallyButNotThroughPieces() {
-    Piece rook = board.add(new Rook(WHITE), new Pos("D4"));
-    board.add(new Pawn(WHITE), new Pos("D2"));
-    board.add(new Pawn(BLACK), new Pos("D6"));
+    Piece rook = board.add(new Rook(WHITE), new Pos("d4"));
+    board.add(new Pawn(WHITE), new Pos("d2"));
+    board.add(new Pawn(BLACK), new Pos("d6"));
     assertEquals(
         new HashSet<>(
             Arrays.asList(
-                new Pos("D3"),
-                new Pos("D5"),
-                new Pos("D6"),
-                new Pos("C4"),
-                new Pos("B4"),
-                new Pos("A4"),
-                new Pos("E4"),
-                new Pos("F4"),
-                new Pos("G4"),
-                new Pos("H4"))),
+                new Pos("d3"),
+                new Pos("d5"),
+                new Pos("d6"),
+                new Pos("c4"),
+                new Pos("b4"),
+                new Pos("a4"),
+                new Pos("e4"),
+                new Pos("f4"),
+                new Pos("g4"),
+                new Pos("h4"))),
         rook.legalMoves().keySet());
   }
 }

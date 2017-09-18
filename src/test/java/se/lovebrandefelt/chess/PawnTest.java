@@ -22,81 +22,81 @@ class PawnTest {
 
   @Test
   void canMoveOneStepForward() {
-    Piece whitePawn = board.add(new Pawn(WHITE), new Pos("A1"));
-    Piece blackPawn = board.add(new Pawn(BLACK), new Pos("H8"));
-    assertTrue(whitePawn.legalMoves().containsKey(new Pos("A2")));
-    assertTrue(blackPawn.legalMoves().containsKey(new Pos("H7")));
+    Piece whitePawn = board.add(new Pawn(WHITE), new Pos("a1"));
+    Piece blackPawn = board.add(new Pawn(BLACK), new Pos("h8"));
+    assertTrue(whitePawn.legalMoves().containsKey(new Pos("a2")));
+    assertTrue(blackPawn.legalMoves().containsKey(new Pos("h7")));
   }
 
   @Test
   void cantCaptureOneStepForward() {
-    Piece whitePawn = board.add(new Pawn(WHITE), new Pos("E4"));
-    Piece blackPawn = board.add(new Pawn(BLACK), new Pos("E5"));
-    assertFalse(whitePawn.legalMoves().containsKey(new Pos("E5")));
-    assertFalse(blackPawn.legalMoves().containsKey(new Pos("E4")));
+    Piece whitePawn = board.add(new Pawn(WHITE), new Pos("e4"));
+    Piece blackPawn = board.add(new Pawn(BLACK), new Pos("e5"));
+    assertFalse(whitePawn.legalMoves().containsKey(new Pos("e5")));
+    assertFalse(blackPawn.legalMoves().containsKey(new Pos("e4")));
   }
 
   @Test
   void canCaptureOneStepDiagonallyForward() {
-    Piece whitePawn = board.add(new Pawn(WHITE), new Pos("E4"));
-    Piece blackPawn = board.add(new Pawn(BLACK), new Pos("D5"));
-    assertTrue(whitePawn.legalMoves().containsKey(new Pos("D5")));
-    assertTrue(blackPawn.legalMoves().containsKey(new Pos("E4")));
+    Piece whitePawn = board.add(new Pawn(WHITE), new Pos("e4"));
+    Piece blackPawn = board.add(new Pawn(BLACK), new Pos("d5"));
+    assertTrue(whitePawn.legalMoves().containsKey(new Pos("d5")));
+    assertTrue(blackPawn.legalMoves().containsKey(new Pos("e4")));
   }
 
   @Test
   void cantMoveOneStepDiagonallyForward() {
-    Piece whitePawn = board.add(new Pawn(WHITE), new Pos("A1"));
-    Piece blackPawn = board.add(new Pawn(BLACK), new Pos("H8"));
-    assertFalse(whitePawn.legalMoves().containsKey(new Pos("B2")));
-    assertFalse(blackPawn.legalMoves().containsKey(new Pos("G7")));
+    Piece whitePawn = board.add(new Pawn(WHITE), new Pos("a1"));
+    Piece blackPawn = board.add(new Pawn(BLACK), new Pos("h8"));
+    assertFalse(whitePawn.legalMoves().containsKey(new Pos("b2")));
+    assertFalse(blackPawn.legalMoves().containsKey(new Pos("g7")));
   }
 
   @Test
   void canMoveTwoStepsForwardOnFirstMove() {
-    Piece whitePawn = board.add(new Pawn(WHITE), new Pos("A1"));
-    Piece blackPawn = board.add(new Pawn(BLACK), new Pos("H8"));
-    assertTrue(whitePawn.legalMoves().containsKey(new Pos("A3")));
-    assertTrue(blackPawn.legalMoves().containsKey(new Pos("H6")));
+    Piece whitePawn = board.add(new Pawn(WHITE), new Pos("a1"));
+    Piece blackPawn = board.add(new Pawn(BLACK), new Pos("h8"));
+    assertTrue(whitePawn.legalMoves().containsKey(new Pos("a3")));
+    assertTrue(blackPawn.legalMoves().containsKey(new Pos("h6")));
   }
 
   @Test
   void cantMoveTwoStepsOnNonFirstMove() {
-    Piece whitePawn = board.add(new Pawn(WHITE), new Pos("A1"));
-    board.move(new Move(whitePawn.getPos(), new Pos("A2")));
-    Piece blackPawn = board.add(new Pawn(BLACK), new Pos("H8"));
-    board.move(new Move(blackPawn.getPos(), new Pos("H7")));
-    assertFalse(whitePawn.legalMoves().containsKey(new Pos("A4")));
-    assertFalse(blackPawn.legalMoves().containsKey(new Pos("H5")));
+    Piece whitePawn = board.add(new Pawn(WHITE), new Pos("a1"));
+    board.move(new Move(whitePawn.getPos(), new Pos("a2")));
+    Piece blackPawn = board.add(new Pawn(BLACK), new Pos("h8"));
+    board.move(new Move(blackPawn.getPos(), new Pos("h7")));
+    assertFalse(whitePawn.legalMoves().containsKey(new Pos("a4")));
+    assertFalse(blackPawn.legalMoves().containsKey(new Pos("h5")));
   }
 
   @Test
   void canEnPassant() {
-    Piece whitePawn = board.add(new Pawn(WHITE), new Pos("A2"));
-    Piece blackPawn = board.add(new Pawn(BLACK), new Pos("B4"));
-    game.makeMove(whitePawn.getPos(), new Pos("A4"));
-    assertTrue(blackPawn.legalMoves().containsKey(new Pos("A3")));
-    game.makeMove(blackPawn.getPos(), new Pos("A3"));
+    Piece whitePawn = board.add(new Pawn(WHITE), new Pos("a2"));
+    Piece blackPawn = board.add(new Pawn(BLACK), new Pos("b4"));
+    game.makeMove(whitePawn.getPos(), new Pos("a4"));
+    assertTrue(blackPawn.legalMoves().containsKey(new Pos("a3")));
+    game.makeMove(blackPawn.getPos(), new Pos("a3"));
     Move lastMove = board.getHistory().peek();
     assertSame(whitePawn, lastMove.getCaptured());
-    assertSame(blackPawn, board.get(new Pos("A3")));
-    assertNull(board.get(new Pos("A4")));
+    assertSame(blackPawn, board.get(new Pos("a3")));
+    assertNull(board.get(new Pos("a4")));
   }
 
   @Test
   void canPromote() {
-    Pawn pawn = (Pawn) board.add(new Pawn(WHITE), new Pos("E7"));
-    game.makeMove(new Pos("E7"), new Pos("E8"));
+    Pawn pawn = (Pawn) board.add(new Pawn(WHITE), new Pos("e7"));
+    game.makeMove(new Pos("e7"), new Pos("e8"));
     assertTrue(pawn.canPromote());
   }
 
   @Test
   void promotionCanBeDoneAndUndone() {
-    Pawn pawn = (Pawn) board.add(new Pawn(WHITE), new Pos("E7"));
-    game.makeMove(new Pos("E7"), new Pos("E8"));
+    Pawn pawn = (Pawn) board.add(new Pawn(WHITE), new Pos("e7"));
+    game.makeMove(new Pos("e7"), new Pos("e8"));
     pawn.promote(new Knight(WHITE));
     board.undoMove();
-    assertNull(board.get(new Pos("E8")));
-    assertSame(pawn, board.get(new Pos("E7")));
+    assertNull(board.get(new Pos("e8")));
+    assertSame(pawn, board.get(new Pos("e7")));
   }
 }
