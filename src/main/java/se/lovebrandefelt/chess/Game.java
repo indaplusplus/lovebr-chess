@@ -180,41 +180,62 @@ public class Game {
       moveString = moveString.replace("x", "").replace("+", "");
       char typeId;
       String fromString;
+      Pos to;
       if (Character.isUpperCase(moveString.charAt(0))) {
         typeId = moveString.charAt(0);
         fromString = moveString.substring(1, moveString.length() - 2);
+        to = new Pos(moveString.substring(moveString.length() - 2));
       } else {
         typeId = 'P';
-        fromString = moveString.substring(0, moveString.length() - 2);
+        if (Character.isUpperCase(moveString.charAt(moveString.length() - 1))) {
+          fromString = moveString.substring(0, moveString.length() - 3);
+          to = new Pos(moveString.substring(moveString.length() - 3, moveString.length() - 1));
+        } else {
+          fromString = moveString.substring(0, moveString.length() - 2);
+          to = new Pos(moveString.substring(moveString.length() - 2));
+        }
       }
-      Pos to = new Pos(moveString.substring(moveString.length() - 2));
-      Stream<Pos> fromCandidates =
+      List<Pos> fromCandidates =
           legalMoves()
               .keySet()
               .stream()
               .filter(
                   (from) ->
                       board.get(from).getTypeId() == typeId
-                          && legalMoves().get(from).containsKey(to));
+                          && legalMoves().get(from).containsKey(to))
+              .collect(Collectors.toList());
       if (fromString.length() == 1) {
         if (Character.isDigit(fromString.charAt(0))) {
           fromCandidates =
-              fromCandidates.filter(
-                  (fromCandidate) -> rowToString(fromCandidate.getRow()).equals(fromString));
+              fromCandidates
+                  .stream()
+                  .filter((fromCandidate) -> rowToString(fromCandidate.getRow()).equals(fromString))
+                  .collect(Collectors.toList());
         } else {
           fromCandidates =
-              fromCandidates.filter(
-                  (fromCandidate) -> colToString(fromCandidate.getCol()).equals(fromString));
+              fromCandidates
+                  .stream()
+                  .filter((fromCandidate) -> colToString(fromCandidate.getCol()).equals(fromString))
+                  .collect(Collectors.toList());
         }
       } else if (fromString.length() == 2) {
         fromCandidates =
-            fromCandidates.filter((fromCandidate) -> fromCandidate.toString().equals(fromString));
+            fromCandidates
+                .stream()
+                .filter((fromCandidate) -> fromCandidate.toString().equals(fromString))
+                .collect(Collectors.toList());
       }
-      if (fromCandidates.count() != 1) {
+      if (fromCandidates.size() != 1) {
         throw new IllegalArgumentException();
       }
-      Pos from = fromCandidates.findFirst().orElseThrow(IllegalArgumentException::new);
+      Pos from = fromCandidates.get(0);
       board.move(legalMoves().get(from).get(to));
+      if (board.get(to).getTypeId() == 'P') {
+        Pawn pawn = (Pawn) board.get(to);
+        if (pawn.canPromote()) {
+          pawn.promote(moveString.charAt(moveString.length() - 1));
+        }
+      }
     }
     currentPlayer = currentPlayer.next();
     legalMoves = new HashMap<>();

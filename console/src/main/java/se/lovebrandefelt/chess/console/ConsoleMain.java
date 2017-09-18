@@ -7,15 +7,9 @@ import static se.lovebrandefelt.chess.Game.chess960Setup;
 import static se.lovebrandefelt.chess.Game.standardSetup;
 
 import java.util.Scanner;
-import se.lovebrandefelt.chess.Bishop;
 import se.lovebrandefelt.chess.Board;
 import se.lovebrandefelt.chess.Game;
-import se.lovebrandefelt.chess.Knight;
-import se.lovebrandefelt.chess.Pawn;
-import se.lovebrandefelt.chess.Piece;
 import se.lovebrandefelt.chess.Pos;
-import se.lovebrandefelt.chess.Queen;
-import se.lovebrandefelt.chess.Rook;
 
 public class ConsoleMain {
   public static void main(String[] args) {
@@ -37,60 +31,13 @@ public class ConsoleMain {
       } else {
         System.out.println(game.getCurrentPlayer() + "'s turn");
       }
-      Pos from;
-      Pos to;
       while (true) {
-        System.out.print("Move from: ");
+        System.out.print("Enter your move: ");
         try {
-          from = new Pos(scanner.next());
-        } catch (IllegalArgumentException e) {
-          System.out.println("That is not a square!");
-          continue;
-        }
-        if (!game.legalMoves().get(from).isEmpty()) {
+          game.makeMove(scanner.next());
           break;
-        }
-        System.out.println("You can't move from there!");
-      }
-      while (true) {
-        System.out.print("Move to: ");
-        try {
-          to = new Pos(scanner.next());
-        } catch (IllegalArgumentException e) {
-          System.out.println("That is not a square!");
-          continue;
-        }
-        if (game.legalMoves().get(from).containsKey(to)) {
-          break;
-        }
-        System.out.println("That move is not legal!");
-      }
-      game.makeMove(from, to);
-      Piece piece = game.getBoard().get(to);
-      if (piece.getTypeId() == 'P' && ((Pawn) piece).canPromote()) {
-        String promoteInto;
-        loop:
-        while (true) {
-          System.out.print("Promote into: ");
-          promoteInto = scanner.next();
-          if (promoteInto.length() == 1) {
-            switch (promoteInto.charAt(0)) {
-              case 'B':
-                ((Pawn) piece).promote(new Bishop(piece.getColor()));
-                break loop;
-              case 'N':
-                ((Pawn) piece).promote(new Knight(piece.getColor()));
-                break loop;
-              case 'R':
-                ((Pawn) piece).promote(new Rook(piece.getColor()));
-                break loop;
-              case 'Q':
-                ((Pawn) piece).promote(new Queen(piece.getColor()));
-                break loop;
-              default:
-            }
-          }
-          System.out.println("You can't promote into that!");
+        } catch (IllegalArgumentException ignored) {
+          System.out.println("That move is not legal!");
         }
       }
     }
@@ -123,7 +70,8 @@ public class ConsoleMain {
     colStringBuilder.append("  ");
     stringBuilder.append(colStringBuilder);
     stringBuilder.append("Captures: ");
-    board.getHistory()
+    board
+        .getHistory()
         .stream()
         .filter((move) -> move.getCaptured() != null && move.getCaptured().getColor() == WHITE)
         .map((move) -> move.getCaptured().getTypeId())
@@ -133,7 +81,7 @@ public class ConsoleMain {
     for (int row = board.rows() - 1; row >= 0; row--) {
       String rowString = String.format("%-2s", Pos.rowToString(row));
       stringBuilder.append(rowString);
-      for (int col = 0; col < board.cols(); row--) {
+      for (int col = 0; col < board.cols(); col++) {
         Pos pos = new Pos(row, col);
         if (board.isEmpty(pos)) {
           stringBuilder.append("- ");
@@ -150,7 +98,8 @@ public class ConsoleMain {
     }
     stringBuilder.append(colStringBuilder.toString().toLowerCase());
     stringBuilder.append("Captures: ");
-    board.getHistory()
+    board
+        .getHistory()
         .stream()
         .filter((move) -> move.getCaptured() != null && move.getCaptured().getColor() == BLACK)
         .map((move) -> move.getCaptured().getTypeId())

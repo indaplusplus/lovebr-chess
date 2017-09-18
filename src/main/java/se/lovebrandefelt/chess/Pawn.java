@@ -65,11 +65,25 @@ public class Pawn extends Piece {
   }
 
   /**
-   * Promotes this pawn into the specified piece.
+   * Promotes this pawn into a piece of the type specified by typeId.
    *
-   * @param piece the piece to promote into
+   * @param typeId the type of the piece to promote into
    */
-  public void promote(Piece piece) {
-    getBoard().add(piece, getPos());
+  public void promote(char typeId) {
+    switch (typeId) {
+      case 'B':
+        getBoard().add(new Bishop(getColor()), getPos());
+        break;
+      case 'N':
+        getBoard().add(new Knight(getColor()), getPos());
+        break;
+      case 'R':
+        getBoard().add(new Rook(getColor()), getPos());
+        break;
+      case 'Q':
+        getBoard().add(new Queen(getColor()), getPos());
+        break;
+      default:
+    }
   }
 }

@@ -15,7 +15,7 @@
         </ToolBar>
     </top>
     <center>
-        <BoardCanvas fx:id="board">
+        <BoardCanvas fx:id="board" onMouseClicked="#canvasClicked">
 
         </BoardCanvas>
     </center>
