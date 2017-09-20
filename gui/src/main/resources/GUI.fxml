@@ -10,11 +10,11 @@
 
     <top>
         <ToolBar fx:id="tools">
-            <Button fx:id="newGame" text="New Game"/>
+            <Button fx:id="newGame" text="New Game" onAction="#newGame"/>
         </ToolBar>
     </top>
     <center>
-        <BoardCanvas fx:id="board" width="360" height="360" onMouseClicked="#canvasClicked">
+        <BoardCanvas fx:id="board" width="440" height="440" onMouseClicked="#canvasClicked">
 
         </BoardCanvas>
     </center>

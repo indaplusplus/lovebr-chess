@@ -2,7 +2,6 @@ package se.lovebrandefelt.chess.gui;
 
 import static se.lovebrandefelt.chess.Color.BLACK;
 import static se.lovebrandefelt.chess.Color.WHITE;
-import static se.lovebrandefelt.chess.Game.standardSetup;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -10,7 +9,6 @@ import java.util.Map;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import se.lovebrandefelt.chess.Color;
@@ -43,8 +41,7 @@ public class GUI extends Application {
   @Override
   public void start(Stage primaryStage) throws IOException {
     Parent root = FXMLLoader.load(getClass().getResource("/GUI.fxml"));
-    Scene scene = new Scene(root);
-    ((BoardCanvas) scene.lookup("#board")).setBoard(standardSetup());
+    GameScene scene = new GameScene(root);
     primaryStage.setScene(scene);
     primaryStage.setTitle("Chess");
     primaryStage.show();
