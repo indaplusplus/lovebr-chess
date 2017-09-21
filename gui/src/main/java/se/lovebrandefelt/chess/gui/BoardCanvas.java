@@ -3,9 +3,11 @@ package se.lovebrandefelt.chess.gui;
 import static javafx.scene.paint.Color.ANTIQUEWHITE;
 import static javafx.scene.paint.Color.BLACK;
 import static javafx.scene.paint.Color.LIGHTSEAGREEN;
+import static se.lovebrandefelt.chess.Game.State.IN_PROGRESS;
 import static se.lovebrandefelt.chess.Pos.colToString;
 import static se.lovebrandefelt.chess.Pos.rowToString;
 import static se.lovebrandefelt.chess.gui.GUI.IMAGES;
+import static se.lovebrandefelt.chess.gui.GUI.SCENE;
 
 import javafx.geometry.VPos;
 import javafx.scene.canvas.Canvas;
@@ -80,25 +82,27 @@ public class BoardCanvas extends Canvas {
   }
 
   public void onClick(MouseEvent mouseEvent) {
-    int row = 8 - (int) (mouseEvent.getY() / squareSize);
-    int col = (int) (mouseEvent.getX() / squareSize) - 1;
-    Pos pos = new Pos(row, col);
-    if (selected == null) {
-      if (board.isInsideBounds(pos)
+    if (SCENE.getGame().state() == IN_PROGRESS) {
+      int row = 8 - (int) (mouseEvent.getY() / squareSize);
+      int col = (int) (mouseEvent.getX() / squareSize) - 1;
+      Pos pos = new Pos(row, col);
+      if (selected == null) {
+        if (board.isInsideBounds(pos)
+            && !board.isEmpty(pos)
+            && board.getGame().legalMoves().containsKey(pos)) {
+          selected = board.get(pos);
+        }
+      } else if (pos.equals(selected.getPos())) {
+        selected = null;
+      } else if (board.getGame().legalMoves().get(selected.getPos()).containsKey(pos)) {
+        board.getGame().makeMove(selected.getPos(), pos);
+        selected = null;
+      } else if (board.isInsideBounds(pos)
           && !board.isEmpty(pos)
           && board.getGame().legalMoves().containsKey(pos)) {
         selected = board.get(pos);
       }
-    } else if (pos.equals(selected.getPos())) {
-      selected = null;
-    } else if (board.getGame().legalMoves().get(selected.getPos()).containsKey(pos)) {
-      board.getGame().makeMove(selected.getPos(), pos);
-      selected = null;
-    } else if (board.isInsideBounds(pos)
-        && !board.isEmpty(pos)
-        && board.getGame().legalMoves().containsKey(pos)) {
-      selected = board.get(pos);
+      GUI.SCENE.update();
     }
-    GUI.SCENE.update();
   }
 }
