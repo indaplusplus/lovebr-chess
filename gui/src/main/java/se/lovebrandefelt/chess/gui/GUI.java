@@ -15,6 +15,8 @@ import se.lovebrandefelt.chess.Color;
 
 public class GUI extends Application {
   public static final Map<Color, Map<Character, Image>> IMAGES = new HashMap<>();
+  public static Stage PRIMARY_STAGE;
+  public static GameScene SCENE;
 
   public static void main(String[] args) {
     launch(args);
@@ -40,10 +42,10 @@ public class GUI extends Application {
 
   @Override
   public void start(Stage primaryStage) throws IOException {
+    GUI.PRIMARY_STAGE = primaryStage;
     Parent root = FXMLLoader.load(getClass().getResource("/GUI.fxml"));
-    GameScene scene = new GameScene(root);
-    primaryStage.setScene(scene);
-    primaryStage.setTitle("Chess");
+    SCENE = new GameScene(root);
+    primaryStage.setScene(SCENE);
     primaryStage.show();
     primaryStage.sizeToScene();
   }
