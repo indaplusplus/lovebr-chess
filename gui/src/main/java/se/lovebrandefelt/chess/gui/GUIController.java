@@ -22,12 +22,12 @@ public class GUIController {
 
   public void newGame(ActionEvent actionEvent) {
     GameScene scene = (GameScene) newGame.getScene();
+
     List<String> setups = new ArrayList<>();
     setups.add("Standard");
     setups.add("Chess 960");
-
     ChoiceDialog<String> dialog = new ChoiceDialog<>("Standard", setups);
-    dialog.setTitle("Chess - Choose Setup");
+    dialog.setTitle("Choose Setup");
     dialog.setContentText("Setup:");
     dialog
         .showAndWait()

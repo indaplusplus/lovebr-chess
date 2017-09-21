@@ -238,7 +238,7 @@ public class Game {
         if (board.get(to).getTypeId() == 'P') {
           Pawn pawn = (Pawn) board.get(to);
           if (pawn.canPromote()) {
-            pawn.promote(moveString.charAt(moveString.length() - 1));
+            pawn.promoteInto(moveString.charAt(moveString.length() - 1));
           }
         }
       }

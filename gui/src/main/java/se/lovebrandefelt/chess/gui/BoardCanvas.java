@@ -9,14 +9,18 @@ import static se.lovebrandefelt.chess.Pos.rowToString;
 import static se.lovebrandefelt.chess.gui.GUI.IMAGES;
 import static se.lovebrandefelt.chess.gui.GUI.SCENE;
 
+import java.util.ArrayList;
+import java.util.List;
 import javafx.geometry.VPos;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.ChoiceDialog;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
 import se.lovebrandefelt.chess.Board;
+import se.lovebrandefelt.chess.Pawn;
 import se.lovebrandefelt.chess.Piece;
 import se.lovebrandefelt.chess.Pos;
 
@@ -96,6 +100,34 @@ public class BoardCanvas extends Canvas {
         selected = null;
       } else if (board.getGame().legalMoves().get(selected.getPos()).containsKey(pos)) {
         board.getGame().makeMove(selected.getPos(), pos);
+        if (board.get(pos) instanceof Pawn) {
+          Pawn pawn = (Pawn) board.get(pos);
+          if (pawn.canPromote()) {
+            List<String> setups = new ArrayList<>();
+            setups.add("Bishop");
+            setups.add("Knight");
+            setups.add("Queen");
+            setups.add("Rook");
+            ChoiceDialog<String> dialog = new ChoiceDialog<>("Queen", setups);
+            dialog.setTitle("Promotion");
+            dialog.setContentText("Promote into:");
+            switch (dialog.showAndWait().orElse("Queen")) {
+              case "Bishop":
+                pawn.promoteInto('B');
+                break;
+              case "Knight":
+                pawn.promoteInto('N');
+                break;
+              case "Queen":
+                pawn.promoteInto('Q');
+                break;
+              case "Rook":
+                pawn.promoteInto('R');
+                break;
+              default:
+            }
+          }
+        }
         selected = null;
       } else if (board.isInsideBounds(pos)
           && !board.isEmpty(pos)
