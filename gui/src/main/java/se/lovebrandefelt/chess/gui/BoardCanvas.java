@@ -29,7 +29,6 @@ public class BoardCanvas extends Canvas {
     this.board = board;
     squareSize = getWidth() / (board.cols() + 2);
     selected = null;
-    draw();
   }
 
   public void draw() {
@@ -84,7 +83,7 @@ public class BoardCanvas extends Canvas {
     int row = 8 - (int) (mouseEvent.getY() / squareSize);
     int col = (int) (mouseEvent.getX() / squareSize) - 1;
     Pos pos = new Pos(row, col);
-    if (selected == null || board.getGame().legalMoves().containsKey(pos)) {
+    if (selected == null) {
       if (board.isInsideBounds(pos)
           && !board.isEmpty(pos)
           && board.getGame().legalMoves().containsKey(pos)) {
@@ -95,7 +94,11 @@ public class BoardCanvas extends Canvas {
     } else if (board.getGame().legalMoves().get(selected.getPos()).containsKey(pos)) {
       board.getGame().makeMove(selected.getPos(), pos);
       selected = null;
+    } else if (board.isInsideBounds(pos)
+        && !board.isEmpty(pos)
+        && board.getGame().legalMoves().containsKey(pos)) {
+      selected = board.get(pos);
     }
-    draw();
+    GUI.SCENE.update();
   }
 }
