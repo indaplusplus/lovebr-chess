@@ -4,6 +4,7 @@ import static se.lovebrandefelt.chess.Game.standardSetup;
 
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import se.lovebrandefelt.chess.Board;
 import se.lovebrandefelt.chess.Color;
 import se.lovebrandefelt.chess.Game;
 
@@ -19,8 +20,8 @@ public class GameScene extends Scene {
     update();
   }
 
-  public void newGame() {
-    game = new Game(standardSetup(), Color.WHITE);
+  public void newGame(Board setup) {
+    game = new Game(setup, Color.WHITE);
     canvas.setBoard(game.getBoard());
     update();
   }
