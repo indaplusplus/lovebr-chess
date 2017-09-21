@@ -153,12 +153,14 @@ public class Game {
    * @param to the position to move to
    */
   public void makeMove(Pos from, Pos to) {
-    Move move = legalMoves().get(from).get(to);
-    if (move != null) {
-      board.move(move);
-      currentPlayer = currentPlayer.next();
+    if (state() == IN_PROGRESS) {
+      Move move = legalMoves().get(from).get(to);
+      if (move != null) {
+        board.move(move);
+        currentPlayer = currentPlayer.next();
+      }
+      legalMoves = new HashMap<>();
     }
-    legalMoves = new HashMap<>();
   }
 
   /**
@@ -167,78 +169,82 @@ public class Game {
    * @param moveString a move written in chess notation
    */
   public void makeMove(String moveString) {
-    if (moveString.startsWith("O-O")) {
-      Stream<Pos> fromCanditates =
-          legalMoves().keySet().stream().filter((from) -> board.get(from).getTypeId() == 'K');
-      if (fromCanditates.count() != 1) {
-        throw new IllegalArgumentException();
-      }
-      Pos from = fromCanditates.findFirst().orElseThrow(IllegalArgumentException::new);
-      Pos to = moveString.equals("O-O") ? new Pos(from.getRow(), 6) : new Pos(from.getRow(), 2);
-      board.move(legalMoves().get(from).get(to));
-    } else {
-      moveString = moveString.replace("x", "").replace("+", "");
-      char typeId;
-      String fromString;
-      Pos to;
-      if (Character.isUpperCase(moveString.charAt(0))) {
-        typeId = moveString.charAt(0);
-        fromString = moveString.substring(1, moveString.length() - 2);
-        to = new Pos(moveString.substring(moveString.length() - 2));
+    if (state() == IN_PROGRESS) {
+      if (moveString.startsWith("O-O")) {
+        Stream<Pos> fromCanditates =
+            legalMoves().keySet().stream().filter((from) -> board.get(from).getTypeId() == 'K');
+        if (fromCanditates.count() != 1) {
+          throw new IllegalArgumentException();
+        }
+        Pos from = fromCanditates.findFirst().orElseThrow(IllegalArgumentException::new);
+        Pos to = moveString.equals("O-O") ? new Pos(from.getRow(), 6) : new Pos(from.getRow(), 2);
+        board.move(legalMoves().get(from).get(to));
       } else {
-        typeId = 'P';
-        if (Character.isUpperCase(moveString.charAt(moveString.length() - 1))) {
-          fromString = moveString.substring(0, moveString.length() - 3);
-          to = new Pos(moveString.substring(moveString.length() - 3, moveString.length() - 1));
-        } else {
-          fromString = moveString.substring(0, moveString.length() - 2);
+        moveString = moveString.replace("x", "").replace("+", "");
+        char typeId;
+        String fromString;
+        Pos to;
+        if (Character.isUpperCase(moveString.charAt(0))) {
+          typeId = moveString.charAt(0);
+          fromString = moveString.substring(1, moveString.length() - 2);
           to = new Pos(moveString.substring(moveString.length() - 2));
-        }
-      }
-      List<Pos> fromCandidates =
-          legalMoves()
-              .keySet()
-              .stream()
-              .filter(
-                  (from) ->
-                      board.get(from).getTypeId() == typeId
-                          && legalMoves().get(from).containsKey(to))
-              .collect(Collectors.toList());
-      if (fromString.length() == 1) {
-        if (Character.isDigit(fromString.charAt(0))) {
-          fromCandidates =
-              fromCandidates
-                  .stream()
-                  .filter((fromCandidate) -> rowToString(fromCandidate.getRow()).equals(fromString))
-                  .collect(Collectors.toList());
         } else {
+          typeId = 'P';
+          if (Character.isUpperCase(moveString.charAt(moveString.length() - 1))) {
+            fromString = moveString.substring(0, moveString.length() - 3);
+            to = new Pos(moveString.substring(moveString.length() - 3, moveString.length() - 1));
+          } else {
+            fromString = moveString.substring(0, moveString.length() - 2);
+            to = new Pos(moveString.substring(moveString.length() - 2));
+          }
+        }
+        List<Pos> fromCandidates =
+            legalMoves()
+                .keySet()
+                .stream()
+                .filter(
+                    (from) ->
+                        board.get(from).getTypeId() == typeId
+                            && legalMoves().get(from).containsKey(to))
+                .collect(Collectors.toList());
+        if (fromString.length() == 1) {
+          if (Character.isDigit(fromString.charAt(0))) {
+            fromCandidates =
+                fromCandidates
+                    .stream()
+                    .filter(
+                        (fromCandidate) -> rowToString(fromCandidate.getRow()).equals(fromString))
+                    .collect(Collectors.toList());
+          } else {
+            fromCandidates =
+                fromCandidates
+                    .stream()
+                    .filter(
+                        (fromCandidate) -> colToString(fromCandidate.getCol()).equals(fromString))
+                    .collect(Collectors.toList());
+          }
+        } else if (fromString.length() == 2) {
           fromCandidates =
               fromCandidates
                   .stream()
-                  .filter((fromCandidate) -> colToString(fromCandidate.getCol()).equals(fromString))
+                  .filter((fromCandidate) -> fromCandidate.toString().equals(fromString))
                   .collect(Collectors.toList());
         }
-      } else if (fromString.length() == 2) {
-        fromCandidates =
-            fromCandidates
-                .stream()
-                .filter((fromCandidate) -> fromCandidate.toString().equals(fromString))
-                .collect(Collectors.toList());
-      }
-      if (fromCandidates.size() != 1) {
-        throw new IllegalArgumentException();
-      }
-      Pos from = fromCandidates.get(0);
-      board.move(legalMoves().get(from).get(to));
-      if (board.get(to).getTypeId() == 'P') {
-        Pawn pawn = (Pawn) board.get(to);
-        if (pawn.canPromote()) {
-          pawn.promote(moveString.charAt(moveString.length() - 1));
+        if (fromCandidates.size() != 1) {
+          throw new IllegalArgumentException();
+        }
+        Pos from = fromCandidates.get(0);
+        board.move(legalMoves().get(from).get(to));
+        if (board.get(to).getTypeId() == 'P') {
+          Pawn pawn = (Pawn) board.get(to);
+          if (pawn.canPromote()) {
+            pawn.promoteInto(moveString.charAt(moveString.length() - 1));
+          }
         }
       }
+      currentPlayer = currentPlayer.next();
+      legalMoves = new HashMap<>();
     }
-    currentPlayer = currentPlayer.next();
-    legalMoves = new HashMap<>();
   }
 
   /**
@@ -247,6 +253,86 @@ public class Game {
    * @return the current state of the game
    */
   public State state() {
+    // Fifty moves rule
+    if (board.getHistory().size() >= 100
+        && board
+            .getHistory()
+            .subList(board.getHistory().size() - 100, board.getHistory().size())
+            .stream()
+            .allMatch((move) -> move.getPiece().getTypeId() != 'P' && move.getCaptured() == null)) {
+      return DRAW;
+    }
+
+    // Recurring board state rule
+    Map<String, Integer> boardStates = new HashMap<>();
+    for (int i = board.getHistory().size() - 1;
+        i >= 0
+            && board.getHistory().get(i).getCaptured() == null
+            && !(board.getHistory().get(i) instanceof CastlingMove);
+        i--) {
+      boardStates.put(
+          board.getBoardStates().get(i),
+          boardStates.getOrDefault(board.getBoardStates().get(i), 0) + 1);
+    }
+    if (boardStates.values().stream().anyMatch((occurrences) -> occurrences >= 3)) {
+      return DRAW;
+    }
+
+    // Check if checkmate is impossible
+    String whitePieces =
+        board
+            .getPieces()
+            .get(WHITE)
+            .stream()
+            .map(Piece::getTypeId)
+            .sorted()
+            .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
+            .toString();
+    String blackPieces =
+        board
+            .getPieces()
+            .get(BLACK)
+            .stream()
+            .map(Piece::getTypeId)
+            .sorted()
+            .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
+            .toString();
+    if ((whitePieces.equals("K") && blackPieces.equals("K"))
+        || (whitePieces.equals("BK") && blackPieces.equals("K"))
+        || (whitePieces.equals("K") && blackPieces.equals("BK"))
+        || (whitePieces.equals("KN") && blackPieces.equals("K"))
+        || (whitePieces.equals("K") && blackPieces.equals("KN"))) {
+      return DRAW;
+    }
+    if (whitePieces.equals("BK") && blackPieces.equals("BK")) {
+      Pos whiteBishopPos =
+          board
+              .getPieces()
+              .get(WHITE)
+              .stream()
+              .filter((piece) -> piece.getTypeId() == 'B')
+              .findFirst()
+              .get()
+              .getPos();
+      Pos blackBishopPos =
+          board
+              .getPieces()
+              .get(BLACK)
+              .stream()
+              .filter((piece) -> piece.getTypeId() == 'B')
+              .findFirst()
+              .get()
+              .getPos();
+      if ((whiteBishopPos.getRow()
+                  + whiteBishopPos.getCol()
+                  + blackBishopPos.getRow()
+                  + blackBishopPos.getCol())
+              % 2
+          == 0) {
+        return DRAW;
+      }
+    }
+
     if (legalMoves().values().stream().anyMatch((moves) -> !moves.isEmpty())) {
       return IN_PROGRESS;
     }

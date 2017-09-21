@@ -48,4 +48,8 @@ public class GameScene extends Scene {
       default:
     }
   }
+
+  public Game getGame() {
+    return game;
+  }
 }

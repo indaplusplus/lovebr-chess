@@ -94,7 +94,7 @@ class PawnTest {
   void promotionCanBeDoneAndUndone() {
     Pawn pawn = (Pawn) board.add(new Pawn(WHITE), new Pos("e7"));
     game.makeMove(new Pos("e7"), new Pos("e8"));
-    pawn.promote(new Knight(WHITE));
+    pawn.promoteInto('N');
     board.undoMove();
     assertNull(board.get(new Pos("e8")));
     assertSame(pawn, board.get(new Pos("e7")));

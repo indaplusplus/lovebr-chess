@@ -13,6 +13,7 @@ public class Board {
   private Game game;
   private Piece[][] squares;
   private Map<Color, List<Piece>> pieces;
+  private Stack<String> boardStates;
   private Stack<Move> history;
 
   /**
@@ -26,6 +27,7 @@ public class Board {
     pieces = new HashMap<>();
     pieces.put(WHITE, new ArrayList<>());
     pieces.put(BLACK, new ArrayList<>());
+    boardStates = new Stack<>();
     history = new Stack<>();
   }
 
@@ -157,13 +159,13 @@ public class Board {
    */
   public void move(Move move) {
     move.perform(this);
+    boardStates.push(toString());
     history.push(move);
   }
 
-  /**
-   * Undoes the last move.
-   */
+  /** Undoes the last move. */
   public void undoMove() {
+    boardStates.pop();
     history.pop().undo(this);
   }
 
@@ -179,7 +181,27 @@ public class Board {
     return pieces;
   }
 
+  public List<String> getBoardStates() {
+    return boardStates;
+  }
+
   public Stack<Move> getHistory() {
     return history;
+  }
+
+  @Override
+  public String toString() {
+    StringBuilder boardStringBuilder = new StringBuilder();
+    for (int row = 0; row < rows(); row++) {
+      for (int col = 0; col < cols(); col++) {
+        Piece piece = get(new Pos(row, col));
+        if (piece == null) {
+          boardStringBuilder.append("  ");
+        } else {
+          boardStringBuilder.append(piece.getColor().toString().charAt(0) + piece.getTypeId());
+        }
+      }
+    }
+    return boardStringBuilder.toString();
   }
 }

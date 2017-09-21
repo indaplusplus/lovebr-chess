@@ -61,7 +61,9 @@ public class Pawn extends Piece {
    * @return whether this pawn can promote
    */
   public boolean canPromote() {
-    return ((getPos().getRow() + moveDirection()) % (getBoard().rows() + 1) == 8);
+    return ((getPos().getRow() + moveDirection() + (getBoard().rows() + 1))
+        % (getBoard().rows() + 1)
+        == getBoard().rows());
   }
 
   /**
@@ -69,7 +71,7 @@ public class Pawn extends Piece {
    *
    * @param typeId the type of the piece to promote into
    */
-  public void promote(char typeId) {
+  public void promoteInto(char typeId) {
     switch (typeId) {
       case 'B':
         getBoard().add(new Bishop(getColor()), getPos());
