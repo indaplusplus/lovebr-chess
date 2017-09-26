@@ -1,6 +1,7 @@
 package se.lovebrandefelt.chess.gui;
 
 import static se.lovebrandefelt.chess.Game.chess960Setup;
+import static se.lovebrandefelt.chess.Game.silvermanChessSetup;
 import static se.lovebrandefelt.chess.Game.standardSetup;
 
 import java.util.ArrayList;
@@ -26,6 +27,7 @@ public class GUIController {
     List<String> setups = new ArrayList<>();
     setups.add("Standard");
     setups.add("Chess 960");
+    setups.add("Silverman 4x4");
     ChoiceDialog<String> dialog = new ChoiceDialog<>("Standard", setups);
     dialog.setTitle("Choose Setup");
     dialog.setContentText("Setup:");
@@ -39,6 +41,9 @@ public class GUIController {
                   break;
                 case "Chess 960":
                   scene.newGame(chess960Setup());
+                  break;
+                case "Silverman 4x4":
+                  scene.newGame(silvermanChessSetup());
                   break;
                 default:
               }
