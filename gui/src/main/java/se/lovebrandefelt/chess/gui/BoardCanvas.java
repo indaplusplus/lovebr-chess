@@ -27,13 +27,15 @@ import se.lovebrandefelt.chess.Pos;
 public class BoardCanvas extends Canvas {
   private static final Color WHITE_SQUARE_COLOR = ANTIQUEWHITE;
   private static final Color BLACK_SQUARE_COLOR = LIGHTSEAGREEN;
+  private static final double squareSize = 75;
   private Board board;
-  private double squareSize;
   private Piece selected;
 
   public void setBoard(Board board) {
     this.board = board;
-    squareSize = getWidth() / (board.cols() + 2);
+    setWidth((board.cols() + 2) * squareSize);
+    setHeight((board.rows() + 2) * squareSize);
+    GUI.PRIMARY_STAGE.sizeToScene();
     selected = null;
   }
 
@@ -77,7 +79,7 @@ public class BoardCanvas extends Canvas {
         graphicsContext.fillText(rowToString(row), squareSize / 2, y);
         graphicsContext.fillText(rowToString(row), getWidth() - squareSize / 2, y);
       }
-      for (int col = 0; col < board.rows(); col++) {
+      for (int col = 0; col < board.cols(); col++) {
         double x = col * squareSize + (squareSize) * 3 / 2;
         graphicsContext.fillText(colToString(col), x, squareSize / 2);
         graphicsContext.fillText(colToString(col), x, getHeight() - squareSize / 2);
@@ -87,7 +89,7 @@ public class BoardCanvas extends Canvas {
 
   public void onClick(MouseEvent mouseEvent) {
     if (SCENE.getGame().state() == IN_PROGRESS) {
-      int row = 8 - (int) (mouseEvent.getY() / squareSize);
+      int row = board.rows() - (int) (mouseEvent.getY() / squareSize);
       int col = (int) (mouseEvent.getX() / squareSize) - 1;
       Pos pos = new Pos(row, col);
       if (selected == null) {
