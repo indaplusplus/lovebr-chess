@@ -27,7 +27,7 @@ public class GUIController {
     List<String> setups = new ArrayList<>();
     setups.add("Standard");
     setups.add("Chess 960");
-    setups.add("Silverman 4x4");
+    setups.add("Silverman 4x5");
     ChoiceDialog<String> dialog = new ChoiceDialog<>("Standard", setups);
     dialog.setTitle("Choose Setup");
     dialog.setContentText("Setup:");
@@ -42,7 +42,7 @@ public class GUIController {
                 case "Chess 960":
                   scene.newGame(chess960Setup());
                   break;
-                case "Silverman 4x4":
+                case "Silverman 4x5":
                   scene.newGame(silvermanChessSetup());
                   break;
                 default:
