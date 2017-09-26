@@ -112,6 +112,27 @@ public class Game {
   }
 
   /**
+   * Returns a board with the Silverman 4x4 setup.
+   *
+   * @return a board with the Silverman 4x4 setup
+   */
+  public static Board silvermanChessSetup() {
+    Board board = new Board(5,4);
+    board.add(new Rook(WHITE), new Pos(0, 0));
+    board.add(new Queen(WHITE), new Pos(0, 1));
+    board.add(new SilvermanKing(WHITE), new Pos(0, 2));
+    board.add(new Rook(WHITE), new Pos(0, 3));
+    board.addPawnRow(1, WHITE);
+
+    board.add(new Rook(BLACK), new Pos(4, 0));
+    board.add(new Queen(BLACK), new Pos(4, 1));
+    board.add(new SilvermanKing(BLACK), new Pos(4, 2));
+    board.add(new Rook(BLACK), new Pos(4, 3));
+    board.addPawnRow(3, BLACK);
+    return board;
+  }
+
+  /**
    * Returns a map where each key is a position the current player can move from and each value a
    * map where each key is a position that piece can move to and each value is a corresponding Move
    * object.
