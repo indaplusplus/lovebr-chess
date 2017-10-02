@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+package se.kth.inda17plusplus;
+
+message Move {
+	string move = 1; // the move in Algebraic Notation, + for checks, # for checkmates, 1-0 / 0-1 / 1/2-1/2 for game end
+	string resulting_state = 2; // the state after the move in Forsyth-Edwards Notation
+  bool last_move_errored = 3;
+}

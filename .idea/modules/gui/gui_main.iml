@@ -10,5 +10,14 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="lovebr-chess_main" />
+    <orderEntry type="library" name="Gradle: com.google.protobuf:protobuf-java:3.0.0" level="project" />
+    <orderEntry type="library" name="Gradle: io.grpc:grpc-stub:1.0.0-pre2" level="project" />
+    <orderEntry type="library" name="Gradle: io.grpc:grpc-protobuf:1.0.0-pre2" level="project" />
+    <orderEntry type="library" name="Gradle: io.grpc:grpc-core:1.0.0-pre2" level="project" />
+    <orderEntry type="library" name="Gradle: com.google.guava:guava:19.0" level="project" />
+    <orderEntry type="library" name="Gradle: com.google.protobuf:protobuf-java-util:3.0.0" level="project" />
+    <orderEntry type="library" name="Gradle: io.grpc:grpc-protobuf-lite:1.0.0-pre2" level="project" />
+    <orderEntry type="library" name="Gradle: com.google.code.findbugs:jsr305:3.0.0" level="project" />
+    <orderEntry type="library" name="Gradle: com.google.code.gson:gson:2.3" level="project" />
   </component>
 </module>
