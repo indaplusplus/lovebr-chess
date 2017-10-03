@@ -9,6 +9,8 @@ import static se.lovebrandefelt.chess.Game.standardSetup;
 import java.util.Scanner;
 import se.lovebrandefelt.chess.Board;
 import se.lovebrandefelt.chess.Game;
+import se.lovebrandefelt.chess.Move;
+import se.lovebrandefelt.chess.Pawn;
 import se.lovebrandefelt.chess.Pos;
 
 public class ConsoleMain {
@@ -34,7 +36,15 @@ public class ConsoleMain {
       while (true) {
         System.out.print("Enter your move: ");
         try {
-          game.makeMove(scanner.next());
+          String moveString = scanner.next();
+          Move move = game.getBoard().algebraicNotationToMove(moveString);
+          game.makeMove(move.getFrom(), move.getTo());
+          if (game.getBoard().get(move.getTo()).getTypeId() == 'P'
+              && ((Pawn) game.getBoard().get(move.getTo())).canPromote()) {
+            moveString = moveString.replace("x", "").replace("+", "").replace("#", "");
+            ((Pawn) game.getBoard().get(move.getTo()))
+                .promoteInto(moveString.charAt(moveString.length() - 1));
+          }
           break;
         } catch (IllegalArgumentException ignored) {
           System.out.println("That move is not legal!");

@@ -11,6 +11,7 @@
     <top>
         <ToolBar fx:id="tools">
             <Button fx:id="newGame" text="New Game" onAction="#newGame"/>
+            <Button fx:id="newOnlineGame" text="New Online Game" onAction="#newOnlineGame"/>
         </ToolBar>
     </top>
     <center>

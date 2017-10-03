@@ -4,6 +4,9 @@ import static se.lovebrandefelt.chess.Game.chess960Setup;
 import static se.lovebrandefelt.chess.Game.silvermanChessSetup;
 import static se.lovebrandefelt.chess.Game.standardSetup;
 
+import java.io.IOException;
+import java.net.ServerSocket;
+import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 import javafx.event.ActionEvent;
@@ -15,7 +18,10 @@ import javafx.scene.input.MouseEvent;
 public class GUIController {
   public ToolBar tools;
   public Button newGame;
+  public Button newOnlineGame;
   public BoardCanvas board;
+  private ServerSocket server;
+  private Socket socket;
 
   public void canvasClicked(MouseEvent mouseEvent) {
     board.onClick(mouseEvent);
@@ -48,5 +54,14 @@ public class GUIController {
                 default:
               }
             });
+  }
+
+  public void newOnlineGame(ActionEvent actionEvent) throws IOException {
+    if (socket == null) {
+      newOnlineGame.setText("Cancel Online Game");
+      server = new ServerSocket(0xDAD);
+      socket = server.accept();
+      ((GameScene) newGame.getScene()).newGame(standardSetup());
+    }
   }
 }

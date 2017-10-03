@@ -101,6 +101,8 @@ public class BoardCanvas extends Canvas {
       } else if (pos.equals(selected.getPos())) {
         selected = null;
       } else if (board.getGame().legalMoves().get(selected.getPos()).containsKey(pos)) {
+        String moveString =
+            board.getGame().legalMoves().get(selected.getPos()).get(pos).toAlgebraicNotation(board);
         board.getGame().makeMove(selected.getPos(), pos);
         if (board.get(pos) instanceof Pawn) {
           Pawn pawn = (Pawn) board.get(pos);
@@ -116,20 +118,45 @@ public class BoardCanvas extends Canvas {
             switch (dialog.showAndWait().orElse("Queen")) {
               case "Bishop":
                 pawn.promoteInto('B');
+                if (moveString.endsWith("+") || moveString.endsWith("#")) {
+                  char last = moveString.charAt(moveString.length() - 1);
+                  moveString = moveString.substring(0, moveString.length() - 1) + 'B' + last;
+                } else {
+                  moveString = moveString + 'B';
+                }
                 break;
               case "Knight":
                 pawn.promoteInto('N');
+                if (moveString.endsWith("+") || moveString.endsWith("#")) {
+                  char last = moveString.charAt(moveString.length() - 1);
+                  moveString = moveString.substring(0, moveString.length() - 1) + 'N' + last;
+                } else {
+                  moveString = moveString + 'N';
+                }
                 break;
               case "Queen":
                 pawn.promoteInto('Q');
+                if (moveString.endsWith("+") || moveString.endsWith("#")) {
+                  char last = moveString.charAt(moveString.length() - 1);
+                  moveString = moveString.substring(0, moveString.length() - 1) + 'Q' + last;
+                } else {
+                  moveString = moveString + 'Q';
+                }
                 break;
               case "Rook":
                 pawn.promoteInto('R');
+                if (moveString.endsWith("+") || moveString.endsWith("#")) {
+                  char last = moveString.charAt(moveString.length() - 1);
+                  moveString = moveString.substring(0, moveString.length() - 1) + 'R' + last;
+                } else {
+                  moveString = moveString + 'R';
+                }
                 break;
               default:
             }
           }
         }
+        System.out.println(moveString);
         selected = null;
       } else if (board.isInsideBounds(pos)
           && !board.isEmpty(pos)

@@ -6,8 +6,6 @@ import static se.lovebrandefelt.chess.Game.State.BLACK_WON;
 import static se.lovebrandefelt.chess.Game.State.DRAW;
 import static se.lovebrandefelt.chess.Game.State.IN_PROGRESS;
 import static se.lovebrandefelt.chess.Game.State.WHITE_WON;
-import static se.lovebrandefelt.chess.Pos.colToString;
-import static se.lovebrandefelt.chess.Pos.rowToString;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -17,7 +15,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Random;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class Game {
   private Board board;
@@ -184,88 +181,10 @@ public class Game {
     }
   }
 
-  /**
-   * Makes a move according to the specified move written in chess notation.
-   *
-   * @param moveString a move written in chess notation
-   */
-  public void makeMove(String moveString) {
-    if (state() == IN_PROGRESS) {
-      if (moveString.startsWith("O-O")) {
-        Stream<Pos> fromCanditates =
-            legalMoves().keySet().stream().filter((from) -> board.get(from).getTypeId() == 'K');
-        if (fromCanditates.count() != 1) {
-          throw new IllegalArgumentException();
-        }
-        Pos from = fromCanditates.findFirst().orElseThrow(IllegalArgumentException::new);
-        Pos to = moveString.equals("O-O") ? new Pos(from.getRow(), 6) : new Pos(from.getRow(), 2);
-        board.move(legalMoves().get(from).get(to));
-      } else {
-        moveString = moveString.replace("x", "").replace("+", "");
-        char typeId;
-        String fromString;
-        Pos to;
-        if (Character.isUpperCase(moveString.charAt(0))) {
-          typeId = moveString.charAt(0);
-          fromString = moveString.substring(1, moveString.length() - 2);
-          to = new Pos(moveString.substring(moveString.length() - 2));
-        } else {
-          typeId = 'P';
-          if (Character.isUpperCase(moveString.charAt(moveString.length() - 1))) {
-            fromString = moveString.substring(0, moveString.length() - 3);
-            to = new Pos(moveString.substring(moveString.length() - 3, moveString.length() - 1));
-          } else {
-            fromString = moveString.substring(0, moveString.length() - 2);
-            to = new Pos(moveString.substring(moveString.length() - 2));
-          }
-        }
-        List<Pos> fromCandidates =
-            legalMoves()
-                .keySet()
-                .stream()
-                .filter(
-                    (from) ->
-                        board.get(from).getTypeId() == typeId
-                            && legalMoves().get(from).containsKey(to))
-                .collect(Collectors.toList());
-        if (fromString.length() == 1) {
-          if (Character.isDigit(fromString.charAt(0))) {
-            fromCandidates =
-                fromCandidates
-                    .stream()
-                    .filter(
-                        (fromCandidate) -> rowToString(fromCandidate.getRow()).equals(fromString))
-                    .collect(Collectors.toList());
-          } else {
-            fromCandidates =
-                fromCandidates
-                    .stream()
-                    .filter(
-                        (fromCandidate) -> colToString(fromCandidate.getCol()).equals(fromString))
-                    .collect(Collectors.toList());
-          }
-        } else if (fromString.length() == 2) {
-          fromCandidates =
-              fromCandidates
-                  .stream()
-                  .filter((fromCandidate) -> fromCandidate.toString().equals(fromString))
-                  .collect(Collectors.toList());
-        }
-        if (fromCandidates.size() != 1) {
-          throw new IllegalArgumentException();
-        }
-        Pos from = fromCandidates.get(0);
-        board.move(legalMoves().get(from).get(to));
-        if (board.get(to).getTypeId() == 'P') {
-          Pawn pawn = (Pawn) board.get(to);
-          if (pawn.canPromote()) {
-            pawn.promoteInto(moveString.charAt(moveString.length() - 1));
-          }
-        }
-      }
-      currentPlayer = currentPlayer.next();
-      legalMoves = new HashMap<>();
-    }
+  void undoMove() {
+    board.undoMove();
+    currentPlayer = currentPlayer.next();
+    legalMoves = new HashMap<>();
   }
 
   /**

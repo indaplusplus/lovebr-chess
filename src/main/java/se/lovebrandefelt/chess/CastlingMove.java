@@ -1,5 +1,7 @@
 package se.lovebrandefelt.chess;
 
+import static se.lovebrandefelt.chess.Pos.colToString;
+
 public class CastlingMove extends Move {
   private Rook rook;
   private Pos rookFrom;
@@ -30,6 +32,15 @@ public class CastlingMove extends Move {
     board.remove(rookTo);
     board.add(getPiece(), getFrom());
     board.add(rook, rookFrom);
+  }
+
+  @Override
+  public String toAlgebraicNotation(Board board) {
+    if (colToString(getTo().getCol()).equals("g")) {
+      return "O-O";
+    } else {
+      return "O-O-O";
+    }
   }
 
   Rook getRook() {

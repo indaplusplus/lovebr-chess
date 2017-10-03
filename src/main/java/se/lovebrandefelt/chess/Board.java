@@ -2,12 +2,16 @@ package se.lovebrandefelt.chess;
 
 import static se.lovebrandefelt.chess.Color.BLACK;
 import static se.lovebrandefelt.chess.Color.WHITE;
+import static se.lovebrandefelt.chess.Pos.colToString;
+import static se.lovebrandefelt.chess.Pos.rowToString;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Stack;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class Board {
   private Game game;
@@ -167,6 +171,75 @@ public class Board {
   public void undoMove() {
     boardStates.pop();
     history.pop().undo(this);
+  }
+
+  public Move algebraicNotationToMove(String moveString) {
+    if (moveString.startsWith("O-O")) {
+      Stream<Pos> fromCanditates =
+          game.legalMoves().keySet().stream().filter((from) -> get(from).getTypeId() == 'K');
+      if (fromCanditates.count() != 1) {
+        throw new IllegalArgumentException();
+      }
+      Pos from = fromCanditates.findFirst().orElseThrow(IllegalArgumentException::new);
+      Pos to = moveString.equals("O-O") ? new Pos(from.getRow(), 6) : new Pos(from.getRow(), 2);
+      return game.legalMoves().get(from).get(to);
+    } else {
+      moveString = moveString.replace("x", "").replace("+", "").replace("#", "");
+      char typeId;
+      String fromString;
+      Pos to;
+      if (Character.isUpperCase(moveString.charAt(0))) {
+        typeId = moveString.charAt(0);
+        fromString = moveString.substring(1, moveString.length() - 2);
+        to = new Pos(moveString.substring(moveString.length() - 2));
+      } else {
+        typeId = 'P';
+        if (Character.isUpperCase(moveString.charAt(moveString.length() - 1))) {
+          fromString = moveString.substring(0, moveString.length() - 3);
+          to = new Pos(moveString.substring(moveString.length() - 3, moveString.length() - 1));
+        } else {
+          fromString = moveString.substring(0, moveString.length() - 2);
+          to = new Pos(moveString.substring(moveString.length() - 2));
+        }
+      }
+      List<Pos> fromCandidates =
+          game.legalMoves()
+              .keySet()
+              .stream()
+              .filter(
+                  (from) ->
+                      get(from).getTypeId() == typeId
+                          && game.legalMoves().get(from).containsKey(to))
+              .collect(Collectors.toList());
+      if (fromString.length() == 1) {
+        if (Character.isDigit(fromString.charAt(0))) {
+          fromCandidates =
+              fromCandidates
+                  .stream()
+                  .filter(
+                      (fromCandidate) -> rowToString(fromCandidate.getRow()).equals(fromString))
+                  .collect(Collectors.toList());
+        } else {
+          fromCandidates =
+              fromCandidates
+                  .stream()
+                  .filter(
+                      (fromCandidate) -> colToString(fromCandidate.getCol()).equals(fromString))
+                  .collect(Collectors.toList());
+        }
+      } else if (fromString.length() == 2) {
+        fromCandidates =
+            fromCandidates
+                .stream()
+                .filter((fromCandidate) -> fromCandidate.toString().equals(fromString))
+                .collect(Collectors.toList());
+      }
+      if (fromCandidates.size() != 1) {
+        throw new IllegalArgumentException();
+      }
+      Pos from = fromCandidates.get(0);
+      return game.legalMoves().get(from).get(to);
+    }
   }
 
   public Game getGame() {
