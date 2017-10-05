@@ -86,15 +86,15 @@ class PawnTest {
   @Test
   void canPromote() {
     Pawn pawn = (Pawn) board.add(new Pawn(WHITE), new Pos("e7"));
+    ((PromotionMove) game.legalMoves().get(new Pos("e7")).get(new Pos("e8"))).setPromoteInto('Q');
     game.makeMove(new Pos("e7"), new Pos("e8"));
-    assertTrue(pawn.canPromote());
+    assertTrue(game.getBoard().get(new Pos("e8")).getTypeId() == 'Q');
   }
 
   @Test
   void promotionCanBeDoneAndUndone() {
     Pawn pawn = (Pawn) board.add(new Pawn(WHITE), new Pos("e7"));
     game.makeMove(new Pos("e7"), new Pos("e8"));
-    pawn.promoteInto('N');
     board.undoMove();
     assertNull(board.get(new Pos("e8")));
     assertSame(pawn, board.get(new Pos("e7")));
