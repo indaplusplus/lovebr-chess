@@ -12,6 +12,7 @@ public class Move {
   private Pos from;
   private Pos to;
   private Piece captured;
+  private String algebraicNotation;
 
   protected Move(Pos from, Pos to) {
     this.from = from;
@@ -48,9 +49,12 @@ public class Move {
    * @param board the board to perform this move on.
    */
   protected void perform(Board board) {
-    captured = board.remove(to);
-    piece = board.add(board.get(from), to);
+    piece = board.get(from);
+    captured = board.get(to);
+    preUpdateAlgebraicNotation(board);
+    board.add(piece, to);
     board.remove(from);
+    postUpdateAlgebraicNotation(board);
   }
 
   /**
@@ -67,7 +71,7 @@ public class Move {
     }
   }
 
-  public String toAlgebraicNotation(Board board) {
+  protected void preUpdateAlgebraicNotation(Board board) {
     String moveString = "";
     if (getPiece().getTypeId() == 'P') {
       if (captured != null) {
@@ -91,7 +95,7 @@ public class Move {
                     piece ->
                         piece != getPiece()
                             && piece.getTypeId() == getPiece().getTypeId()
-                            && board.getGame().legalMoves().get(piece.getPos()).containsKey(to))
+                            && piece.legalMoves().containsKey(to))
                 .collect(Collectors.toSet());
         if (!others.isEmpty()) {
           if (others.stream().noneMatch(piece -> piece.getPos().getCol() == from.getCol())) {
@@ -109,15 +113,24 @@ public class Move {
     } else {
       moveString += "x" + to;
     }
-    board.getGame().makeMove(this.getFrom(), this.getTo());
+    algebraicNotation = moveString;
+  }
+
+  protected void postUpdateAlgebraicNotation(Board board) {
     if (board.kingInCheck(piece.getColor().next())) {
       if (board.getGame().state() != IN_PROGRESS) {
-        moveString += '#';
+        algebraicNotation += '#';
       } else {
-        moveString += '+';
+        algebraicNotation += '+';
       }
     }
-    board.getGame().undoMove();
-    return moveString;
+  }
+
+  public String getAlgebraicNotation() {
+    return algebraicNotation;
+  }
+
+  protected void setAlgebraicNotation(String algebraicNotation) {
+    this.algebraicNotation = algebraicNotation;
   }
 }

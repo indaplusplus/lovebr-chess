@@ -6,6 +6,8 @@ import static se.lovebrandefelt.chess.Piece.CaptureRule.MUST_CAPTURE;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 public class Pawn extends Piece {
   public Pawn(Color color) {
@@ -25,7 +27,7 @@ public class Pawn extends Piece {
     }
 
     // Checks for available en passant moves
-    if (!getBoard().getHistory().empty()) {
+    if (!getBoard().getHistory().isEmpty()) {
       Move lastMove = getBoard().getHistory().peek();
       if (lastMove.getPiece().getTypeId() == 'P'
           && lastMove
@@ -38,6 +40,15 @@ public class Pawn extends Piece {
           legalMoves.put(to, new EnPassantMove(getPos(), to));
         }
       }
+    }
+
+    if (getPos().getRow() + moveDirection() == 7 || getPos().getRow() + moveDirection() == 0) {
+      legalMoves =
+          legalMoves
+              .values()
+              .stream()
+              .map(move -> new PromotionMove(move.getFrom(), move.getTo()))
+              .collect(Collectors.toMap(Move::getTo, Function.identity()));
     }
     return legalMoves;
   }
@@ -56,22 +67,11 @@ public class Pawn extends Piece {
   }
 
   /**
-   * Returns whether this pawn can promote.
-   *
-   * @return whether this pawn can promote
-   */
-  public boolean canPromote() {
-    return ((getPos().getRow() + moveDirection() + (getBoard().rows() + 1))
-        % (getBoard().rows() + 1)
-        == getBoard().rows());
-  }
-
-  /**
    * Promotes this pawn into a piece of the type specified by typeId.
    *
    * @param typeId the type of the piece to promote into
    */
-  public void promoteInto(char typeId) {
+  protected void promoteInto(char typeId) {
     switch (typeId) {
       case 'B':
         getBoard().add(new Bishop(getColor()), getPos());

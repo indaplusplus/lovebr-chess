@@ -20,9 +20,9 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
 import se.lovebrandefelt.chess.Board;
-import se.lovebrandefelt.chess.Pawn;
 import se.lovebrandefelt.chess.Piece;
 import se.lovebrandefelt.chess.Pos;
+import se.lovebrandefelt.chess.PromotionMove;
 
 public class BoardCanvas extends Canvas {
   private static final Color WHITE_SQUARE_COLOR = ANTIQUEWHITE;
@@ -30,6 +30,10 @@ public class BoardCanvas extends Canvas {
   private static final double squareSize = 75;
   private Board board;
   private Piece selected;
+
+  public Board getBoard() {
+    return board;
+  }
 
   public void setBoard(Board board) {
     this.board = board;
@@ -87,7 +91,7 @@ public class BoardCanvas extends Canvas {
     }
   }
 
-  public void onClick(MouseEvent mouseEvent) {
+  public boolean onClick(MouseEvent mouseEvent) {
     if (SCENE.getGame().state() == IN_PROGRESS) {
       int row = board.rows() - (int) (mouseEvent.getY() / squareSize);
       int col = (int) (mouseEvent.getX() / squareSize) - 1;
@@ -101,63 +105,39 @@ public class BoardCanvas extends Canvas {
       } else if (pos.equals(selected.getPos())) {
         selected = null;
       } else if (board.getGame().legalMoves().get(selected.getPos()).containsKey(pos)) {
-        String moveString =
-            board.getGame().legalMoves().get(selected.getPos()).get(pos).toAlgebraicNotation(board);
-        board.getGame().makeMove(selected.getPos(), pos);
-        if (board.get(pos) instanceof Pawn) {
-          Pawn pawn = (Pawn) board.get(pos);
-          if (pawn.canPromote()) {
-            List<String> setups = new ArrayList<>();
-            setups.add("Bishop");
-            setups.add("Knight");
-            setups.add("Queen");
-            setups.add("Rook");
-            ChoiceDialog<String> dialog = new ChoiceDialog<>("Queen", setups);
-            dialog.setTitle("Promotion");
-            dialog.setContentText("Promote into:");
-            switch (dialog.showAndWait().orElse("Queen")) {
-              case "Bishop":
-                pawn.promoteInto('B');
-                if (moveString.endsWith("+") || moveString.endsWith("#")) {
-                  char last = moveString.charAt(moveString.length() - 1);
-                  moveString = moveString.substring(0, moveString.length() - 1) + 'B' + last;
-                } else {
-                  moveString = moveString + 'B';
-                }
-                break;
-              case "Knight":
-                pawn.promoteInto('N');
-                if (moveString.endsWith("+") || moveString.endsWith("#")) {
-                  char last = moveString.charAt(moveString.length() - 1);
-                  moveString = moveString.substring(0, moveString.length() - 1) + 'N' + last;
-                } else {
-                  moveString = moveString + 'N';
-                }
-                break;
-              case "Queen":
-                pawn.promoteInto('Q');
-                if (moveString.endsWith("+") || moveString.endsWith("#")) {
-                  char last = moveString.charAt(moveString.length() - 1);
-                  moveString = moveString.substring(0, moveString.length() - 1) + 'Q' + last;
-                } else {
-                  moveString = moveString + 'Q';
-                }
-                break;
-              case "Rook":
-                pawn.promoteInto('R');
-                if (moveString.endsWith("+") || moveString.endsWith("#")) {
-                  char last = moveString.charAt(moveString.length() - 1);
-                  moveString = moveString.substring(0, moveString.length() - 1) + 'R' + last;
-                } else {
-                  moveString = moveString + 'R';
-                }
-                break;
-              default:
-            }
+        if (board.getGame().legalMoves().get(selected.getPos()).get(pos) instanceof PromotionMove) {
+          List<String> setups = new ArrayList<>();
+          setups.add("Bishop");
+          setups.add("Knight");
+          setups.add("Queen");
+          setups.add("Rook");
+          ChoiceDialog<String> dialog = new ChoiceDialog<>("Queen", setups);
+          dialog.setTitle("Promotion");
+          dialog.setContentText("Promote into:");
+          switch (dialog.showAndWait().orElse("Queen")) {
+            case "Bishop":
+              ((PromotionMove) board.getGame().legalMoves().get(selected.getPos()).get(pos))
+                  .setPromoteInto('B');
+              break;
+            case "Knight":
+              ((PromotionMove) board.getGame().legalMoves().get(selected.getPos()).get(pos))
+                  .setPromoteInto('N');
+              break;
+            case "Queen":
+              ((PromotionMove) board.getGame().legalMoves().get(selected.getPos()).get(pos))
+                  .setPromoteInto('Q');
+              break;
+            case "Rook":
+              ((PromotionMove) board.getGame().legalMoves().get(selected.getPos()).get(pos))
+                  .setPromoteInto('R');
+              break;
+            default:
           }
         }
-        System.out.println(moveString);
+        board.getGame().makeMove(selected.getPos(), pos);
         selected = null;
+        GUI.SCENE.update();
+        return true;
       } else if (board.isInsideBounds(pos)
           && !board.isEmpty(pos)
           && board.getGame().legalMoves().containsKey(pos)) {
@@ -165,5 +145,6 @@ public class BoardCanvas extends Canvas {
       }
       GUI.SCENE.update();
     }
+    return false;
   }
 }

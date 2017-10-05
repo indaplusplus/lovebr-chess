@@ -114,7 +114,7 @@ public class Game {
    * @return a board with the Silverman 4x4 setup
    */
   public static Board silvermanChessSetup() {
-    Board board = new Board(5,4);
+    Board board = new Board(5, 4);
     board.add(new Rook(WHITE), new Pos(0, 0));
     board.add(new Queen(WHITE), new Pos(0, 1));
     board.add(new SilvermanKing(WHITE), new Pos(0, 2));
@@ -142,6 +142,13 @@ public class Game {
           .forEach((piece) -> legalMoves.put(piece.getPos(), legalMovesWithCheck(piece.getPos())));
     }
     return legalMoves;
+  }
+
+  public Map<Pos, Map<Pos, Move>> legalMovesForPlayer(Color player) {
+    Map<Pos, Map<Pos, Move>> legalMovesForPlayer = new HashMap<>();
+    new ArrayList<>(getBoard().getPieces().get(player))
+        .forEach((piece) -> legalMovesForPlayer.put(piece.getPos(), legalMovesWithCheck(piece.getPos())));
+    return legalMovesForPlayer;
   }
 
   private Map<Pos, Move> legalMovesWithCheck(Pos from) {
@@ -197,7 +204,7 @@ public class Game {
     if (board.getHistory().size() >= 100
         && board
             .getHistory()
-            .subList(board.getHistory().size() - 100, board.getHistory().size())
+        .subList(0, 100)
             .stream()
             .allMatch((move) -> move.getPiece().getTypeId() != 'P' && move.getCaptured() == null)) {
       return DRAW;
@@ -205,11 +212,11 @@ public class Game {
 
     // Recurring board state rule
     Map<String, Integer> boardStates = new HashMap<>();
-    for (int i = board.getHistory().size() - 1;
-        i >= 0
+    for (int i = 0;
+         i < board.getHistory().size()
             && board.getHistory().get(i).getCaptured() == null
             && !(board.getHistory().get(i) instanceof CastlingMove);
-        i--) {
+         i++) {
       boardStates.put(
           board.getBoardStates().get(i),
           boardStates.getOrDefault(board.getBoardStates().get(i), 0) + 1);

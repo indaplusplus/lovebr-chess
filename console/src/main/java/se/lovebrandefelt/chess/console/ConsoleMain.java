@@ -10,8 +10,8 @@ import java.util.Scanner;
 import se.lovebrandefelt.chess.Board;
 import se.lovebrandefelt.chess.Game;
 import se.lovebrandefelt.chess.Move;
-import se.lovebrandefelt.chess.Pawn;
 import se.lovebrandefelt.chess.Pos;
+import se.lovebrandefelt.chess.PromotionMove;
 
 public class ConsoleMain {
   public static void main(String[] args) {
@@ -38,14 +38,11 @@ public class ConsoleMain {
         try {
           String moveString = scanner.next();
           Move move = game.getBoard().algebraicNotationToMove(moveString);
-          game.makeMove(move.getFrom(), move.getTo());
-          if (game.getBoard().get(move.getTo()).getTypeId() == 'P'
-              && ((Pawn) game.getBoard().get(move.getTo())).canPromote()) {
-            moveString = moveString.replace("x", "").replace("+", "").replace("#", "");
-            ((Pawn) game.getBoard().get(move.getTo()))
-                .promoteInto(moveString.charAt(moveString.length() - 1));
+          if (!(move instanceof PromotionMove) || ((PromotionMove) move).getPromoteInto() != null) {
+            game.makeMove(move.getFrom(), move.getTo());
+            break;
           }
-          break;
+          System.out.println("That move is not legal!");
         } catch (IllegalArgumentException ignored) {
           System.out.println("That move is not legal!");
         }

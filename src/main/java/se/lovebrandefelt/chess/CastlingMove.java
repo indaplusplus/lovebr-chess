@@ -28,18 +28,20 @@ public class CastlingMove extends Move {
 
   @Override
   protected void undo(Board board) {
+    preUpdateAlgebraicNotation(board);
     board.remove(getTo());
     board.remove(rookTo);
     board.add(getPiece(), getFrom());
     board.add(rook, rookFrom);
+    postUpdateAlgebraicNotation(board);
   }
 
   @Override
-  public String toAlgebraicNotation(Board board) {
+  protected void preUpdateAlgebraicNotation(Board board) {
     if (colToString(getTo().getCol()).equals("g")) {
-      return "O-O";
+      setAlgebraicNotation("O-O");
     } else {
-      return "O-O-O";
+      setAlgebraicNotation("O-O-O");
     }
   }
 

@@ -12,6 +12,7 @@
         <ToolBar fx:id="tools">
             <Button fx:id="newGame" text="New Game" onAction="#newGame"/>
             <Button fx:id="newOnlineGame" text="New Online Game" onAction="#newOnlineGame"/>
+            <Button fx:id="joinOnlineGame" text="Join Online Game" onAction="#joinOnlineGame"/>
         </ToolBar>
     </top>
     <center>
