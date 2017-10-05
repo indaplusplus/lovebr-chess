@@ -133,4 +133,9 @@ public class Move {
   protected void setAlgebraicNotation(String algebraicNotation) {
     this.algebraicNotation = algebraicNotation;
   }
+
+  @Override
+  public String toString() {
+    return algebraicNotation;
+  }
 }

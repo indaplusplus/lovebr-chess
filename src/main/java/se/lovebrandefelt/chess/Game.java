@@ -183,15 +183,9 @@ public class Game {
       if (move != null) {
         board.move(move);
         currentPlayer = currentPlayer.next();
+        legalMoves = new HashMap<>();
       }
-      legalMoves = new HashMap<>();
     }
-  }
-
-  void undoMove() {
-    board.undoMove();
-    currentPlayer = currentPlayer.next();
-    legalMoves = new HashMap<>();
   }
 
   /**

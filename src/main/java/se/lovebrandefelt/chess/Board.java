@@ -177,10 +177,7 @@ public class Board {
     if (moveString.startsWith("O-O")) {
       Stream<Pos> fromCanditates =
           game.legalMoves().keySet().stream().filter((from) -> get(from).getTypeId() == 'K');
-      if (fromCanditates.count() != 1) {
-        throw new IllegalArgumentException();
-      }
-      Pos from = fromCanditates.findFirst().orElseThrow(IllegalArgumentException::new);
+      Pos from = fromCanditates.findFirst().get();
       Pos to = moveString.equals("O-O") ? new Pos(from.getRow(), 6) : new Pos(from.getRow(), 2);
       return game.legalMoves().get(from).get(to);
     } else {
@@ -231,9 +228,6 @@ public class Board {
                 .stream()
                 .filter((fromCandidate) -> fromCandidate.toString().equals(fromString))
                 .collect(Collectors.toList());
-      }
-      if (fromCandidates.size() != 1) {
-        throw new IllegalArgumentException();
       }
       Pos from = fromCandidates.get(0);
       if (game.legalMoves().get(from).get(to) instanceof PromotionMove) {

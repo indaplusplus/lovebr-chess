@@ -12,8 +12,10 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.stream.Collectors;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.scene.control.Button;
@@ -48,9 +50,9 @@ public class GUIController {
                 .setMove(board.getBoard().getHistory().peek().getAlgebraicNotation())
                 .setResultingState(board.getBoard().toForsythEdwardsNotation())
                 .build();
-        System.out.println(serverMove.getMove());
         serverMove.writeDelimitedTo(socket.getOutputStream());
       }
+      GUI.SCENE.update();
     }
   }
 
@@ -92,21 +94,20 @@ public class GUIController {
 
   public void newOnlineGame(ActionEvent actionEvent) throws IOException {
     if (socket == null || socket.isClosed()) {
-      server = new ServerSocket(0xDAD);
-      executorService.submit(
+      CompletableFuture.runAsync(
           () -> {
             try {
+              server = new ServerSocket(0xDAD);
               socket = server.accept();
-            } catch (IOException e) {
-              e.printStackTrace();
+            } catch (IOException ignored) {
             }
-          });
-      ((GameScene) newGame.getScene()).newGame(standardSetup());
-      you = WHITE;
-      executorService.submit(
-          () -> {
-            readMovesFromSocket(socket);
-          });
+          })
+          .thenAccept(
+              (v) -> {
+                Platform.runLater(() -> ((GameScene) newGame.getScene()).newGame(standardSetup()));
+                you = WHITE;
+                executorService.submit(() -> readMovesFromSocket(socket));
+              });
     }
   }
 
@@ -128,6 +129,7 @@ public class GUIController {
                   server.close();
                 }
                 socket = new Socket(ip, 0xDAD);
+                ((GameScene) newGame.getScene()).newGame(standardSetup());
                 executorService.submit(
                     () -> {
                       readMovesFromSocket(socket);
@@ -209,12 +211,20 @@ public class GUIController {
   }
 
   public void readMovesFromSocket(Socket socket) {
-    System.out.println(socket);
     while (socket != null && socket.isConnected()) {
       try {
         MoveOuterClass.Move serverMove =
             MoveOuterClass.Move.parseDelimitedFrom(socket.getInputStream());
         System.out.println(serverMove.getMove());
+        System.out.println(
+            board
+                .getBoard()
+                .getGame()
+                .legalMoves()
+                .values()
+                .stream()
+                .flatMap(map -> map.values().stream())
+                .collect(Collectors.toSet()));
         Move move = board.getBoard().algebraicNotationToMove(serverMove.getMove());
         you = board.getBoard().extractCurrentPlayer(serverMove.getResultingState());
         board.getBoard().getGame().makeMove(move.getFrom(), move.getTo());

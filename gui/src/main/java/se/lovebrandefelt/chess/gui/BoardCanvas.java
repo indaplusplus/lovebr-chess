@@ -136,14 +136,12 @@ public class BoardCanvas extends Canvas {
         }
         board.getGame().makeMove(selected.getPos(), pos);
         selected = null;
-        GUI.SCENE.update();
         return true;
       } else if (board.isInsideBounds(pos)
           && !board.isEmpty(pos)
           && board.getGame().legalMoves().containsKey(pos)) {
         selected = board.get(pos);
       }
-      GUI.SCENE.update();
     }
     return false;
   }

@@ -22,6 +22,7 @@ public class Pawn extends Piece {
     addMovesInDirection(new Pos(moveDirection(), 1), legalMoves, Move::new, MUST_CAPTURE, 1);
 
     if (getBoard().getHistory().stream().noneMatch((move) -> move.getPiece() == this)
+        && getBoard().isInsideBounds(getPos().offset(new Pos(moveDirection(), 0)))
         && getBoard().isEmpty(getPos().offset(new Pos(moveDirection(), 0)))) {
       addMovesInDirection(new Pos(2 * moveDirection(), 0), legalMoves, Move::new, CANT_CAPTURE, 1);
     }
