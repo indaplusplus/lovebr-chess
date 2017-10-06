@@ -92,7 +92,7 @@ public class BoardCanvas extends Canvas {
   }
 
   public boolean onClick(MouseEvent mouseEvent) {
-    if (SCENE.getGame().state() == IN_PROGRESS) {
+    if (SCENE.getGame().getState() == IN_PROGRESS) {
       int row = board.rows() - (int) (mouseEvent.getY() / squareSize);
       int col = (int) (mouseEvent.getX() / squareSize) - 1;
       Pos pos = new Pos(row, col);

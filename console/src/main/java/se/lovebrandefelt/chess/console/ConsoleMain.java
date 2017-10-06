@@ -26,7 +26,7 @@ public class ConsoleMain {
     } else {
       game = new Game(standardSetup(), WHITE);
     }
-    while (game.state() == IN_PROGRESS) {
+    while (game.getState() == IN_PROGRESS) {
       System.out.println(boardToString(game.getBoard()));
       if (game.getBoard().kingInCheck(game.getCurrentPlayer())) {
         System.out.println(game.getCurrentPlayer() + "'s turn - In Check");
@@ -48,7 +48,7 @@ public class ConsoleMain {
         }
       }
     }
-    switch (game.state()) {
+    switch (game.getState()) {
       case WHITE_WON:
         System.out.println("WHITE won");
         break;

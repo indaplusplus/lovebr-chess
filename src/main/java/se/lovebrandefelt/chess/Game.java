@@ -20,6 +20,7 @@ public class Game {
   private Board board;
   private Color currentPlayer;
   private Map<Pos, Map<Pos, Move>> legalMoves;
+  private State state;
 
   /**
    * Creates a new game using the specified setup with the specified starting player.
@@ -32,6 +33,7 @@ public class Game {
     board.setGame(this);
     currentPlayer = startingPlayer;
     legalMoves = new HashMap<>();
+    state = IN_PROGRESS;
   }
 
   /**
@@ -178,45 +180,44 @@ public class Game {
    * @param to the position to move to
    */
   public void makeMove(Pos from, Pos to) {
-    if (state() == IN_PROGRESS) {
+    if (state == IN_PROGRESS) {
       Move move = legalMoves().get(from).get(to);
       if (move != null) {
         board.move(move);
         currentPlayer = currentPlayer.next();
         legalMoves = new HashMap<>();
+        updateState();
       }
     }
   }
 
   /**
-   * Returns the current state of the game.
-   *
-   * @return the current state of the game
+   * Updates the current state of the game.
    */
-  public State state() {
+  public void updateState() {
     // Fifty moves rule
     if (board.getHistory().size() >= 100
         && board
-            .getHistory()
+        .getHistory()
         .subList(0, 100)
-            .stream()
-            .allMatch((move) -> move.getPiece().getTypeId() != 'P' && move.getCaptured() == null)) {
-      return DRAW;
+        .stream()
+        .allMatch((move) -> move.getPiece().getTypeId() != 'P' && move.getCaptured() == null)) {
+      state = DRAW;
     }
 
     // Recurring board state rule
     Map<String, Integer> boardStates = new HashMap<>();
     for (int i = 0;
          i < board.getHistory().size()
-            && board.getHistory().get(i).getCaptured() == null
-            && !(board.getHistory().get(i) instanceof CastlingMove);
+             && board.getHistory().get(i).getCaptured() == null
+             && !(board.getHistory().get(i) instanceof CastlingMove);
          i++) {
       boardStates.put(
           board.getBoardStates().get(i),
           boardStates.getOrDefault(board.getBoardStates().get(i), 0) + 1);
     }
     if (boardStates.values().stream().anyMatch((occurrences) -> occurrences >= 3)) {
-      return DRAW;
+      state = DRAW;
     }
 
     // Check if checkmate is impossible
@@ -243,7 +244,7 @@ public class Game {
         || (whitePieces.equals("K") && blackPieces.equals("BK"))
         || (whitePieces.equals("KN") && blackPieces.equals("K"))
         || (whitePieces.equals("K") && blackPieces.equals("KN"))) {
-      return DRAW;
+      state = DRAW;
     }
     if (whitePieces.equals("BK") && blackPieces.equals("BK")) {
       Pos whiteBishopPos =
@@ -265,26 +266,27 @@ public class Game {
               .get()
               .getPos();
       if ((whiteBishopPos.getRow()
-                  + whiteBishopPos.getCol()
-                  + blackBishopPos.getRow()
-                  + blackBishopPos.getCol())
-              % 2
+          + whiteBishopPos.getCol()
+          + blackBishopPos.getRow()
+          + blackBishopPos.getCol())
+          % 2
           == 0) {
-        return DRAW;
+        state = DRAW;
       }
     }
 
     if (legalMoves().values().stream().anyMatch((moves) -> !moves.isEmpty())) {
-      return IN_PROGRESS;
+      return;
     }
     if (board.kingInCheck(currentPlayer)) {
       if (currentPlayer == WHITE) {
-        return BLACK_WON;
+        state = BLACK_WON;
       } else {
-        return WHITE_WON;
+        state = WHITE_WON;
       }
+      return;
     }
-    return DRAW;
+    state = DRAW;
   }
 
   public Board getBoard() {
@@ -293,6 +295,10 @@ public class Game {
 
   public Color getCurrentPlayer() {
     return currentPlayer;
+  }
+
+  public State getState() {
+    return state;
   }
 
   public enum State {

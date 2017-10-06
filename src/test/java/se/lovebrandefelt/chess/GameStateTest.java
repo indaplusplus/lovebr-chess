@@ -26,7 +26,8 @@ class GameStateTest {
     board.add(new Rook(WHITE), new Pos("h6"));
     board.add(new Rook(WHITE), new Pos("g7"));
     board.add(new King(BLACK), new Pos("b8"));
-    assertEquals(IN_PROGRESS, game.state());
+    game.updateState();
+    assertEquals(IN_PROGRESS, game.getState());
   }
 
   @Test
@@ -35,7 +36,7 @@ class GameStateTest {
     board.add(new Rook(WHITE), new Pos("g7"));
     board.add(new King(BLACK), new Pos("b8"));
     game.makeMove(new Pos("h6"), new Pos("h8"));
-    assertEquals(WHITE_WON, game.state());
+    assertEquals(WHITE_WON, game.getState());
   }
 
   @Test
@@ -43,7 +44,8 @@ class GameStateTest {
     board.add(new Rook(BLACK), new Pos("h8"));
     board.add(new Rook(BLACK), new Pos("g7"));
     board.add(new King(WHITE), new Pos("b8"));
-    assertEquals(BLACK_WON, game.state());
+    game.updateState();
+    assertEquals(BLACK_WON, game.getState());
   }
 
   @Test
@@ -51,6 +53,7 @@ class GameStateTest {
     board.add(new Rook(BLACK), new Pos("h7"));
     board.add(new Rook(BLACK), new Pos("b1"));
     board.add(new King(WHITE), new Pos("a8"));
-    assertEquals(DRAW, game.state());
+    game.updateState();
+    assertEquals(DRAW, game.getState());
   }
 }

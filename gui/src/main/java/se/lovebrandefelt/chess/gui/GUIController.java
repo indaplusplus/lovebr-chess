@@ -12,10 +12,8 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.stream.Collectors;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.scene.control.Button;
@@ -94,20 +92,16 @@ public class GUIController {
 
   public void newOnlineGame(ActionEvent actionEvent) throws IOException {
     if (socket == null || socket.isClosed()) {
-      CompletableFuture.runAsync(
-          () -> {
-            try {
-              server = new ServerSocket(0xDAD);
-              socket = server.accept();
-            } catch (IOException ignored) {
-            }
-          })
-          .thenAccept(
-              (v) -> {
-                Platform.runLater(() -> ((GameScene) newGame.getScene()).newGame(standardSetup()));
-                you = WHITE;
-                executorService.submit(() -> readMovesFromSocket(socket));
-              });
+      executorService.submit(() -> {
+        try {
+          server = new ServerSocket(0xDAD);
+          socket = server.accept();
+          Platform.runLater(() -> ((GameScene) newGame.getScene()).newGame(standardSetup()));
+          you = WHITE;
+          executorService.submit(() -> readMovesFromSocket(socket));
+        } catch (IOException ignored) {
+        }
+      });
     }
   }
 
@@ -143,7 +137,7 @@ public class GUIController {
   void update(GameScene scene) {
     StringBuilder title = new StringBuilder("Chess - ");
     if (socket != null && socket.isConnected()) {
-      switch (scene.getGame().state()) {
+      switch (scene.getGame().getState()) {
         case IN_PROGRESS:
           if (scene.getGame().getCurrentPlayer() == you) {
             title.append("Your Turn");
@@ -174,7 +168,7 @@ public class GUIController {
           break;
         default:
       }
-      if (scene.getGame().state() != IN_PROGRESS) {
+      if (scene.getGame().getState() != IN_PROGRESS) {
         try {
           if (socket != null) {
             socket.close();
@@ -187,7 +181,7 @@ public class GUIController {
         you = null;
       }
     } else {
-      switch (scene.getGame().state()) {
+      switch (scene.getGame().getState()) {
         case IN_PROGRESS:
           title.append(scene.getGame().getCurrentPlayer());
           title.append("'s Turn");
@@ -215,16 +209,6 @@ public class GUIController {
       try {
         MoveOuterClass.Move serverMove =
             MoveOuterClass.Move.parseDelimitedFrom(socket.getInputStream());
-        System.out.println(serverMove.getMove());
-        System.out.println(
-            board
-                .getBoard()
-                .getGame()
-                .legalMoves()
-                .values()
-                .stream()
-                .flatMap(map -> map.values().stream())
-                .collect(Collectors.toSet()));
         Move move = board.getBoard().algebraicNotationToMove(serverMove.getMove());
         you = board.getBoard().extractCurrentPlayer(serverMove.getResultingState());
         board.getBoard().getGame().makeMove(move.getFrom(), move.getTo());

@@ -118,7 +118,7 @@ public class Move {
 
   protected void postUpdateAlgebraicNotation(Board board) {
     if (board.kingInCheck(piece.getColor().next())) {
-      if (board.getGame().state() != IN_PROGRESS) {
+      if (board.getGame().getState() != IN_PROGRESS) {
         algebraicNotation += '#';
       } else {
         algebraicNotation += '+';
